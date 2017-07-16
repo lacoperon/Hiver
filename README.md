@@ -1,7 +1,7 @@
 # Hiver
 
 Hiver is [lacoperon](https://www.github.com/lacoperon "GitHub Profile")'s implementation of an AI for the programming game [Screeps](https://www.screeps.com "Screeps")
-in **OCaml**, transpiled to **Javascript** through [**Bucklescript**](http://bucklescript.github.io/bucklescript/Manual.html "Bucklescrip").
+in **OCaml**, transpiled to **Javascript** through [**Bucklescript**](http://bucklescript.github.io/bucklescript/Manual.html "Bucklescript") (which, by the way, is brilliant. You should check it out!).
 
 **NOTE**: Doing something like this is impractical, yet (in my view) fun.
 And using things like `bs.raw` removes the type-safety that would make OCaml practical and nice.
@@ -9,7 +9,7 @@ People before me have made the (sensible) choice of settling on TypeScript. I wa
 more ambitious / weird.
 
 To install dependencies, simply run `npm install`, and make sure you've also
-installed `OCaml` (IE `sudo apt-get install ocaml`) beforehand.
+installed OCaml (IE `sudo apt-get install ocaml`) beforehand.
 
 To build from `./src/*.ml` to `./deploy/main.js` (They're bundled together
 via `webpack`), run `npm run build`. To deploy to the screeps server, setup
