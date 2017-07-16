@@ -1,6 +1,6 @@
 #Hiver
 
-Hiver is @lacoperon's implementation of an AI for the programming game Screeps [link]
+Hiver is @lacoperon 's implementation of an AI for the programming game Screeps [link]
 in OCaml, transpiled to Javascript through Bucklescript [link].
 
 To install dependencies, simply run `npm install`, and make sure you've also
@@ -24,10 +24,10 @@ from global objects like `Game`, and I don't have time for that alone. It would
 also be a massive waste of time if nobody else wants to write their AI in OCaml).
 
 Quick List:
-  * grunt
-  * grunt-screeps'
-  * webpack
-  * Bucklescript
+  * `grunt`
+  * `grunt-screeps'
+  * `webpack`
+  * `Bucklescript`
   * I think that's it, for now
 
-//TODO: Add dependencies / other peoples' work to thank
+//TODO: Add dependencies / other peoples' work to thank / more detailed deploy instructions
