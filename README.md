@@ -4,9 +4,8 @@ Hiver is @lacoperon 's implementation of an AI for the programming game Screeps 
 in OCaml, transpiled to Javascript through Bucklescript [link].
 
 **NOTE: Doing something like this is impractical, yet (in my view) fun.
-And using things like `bs.raw` removes the type-safety that would make OCaml practical and nice.
-
-People before me have made the (sensible) choice of settling on TypeScript. I wanted to do something
+And using things like `bs.raw` removes the type-safety that would make OCaml practical and nice. **
+**People before me have made the (sensible) choice of settling on TypeScript. I wanted to do something
 more ambitious / weird. **
 
 To install dependencies, simply run `npm install`, and make sure you've also
