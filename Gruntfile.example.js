@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: 'dist/',
-                        src: ['lib/js/src/*.js'],
+                        src: ['deploy/*.js'],
                         flatten: true
                     }
                 ]
