@@ -7,7 +7,7 @@ in OCaml, transpiled to Javascript through Bucklescript [link].
 And using things like `bs.raw` removes the type-safety that would make OCaml practical and nice.
 
 People before me have made the (sensible) choice of settling on TypeScript. I wanted to do something
-more ambitious / weird.**
+more ambitious / weird. **
 
 To install dependencies, simply run `npm install`, and make sure you've also
 installed `OCaml` (IE `sudo apt-get install ocaml`) beforehand.
