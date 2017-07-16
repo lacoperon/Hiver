@@ -12,7 +12,7 @@ your own Gruntfile.js (based off of my `Gruntfile.example.js`), and then run
 `grunt screeps`.
 
 All `ml` files within `./src` are transpiled by Bucklescript into the `./lib/js/src` directory, and then all of those files are packed (with their
-dependencies) into a `main.js` file via `webpack`.
+dependencies) into a `main.js` file within `./deploy` via `webpack`.
 
 In the future, I'll be adding more functional accessibility between OCaml,
 via the Bucklescript bindings, and the Screeps API.
