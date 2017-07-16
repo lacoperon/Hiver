@@ -1,7 +1,7 @@
-#Hiver
+# Hiver
 
-Hiver is @lacoperon 's implementation of an AI for the programming game Screeps [link]
-in OCaml, transpiled to Javascript through Bucklescript [link].
+Hiver is [lacoperon](https://www.github.com/lacoperon "GitHub Profile")'s implementation of an AI for the programming game [Screeps](https://www.screeps.com "Screeps")
+in **OCaml**, transpiled to **Javascript** through [**Bucklescript**](http://bucklescript.github.io/bucklescript/Manual.html "Bucklescrip").
 
 **NOTE**: Doing something like this is impractical, yet (in my view) fun.
 And using things like `bs.raw` removes the type-safety that would make OCaml practical and nice.
@@ -30,7 +30,7 @@ also be a massive waste of time if nobody else wants to write their AI in OCaml)
 
 Quick List:
   * `grunt`
-  * `grunt-screeps'
+  * `grunt-screeps`
   * `webpack`
   * `Bucklescript`
   * I think that's it, for now
