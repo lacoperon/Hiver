@@ -57,16 +57,16 @@ type memoryField =
 
 external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 
-let setMemoryField(creepName : string) (memory : memoryField) : unit =
-  match memory with
-  | Working(x) ->
-    defineMemoryHelper(creepName)("working")
-      (match x with
-      | true -> "true";
-      | false-> "false");
-  | Memory_Role(occupation) ->
-    match occupation with
-    | Harvester -> defineMemoryHelper(creepName)("role")("harvester")
+  let setMemoryField(creepName : string) (memory : memoryField) : unit =
+    match memory with
+    | Working(x) ->
+      defineMemoryHelper(creepName)("working")
+        (match x with
+        | true -> "true";
+        | false-> "false");
+    | Memory_Role(occupation) ->
+      match occupation with
+      | Harvester -> defineMemoryHelper(creepName)("role")("harvester")
 
 
 type roomPosition =
@@ -84,11 +84,10 @@ let iterateCreeps () : unit =
   match Array.length creeps  with
   | 0 -> Js.log("There are no creeps to iterate over") ;
   | x -> Js.log("There are " ^ (string_of_int x) ^ " creeps currently") ;
-
+  Js.log(creeps);
 for i=0 to Array.length creeps - 1 do
   (* Js.log(Array.get creeps i) *)
   let creepName = Array.get creeps i in
-  Js.log("One is named " ^ creepName);
   setMemoryField(creepName)(Working(false))
 
 done
