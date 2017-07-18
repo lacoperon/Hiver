@@ -5,6 +5,13 @@ let spawns : string array = [%bs.raw{|Object.keys(Game.spawns)|}]
 let spawnsArray : string array = spawns
 let spawnsObject = [%bs.raw{|Game.spawns|}]
 
+let rec arraySumRecursive (numArray : int array) (currentSum : int) (currentIndex : int) : int =
+  if Array.length numArray = currentIndex then currentSum
+  else arraySumRecursive(numArray)(currentSum + Array.get numArray currentIndex)(currentIndex+1)
+
+let arraySum (numArray : int array) : int =
+  arraySumRecursive(numArray)(0)(0)
+
 (* From the wiki *)
 
 type bodyPart =
@@ -41,8 +48,10 @@ let bodyPartToString(part : bodyPart) : string =
   | CLAIM -> "claim"
 
 external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+external doWatcher : string -> unit = "" [@@bs.module "./supplemental"]
 
 let spawnCreep(spawn : string) (body : bodyPart array) : unit =
+  let bodyCost = (arraySum(Array.map bodyPartToCost body )) in
   spawnCreepHelper (spawn) (Array.map bodyPartToString body) ;
   Js.log("Spawning a new creep!")
 
@@ -76,15 +85,11 @@ type roomPosition =
     roomName : string
   }
 
-
-
-
-
 let iterateCreeps () : unit =
   match Array.length creeps  with
   | 0 -> Js.log("There are no creeps to iterate over") ;
   | x -> Js.log("There are " ^ (string_of_int x) ^ " creeps currently") ;
-  Js.log(creeps);
+  (* Js.log(creeps); *)
 for i=0 to Array.length creeps - 1 do
   (* Js.log(Array.get creeps i) *)
   let creepName = Array.get creeps i in
@@ -93,12 +98,12 @@ for i=0 to Array.length creeps - 1 do
 done
 
 let iterateSpawns () : unit =
-  match Array.length spawns with
+  (* match Array.length spawns with
   | 0 -> Js.log("There are no spawns to iterate over (should be untrue)") ;
-  | x -> Js.log("There are " ^ (string_of_int x) ^ " spawns currently") ;
+  | x -> Js.log("There are " ^ (string_of_int x) ^ " spawns currently") ;  *)
 
     for i=0 to Array.length spawns - 1 do
-      Js.log("One is named " ^ Array.get spawns i);
+      (* Js.log("One is named " ^ Array.get spawns i); *)
       let body = [|WORK; CARRY; MOVE; MOVE|] in
       spawnCreep(Array.get spawns i) body
     done
@@ -106,8 +111,9 @@ let iterateSpawns () : unit =
 
 
 let run () : unit =
-  ignore (let time : int = [%bs.raw{|Date.now()|}] in Js.log(time)) ;
+  (* ignore (let time : int = [%bs.raw{|Date.now()|}] in Js.log(time)) ; *)
   ignore (iterateSpawns());
+  ignore (doWatcher(""));
   iterateCreeps()
 
 let runEachTick : unit = run()

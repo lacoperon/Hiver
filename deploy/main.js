@@ -1612,6 +1612,25 @@ var spawns = (Object.keys(Game.spawns));
 
 var spawnsObject = (Game.spawns);
 
+function arraySumRecursive(numArray, _currentSum, _currentIndex) {
+  while(true) {
+    var currentIndex = _currentIndex;
+    var currentSum = _currentSum;
+    if (numArray.length === currentIndex) {
+      return currentSum;
+    } else {
+      _currentIndex = currentIndex + 1 | 0;
+      _currentSum = currentSum + Caml_array.caml_array_get(numArray, currentIndex) | 0;
+      continue ;
+      
+    }
+  };
+}
+
+function arraySum(numArray) {
+  return arraySumRecursive(numArray, 0, 0);
+}
+
 function bodyPartToCost(part) {
   switch (part) {
     case 1 : 
@@ -1656,6 +1675,7 @@ function bodyPartToString(part) {
 }
 
 function spawnCreep(spawn, body) {
+  console.log(arraySumRecursive($$Array.map(bodyPartToCost, body), 0, 0));
   Supplement.spawnCreepHelper(spawn, $$Array.map(bodyPartToString, body));
   console.log("Spawning a new creep!");
   return /* () */0;
@@ -1675,7 +1695,6 @@ function iterateCreeps() {
   var x = creeps.length;
   if (x !== 0) {
     console.log("There are " + (Pervasives.string_of_int(x) + " creeps currently"));
-    console.log(creeps);
     for(var i = 0 ,i_finish = creeps.length - 1 | 0; i <= i_finish; ++i){
       var creepName = Caml_array.caml_array_get(creeps, i);
       setMemoryField(creepName, /* Working */Block.__(0, [/* false */0]));
@@ -1688,30 +1707,21 @@ function iterateCreeps() {
 }
 
 function iterateSpawns() {
-  var x = spawns.length;
-  if (x !== 0) {
-    console.log("There are " + (Pervasives.string_of_int(x) + " spawns currently"));
-    for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
-      console.log("One is named " + Caml_array.caml_array_get(spawns, i));
-      var body = /* int array */[
-        /* WORK */1,
-        /* CARRY */2,
-        /* MOVE */0,
-        /* MOVE */0
-      ];
-      spawnCreep(Caml_array.caml_array_get(spawns, i), body);
-    }
-    return /* () */0;
-  } else {
-    console.log("There are no spawns to iterate over (should be untrue)");
-    return /* () */0;
+  for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
+    var body = /* int array */[
+      /* WORK */1,
+      /* CARRY */2,
+      /* MOVE */0,
+      /* MOVE */0
+    ];
+    spawnCreep(Caml_array.caml_array_get(spawns, i), body);
   }
+  return /* () */0;
 }
 
 function run() {
-  var time = (Date.now());
-  console.log(time);
   iterateSpawns(/* () */0);
+  Supplement.doWatcher("");
   return iterateCreeps(/* () */0);
 }
 
@@ -1721,19 +1731,21 @@ var creepsArray = creeps;
 
 var spawnsArray = spawns;
 
-exports.creeps           = creeps;
-exports.creepsArray      = creepsArray;
-exports.spawns           = spawns;
-exports.spawnsArray      = spawnsArray;
-exports.spawnsObject     = spawnsObject;
-exports.bodyPartToCost   = bodyPartToCost;
-exports.bodyPartToString = bodyPartToString;
-exports.spawnCreep       = spawnCreep;
-exports.setMemoryField   = setMemoryField;
-exports.iterateCreeps    = iterateCreeps;
-exports.iterateSpawns    = iterateSpawns;
-exports.run              = run;
-exports.runEachTick      = runEachTick;
+exports.creeps            = creeps;
+exports.creepsArray       = creepsArray;
+exports.spawns            = spawns;
+exports.spawnsArray       = spawnsArray;
+exports.spawnsObject      = spawnsObject;
+exports.arraySumRecursive = arraySumRecursive;
+exports.arraySum          = arraySum;
+exports.bodyPartToCost    = bodyPartToCost;
+exports.bodyPartToString  = bodyPartToString;
+exports.spawnCreep        = spawnCreep;
+exports.setMemoryField    = setMemoryField;
+exports.iterateCreeps     = iterateCreeps;
+exports.iterateSpawns     = iterateSpawns;
+exports.run               = run;
+exports.runEachTick       = runEachTick;
 /* creeps Not a pure module */
 
 
@@ -5053,7 +5065,7 @@ exports.concat_fmt   = concat_fmt;
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /* NOTE: This is the only file in this folder not transpiled by BUCKLESCRIPT.
   Still though, you should handle with care, although this will be more readable
@@ -5067,8 +5079,44 @@ function defineMemoryHelper(creepName, fieldName, value) {
   Game.creeps[creepName].memory[fieldName] = value;
 }
 
+function doWatcher(empty) {
+  var watcher = __webpack_require__(21);
+  watcher();
+}
 exports.spawnCreepHelper = spawnCreepHelper;
 exports.defineMemoryHelper = defineMemoryHelper;
+exports.doWatcher = doWatcher;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+  if (typeof Memory.watch !== 'object') {
+    Memory.watch = {};
+  }
+  if (typeof Memory.watch.expressions !== 'object') {
+    Memory.watch.expressions = {};
+  }
+  if (typeof Memory.watch.values !== 'object') {
+    Memory.watch.values = {};
+  }
+  _.each(Memory.watch.expressions, (expr, name) => {
+    if (typeof expr !== 'string') return;
+    let result;
+    try {
+      result = eval(expr);
+    } catch (ex) {
+      result = "Error: " + ex.message;
+    }
+    if (name == 'console') {
+      if (typeof result !== 'undefined') console.log(result);
+    } else {
+      Memory.watch.values[name] = typeof result !== 'undefined' ? result.toString() : result;
+    }
+  });
+};
 
 
 /***/ })
