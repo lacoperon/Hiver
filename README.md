@@ -28,16 +28,20 @@ but that would require documenting every single type within the Screeps API down
 from global objects like `Game`, and I don't have time for that alone. It would
 also be a massive waste of time if nobody else wants to write their AI in OCaml).
 
-Quick List:
+
+
+Quick List of Modules/Tools Used:
   * `grunt`
   * `grunt-screeps`
   * `webpack`
   * `Bucklescript`
-  * I think that's it, for now
+  * `screeps-multimeter`(which saved me from having to launch the game GUI to see if my code has runtime JS errors.)
 
 I currently use a whole bunch of supplemental Screeps interface functions I defined
 within `./lib/js/src/supplemental.js`, to make working with the OCaml functions easier.
 (IE Object-Oriented OCaml seems like something of a clusterfuck, and I don't want to deal with that
-every time I need to call a function which is four properties down of the global Game Object if I don't have to)
+every time I need to call a function which is four properties down of the global Game Object if I don't have to).
+
+T
 
 //TODO: Add dependencies / other peoples' work to thank / more detailed deploy instructions
