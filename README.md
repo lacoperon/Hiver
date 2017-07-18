@@ -35,4 +35,9 @@ Quick List:
   * `Bucklescript`
   * I think that's it, for now
 
+I currently use a whole bunch of supplemental Screeps interface functions I defined
+within `./lib/js/src/supplemental.js`, to make working with the OCaml functions easier.
+(IE Object-Oriented OCaml seems like something of a clusterfuck, and I don't want to deal with that
+every time I need to call a function which is four properties down of the global Game Object if I don't have to)
+
 //TODO: Add dependencies / other peoples' work to thank / more detailed deploy instructions
