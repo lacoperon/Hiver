@@ -3,6 +3,9 @@ let creepsArray = creeps
 (* let creepsObj : *)
 let spawns : string array = [%bs.raw{|Object.keys(Game.spawns)|}]
 let spawnsArray : string array = spawns
+let spawnsObject = [%bs.raw{|Game.spawns|}]
+
+(* From the wiki *)
 
 type bodyPart =
   | MOVE
@@ -15,7 +18,16 @@ type bodyPart =
   | CLAIM
 
 
-external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+let bodyPartToCost(part : bodyPart) : int =
+  match part with
+  | MOVE -> 50;
+  | WORK -> 100;
+  | ATTACK -> 80;
+  | CARRY -> 50;
+  | HEAL -> 250;
+  | RANGED_ATTACK -> 150;
+  | TOUGH -> 10;
+  | CLAIM -> 600
 
 let bodyPartToString(part : bodyPart) : string =
   match part with
@@ -28,20 +40,33 @@ let bodyPartToString(part : bodyPart) : string =
   | HEAL -> "heal" ;
   | CLAIM -> "claim"
 
-let bodyPartToCost(part : bodyPart) : int =
-  match part with
-  | MOVE -> 50;
-  | WORK -> 100;
-  | ATTACK -> 80;
-  | CARRY -> 50;
-  | HEAL -> 250;
-  | RANGED_ATTACK -> 150;
-  | TOUGH -> 10;
-  | CLAIM -> 600
+external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 
 let spawnCreep(spawn : string) (body : bodyPart array) : unit =
   spawnCreepHelper (spawn) (Array.map bodyPartToString body) ;
   Js.log("Spawning a new creep!")
+
+(* Defines all possible roles available to Creeps *)
+type role =
+  | Harvester
+
+(* Defines all of the memory fields I allow to be set on creeps programmatically *)
+type memoryField =
+  | Working of bool
+  | Memory_Role of role
+
+external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+
+let setMemoryField(creepName : string) (memory : memoryField) =
+  match memory with
+  | Working(x) ->
+    defineMemoryHelper(creepName)("working")
+      (match x with
+      | true -> "true";
+      | false-> "false");
+  | Memory_Role(occupation) ->
+    match occupation with
+    | Harvester -> defineMemoryHelper(creepName)("role")("harvester")
 
 
 type roomPosition =

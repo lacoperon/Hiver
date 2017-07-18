@@ -1609,27 +1609,7 @@ var creeps = (Object.keys(Game.creeps));
 
 var spawns = (Object.keys(Game.spawns));
 
-function bodyPartToString(part) {
-  switch (part) {
-    case 0 : 
-        return "move";
-    case 1 : 
-        return "work";
-    case 2 : 
-        return "carry";
-    case 3 : 
-        return "attack";
-    case 4 : 
-        return "ranged_attack";
-    case 5 : 
-        return "heal";
-    case 6 : 
-        return "tough";
-    case 7 : 
-        return "claim";
-    
-  }
-}
+var spawnsObject = (Game.spawns);
 
 function bodyPartToCost(part) {
   switch (part) {
@@ -1652,10 +1632,42 @@ function bodyPartToCost(part) {
   }
 }
 
+function bodyPartToString(part) {
+  switch (part) {
+    case 0 : 
+        return "move";
+    case 1 : 
+        return "work";
+    case 2 : 
+        return "carry";
+    case 3 : 
+        return "attack";
+    case 4 : 
+        return "ranged_attack";
+    case 5 : 
+        return "heal";
+    case 6 : 
+        return "tough";
+    case 7 : 
+        return "claim";
+    
+  }
+}
+
 function spawnCreep(spawn, body) {
   Supplement.spawnCreepHelper(spawn, $$Array.map(bodyPartToString, body));
   console.log("Spawning a new creep!");
   return /* () */0;
+}
+
+function setMemoryField(creepName, memory) {
+  if (memory.tag) {
+    Supplement.defineMemoryHelper(creepName, "role", "harvester");
+    return /* () */0;
+  } else {
+    Supplement.defineMemoryHelper(creepName, "working", memory[0] !== 0 ? "true" : "false");
+    return /* () */0;
+  }
 }
 
 function iterateCreeps() {
@@ -1710,9 +1722,11 @@ exports.creeps           = creeps;
 exports.creepsArray      = creepsArray;
 exports.spawns           = spawns;
 exports.spawnsArray      = spawnsArray;
-exports.bodyPartToString = bodyPartToString;
+exports.spawnsObject     = spawnsObject;
 exports.bodyPartToCost   = bodyPartToCost;
+exports.bodyPartToString = bodyPartToString;
 exports.spawnCreep       = spawnCreep;
+exports.setMemoryField   = setMemoryField;
 exports.iterateCreeps    = iterateCreeps;
 exports.iterateSpawns    = iterateSpawns;
 exports.run              = run;
@@ -5040,6 +5054,10 @@ exports.concat_fmt   = concat_fmt;
 
 function spawnCreepHelper(spawnName, body) {
   Game.spawns[spawnName].createCreep(body);
+}
+
+function defineMemoryHelper(creepName, fieldName, value) {
+  Game.creeps[creepName].memory[fieldName] = value;
 }
 
 exports.spawnCreepHelper = spawnCreepHelper;
