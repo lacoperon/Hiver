@@ -57,7 +57,7 @@ type memoryField =
 
 external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 
-let setMemoryField(creepName : string) (memory : memoryField) =
+let setMemoryField(creepName : string) (memory : memoryField) : unit =
   match memory with
   | Working(x) ->
     defineMemoryHelper(creepName)("working")
@@ -87,7 +87,10 @@ let iterateCreeps () : unit =
 
 for i=0 to Array.length creeps - 1 do
   (* Js.log(Array.get creeps i) *)
-  Js.log("One is named " ^ Array.get creeps i)
+  let creepName = Array.get creeps i in
+  Js.log("One is named " ^ creepName);
+  setMemoryField(creepName)(Working(false))
+
 done
 
 let iterateSpawns () : unit =
@@ -101,16 +104,11 @@ let iterateSpawns () : unit =
       spawnCreep(Array.get spawns i) body
     done
 
-(* external createCreep : (string, string array) -> unit =
-  "" [@bs.module "Game"] [@bs.scope spawns] [] *)
-
-
 
 
 let run () : unit =
   ignore (let time : int = [%bs.raw{|Date.now()|}] in Js.log(time)) ;
   ignore (iterateSpawns());
   iterateCreeps()
-  (* spawnCreep() *)
 
 let runEachTick : unit = run()

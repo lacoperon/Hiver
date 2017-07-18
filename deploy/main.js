@@ -988,6 +988,23 @@ exports.isCamlExceptionOrOpenVariant = isCamlExceptionOrOpenVariant;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+function __(tag, block) {
+  block.tag = tag;
+  return block;
+}
+
+exports.__ = __;
+/* No side effect */
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1177,13 +1194,13 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Block                   = __webpack_require__(6);
+var Block                   = __webpack_require__(4);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_obj_dup(x) {
@@ -1489,23 +1506,6 @@ exports.caml_lessequal         = caml_lessequal;
 
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-
-function __(tag, block) {
-  block.tag = tag;
-  return block;
-}
-
-exports.__ = __;
-/* No side effect */
-
-
-/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1601,6 +1601,7 @@ exports.repeat = repeat;
 
 
 var $$Array    = __webpack_require__(10);
+var Block      = __webpack_require__(4);
 var Caml_array = __webpack_require__(2);
 var Pervasives = __webpack_require__(12);
 var Supplement = __webpack_require__(20);
@@ -1675,7 +1676,9 @@ function iterateCreeps() {
   if (x !== 0) {
     console.log("There are " + (Pervasives.string_of_int(x) + " creeps currently"));
     for(var i = 0 ,i_finish = creeps.length - 1 | 0; i <= i_finish; ++i){
-      console.log("One is named " + Caml_array.caml_array_get(creeps, i));
+      var creepName = Caml_array.caml_array_get(creeps, i);
+      console.log("One is named " + creepName);
+      setMemoryField(creepName, /* Working */Block.__(0, [/* false */0]));
     }
     return /* () */0;
   } else {
@@ -2244,7 +2247,7 @@ exports.raiseUriError            = raiseUriError;
 
 var Curry                    = __webpack_require__(1);
 var Caml_io                  = __webpack_require__(13);
-var Caml_obj                 = __webpack_require__(5);
+var Caml_obj                 = __webpack_require__(6);
 var Caml_sys                 = __webpack_require__(14);
 var Caml_format              = __webpack_require__(15);
 var Caml_string              = __webpack_require__(17);
@@ -3072,7 +3075,7 @@ exports.caml_ml_input_char          = caml_ml_input_char;
 exports.caml_ml_out_channels_list   = caml_ml_out_channels_list;
 /* stdin Not a pure module */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 14 */
@@ -3172,7 +3175,7 @@ exports.caml_sys_is_directory   = caml_sys_is_directory;
 exports.caml_sys_file_exists    = caml_sys_file_exists;
 /* No side effect */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 15 */
@@ -3989,7 +3992,7 @@ exports.caml_nativeint_of_string = caml_nativeint_of_string;
 "use strict";
 
 
-var Caml_obj                = __webpack_require__(5);
+var Caml_obj                = __webpack_require__(6);
 var Caml_int32              = __webpack_require__(7);
 var Caml_utils              = __webpack_require__(8);
 var Caml_builtin_exceptions = __webpack_require__(0);
@@ -4820,7 +4823,7 @@ exports.not_implemented = not_implemented;
 "use strict";
 
 
-var Block = __webpack_require__(6);
+var Block = __webpack_require__(4);
 
 function erase_rel(param) {
   if (typeof param === "number") {
@@ -5065,6 +5068,7 @@ function defineMemoryHelper(creepName, fieldName, value) {
 }
 
 exports.spawnCreepHelper = spawnCreepHelper;
+exports.defineMemoryHelper = defineMemoryHelper;
 
 
 /***/ })
