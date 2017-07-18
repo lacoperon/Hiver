@@ -8,7 +8,7 @@ let spawnsObject = [%bs.raw{|Game.spawns|}]
 let rec arraySumRecursive (numArray : int array) (currentSum : int) (currentIndex : int) : int =
   if Array.length numArray = currentIndex then currentSum
   else arraySumRecursive(numArray)(currentSum + Array.get numArray currentIndex)(currentIndex+1)
-
+(* For convenience *)
 let arraySum (numArray : int array) : int =
   arraySumRecursive(numArray)(0)(0)
 
@@ -52,6 +52,7 @@ external doWatcher : string -> unit = "" [@@bs.module "./supplemental"]
 
 let spawnCreep(spawn : string) (body : bodyPart array) : unit =
   let bodyCost = (arraySum(Array.map bodyPartToCost body )) in
+  if bodyCost >
   spawnCreepHelper (spawn) (Array.map bodyPartToString body) ;
   Js.log("Spawning a new creep!")
 
