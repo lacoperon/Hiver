@@ -177,7 +177,7 @@ exports.undefined_recursive_module = undefined_recursive_module;
 "use strict";
 
 
-var Caml_array = __webpack_require__(2);
+var Caml_array = __webpack_require__(3);
 
 function app(_f, _args) {
   while(true) {
@@ -819,6 +819,59 @@ exports.__8     = __8;
 "use strict";
 
 
+
+var id = [0];
+
+function caml_set_oo_id(b) {
+  b[1] = id[0];
+  id[0] += 1;
+  return b;
+}
+
+function get_id() {
+  id[0] += 1;
+  return id[0];
+}
+
+function create(str) {
+  var v_001 = get_id(/* () */0);
+  var v = /* tuple */[
+    str,
+    v_001
+  ];
+  v.tag = 248;
+  return v;
+}
+
+function isCamlExceptionOrOpenVariant(e) {
+  if (e === undefined) {
+    return /* false */0;
+  } else if (e.tag === 248) {
+    return /* true */1;
+  } else {
+    var slot = e[0];
+    if (slot !== undefined) {
+      return +(slot.tag === 248);
+    } else {
+      return /* false */0;
+    }
+  }
+}
+
+exports.caml_set_oo_id               = caml_set_oo_id;
+exports.get_id                       = get_id;
+exports.create                       = create;
+exports.isCamlExceptionOrOpenVariant = isCamlExceptionOrOpenVariant;
+/* No side effect */
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_array_sub(x, offset, len) {
@@ -930,59 +983,6 @@ exports.caml_make_vect    = caml_make_vect;
 exports.caml_array_blit   = caml_array_blit;
 exports.caml_array_get    = caml_array_get;
 exports.caml_array_set    = caml_array_set;
-/* No side effect */
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-
-var id = [0];
-
-function caml_set_oo_id(b) {
-  b[1] = id[0];
-  id[0] += 1;
-  return b;
-}
-
-function get_id() {
-  id[0] += 1;
-  return id[0];
-}
-
-function create(str) {
-  var v_001 = get_id(/* () */0);
-  var v = /* tuple */[
-    str,
-    v_001
-  ];
-  v.tag = 248;
-  return v;
-}
-
-function isCamlExceptionOrOpenVariant(e) {
-  if (e === undefined) {
-    return /* false */0;
-  } else if (e.tag === 248) {
-    return /* true */1;
-  } else {
-    var slot = e[0];
-    if (slot !== undefined) {
-      return +(slot.tag === 248);
-    } else {
-      return /* false */0;
-    }
-  }
-}
-
-exports.caml_set_oo_id               = caml_set_oo_id;
-exports.get_id                       = get_id;
-exports.create                       = create;
-exports.isCamlExceptionOrOpenVariant = isCamlExceptionOrOpenVariant;
 /* No side effect */
 
 
@@ -1601,7 +1601,7 @@ exports.repeat = repeat;
 
 
 var $$Array      = __webpack_require__(10);
-var Caml_array   = __webpack_require__(2);
+var Caml_array   = __webpack_require__(3);
 var Pervasives   = __webpack_require__(12);
 var ConstantConv = __webpack_require__(20);
 var Supplement   = __webpack_require__(21);
@@ -1693,6 +1693,14 @@ function setMemoryField(creepName, memory) {
   }
 }
 
+function get_struct_type(r) {
+  return ConstantConv.fromStringStructure(r.structureType);
+}
+
+function find(r, f) {
+  return r.find(ConstantConv.toNumFilter(f));
+}
+
 function iterateCreeps() {
   var x = creeps.length;
   if (x !== 0) {
@@ -1702,15 +1710,17 @@ function iterateCreeps() {
       var creep = Supplement.getCreep(creepName);
       var carryCap = creep.carryCapacity;
       var load = creep.carry.energy;
-      var energySources = Supplement.getSources(creep);
+      var currentRoom = creep.room;
+      var energySources = currentRoom.find(ConstantConv.toNumFilter(/* FIND_SOURCES */9));
       var chosenSource = Caml_array.caml_array_get(energySources, 0);
       if (load < carryCap) {
         if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
           creep.moveTo(chosenSource);
         }
         
+      } else {
+        currentRoom.find(ConstantConv.toNumFilter(/* FIND_STRUCTURES */12));
       }
-      
     }
     return /* () */0;
   } else {
@@ -1756,6 +1766,8 @@ exports.bodyPartToCost    = bodyPartToCost;
 exports.bodyPartToString  = bodyPartToString;
 exports.spawnCreep        = spawnCreep;
 exports.setMemoryField    = setMemoryField;
+exports.get_struct_type   = get_struct_type;
+exports.find              = find;
 exports.iterateCreeps     = iterateCreeps;
 exports.iterateSpawns     = iterateSpawns;
 exports.run               = run;
@@ -1772,8 +1784,8 @@ exports.runEachTick       = runEachTick;
 
 var Curry                   = __webpack_require__(1);
 var Js_exn                  = __webpack_require__(11);
-var Caml_array              = __webpack_require__(2);
-var Caml_exceptions         = __webpack_require__(3);
+var Caml_array              = __webpack_require__(3);
+var Caml_exceptions         = __webpack_require__(2);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function init(l, f) {
@@ -2209,7 +2221,7 @@ exports.fast_sort     = fast_sort;
 "use strict";
 
 
-var Caml_exceptions = __webpack_require__(3);
+var Caml_exceptions = __webpack_require__(2);
 
 var $$Error = Caml_exceptions.create("Js_exn.Error");
 
@@ -2277,7 +2289,7 @@ var Caml_obj                 = __webpack_require__(5);
 var Caml_sys                 = __webpack_require__(14);
 var Caml_format              = __webpack_require__(15);
 var Caml_string              = __webpack_require__(17);
-var Caml_exceptions          = __webpack_require__(3);
+var Caml_exceptions          = __webpack_require__(2);
 var Caml_missing_polyfill    = __webpack_require__(18);
 var Caml_builtin_exceptions  = __webpack_require__(0);
 var CamlinternalFormatBasics = __webpack_require__(19);
@@ -5085,6 +5097,11 @@ exports.concat_fmt   = concat_fmt;
 // Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
 
 
+var Caml_exceptions = __webpack_require__(2);
+
+var NumNotOfType = Caml_exceptions.create("ConstantConv.NumNotOfType");
+
+var StringNotOfType = Caml_exceptions.create("ConstantConv.StringNotOfType");
 
 function toNumResult(sc) {
   switch (sc) {
@@ -5120,6 +5137,55 @@ function toNumResult(sc) {
     case 15 : 
         return -15;
     
+  }
+}
+
+function fromNumResult(i) {
+  var switcher = i + 15 | 0;
+  if (switcher > 15 || switcher < 0) {
+    throw [
+          NumNotOfType,
+          i
+        ];
+  } else {
+    switch (switcher) {
+      case 0 : 
+          return /* ERR_GCL_NOT_ENOUGH */15;
+      case 1 : 
+          return /* ERR_RCL_NOT_ENOUGH */14;
+      case 2 : 
+          throw [
+                NumNotOfType,
+                i
+              ];
+      case 3 : 
+          return /* ERR_NO_BODYPART */12;
+      case 4 : 
+          return /* ERR_TIRED */11;
+      case 5 : 
+          return /* ERR_INVALID_ARGS */10;
+      case 6 : 
+          return /* ERR_NOT_IN_RANGE */9;
+      case 7 : 
+          return /* ERR_FULL */8;
+      case 8 : 
+          return /* ERR_INVALID_TARGET */7;
+      case 9 : 
+          return /* ERR_NOT_ENOUGH_ENERGY */6;
+      case 10 : 
+          return /* ERR_NOT_FOUND */5;
+      case 11 : 
+          return /* ERR_BUSY */4;
+      case 12 : 
+          return /* ERR_NAME_EXISTS */3;
+      case 13 : 
+          return /* ERR_NO_PATH */2;
+      case 14 : 
+          return /* ERR_NOT_OWNER */1;
+      case 15 : 
+          return /* OK */0;
+      
+    }
   }
 }
 
@@ -5172,8 +5238,178 @@ function toNumFilter(sc) {
   }
 }
 
-exports.toNumResult = toNumResult;
-exports.toNumFilter = toNumFilter;
+function fromNumFilter(i) {
+  if (i >= 11) {
+    var switcher = i - 101 | 0;
+    if (switcher > 15 || switcher < 0) {
+      throw [
+            NumNotOfType,
+            i
+          ];
+    } else {
+      switch (switcher) {
+        case 0 : 
+            return /* FIND_CREEPS */5;
+        case 1 : 
+            return /* FIND_MY_CREEPS */6;
+        case 2 : 
+            return /* FIND_HOSTILE_CREEPS */7;
+        case 3 : 
+            return /* FIND_SOURCES_ACTIVE */8;
+        case 4 : 
+            return /* FIND_SOURCES */9;
+        case 5 : 
+            return /* FIND_DROPPED_ENERGY */10;
+        case 6 : 
+            return /* FIND_STRUCTURES */12;
+        case 7 : 
+            return /* FIND_MY_STRUCTURES */13;
+        case 8 : 
+            return /* FIND_HOSTILE_STRUCTURES */14;
+        case 9 : 
+            return /* FIND_FLAGS */15;
+        case 10 : 
+            return /* FIND_CONSTRUCTION_SITES */16;
+        case 11 : 
+            return /* FIND_MY_SPAWNS */17;
+        case 12 : 
+            return /* FIND_HOSTILE_SPAWNS */18;
+        case 13 : 
+            return /* FIND_MY_CONSTRUCTION_SITES */19;
+        case 14 : 
+            return /* FIND_HOSTILE_CONSTRUCTION_SITES */20;
+        case 15 : 
+            return /* FIND_MINERALS */21;
+        
+      }
+    }
+  } else if (i > 0) {
+    switch (i - 1 | 0) {
+      case 0 : 
+          return /* FIND_EXIT_TOP */0;
+      case 2 : 
+          return /* FIND_EXIT_RIGHT */1;
+      case 4 : 
+          return /* FIND_EXIT_BOTTOM */2;
+      case 6 : 
+          return /* FIND_EXIT_LEFT */3;
+      case 1 : 
+      case 3 : 
+      case 5 : 
+      case 7 : 
+      case 8 : 
+          throw [
+                NumNotOfType,
+                i
+              ];
+      case 9 : 
+          return /* FIND_EXIT */4;
+      
+    }
+  } else {
+    throw [
+          NumNotOfType,
+          i
+        ];
+  }
+}
+
+function toStringStructure(sc) {
+  switch (sc) {
+    case 0 : 
+        return "spawn";
+    case 1 : 
+        return "extension";
+    case 2 : 
+        return "road";
+    case 3 : 
+        return "constructedWall";
+    case 4 : 
+        return "rampart";
+    case 5 : 
+        return "keeperLair";
+    case 6 : 
+        return "portal";
+    case 7 : 
+        return "controller";
+    case 8 : 
+        return "link";
+    case 9 : 
+        return "storage";
+    case 10 : 
+        return "tower";
+    case 11 : 
+        return "observer";
+    case 12 : 
+        return "powerBank";
+    case 13 : 
+        return "powerSpawn";
+    case 14 : 
+        return "extractor";
+    case 15 : 
+        return "lab";
+    case 16 : 
+        return "terminal";
+    case 17 : 
+        return "container";
+    
+  }
+}
+
+function fromStringStructure(sc) {
+  switch (sc) {
+    case "constructedWall" : 
+        return /* STRUCTURE_WALL */3;
+    case "container" : 
+        return /* STRUCTURE_CONTAINER */17;
+    case "controller" : 
+        return /* STRUCTURE_CONTROLLER */7;
+    case "extension" : 
+        return /* STRUCTURE_EXTENSION */1;
+    case "extractor" : 
+        return /* STRUCTURE_EXTRACTOR */14;
+    case "keeperLair" : 
+        return /* STRUCTURE_KEEPER_LAIR */5;
+    case "lab" : 
+        return /* STRUCTURE_LAB */15;
+    case "link" : 
+        return /* STRUCTURE_LINK */8;
+    case "observer" : 
+        return /* STRUCTURE_OBSERVER */11;
+    case "portal" : 
+        return /* STRUCTURE_PORTAL */6;
+    case "powerBank" : 
+        return /* STRUCTURE_POWER_BANK */12;
+    case "powerSpawn" : 
+        return /* STRUCTURE_POWER_SPAWN */13;
+    case "rampart" : 
+        return /* STRUCTURE_RAMPART */4;
+    case "road" : 
+        return /* STRUCTURE_ROAD */2;
+    case "spawn" : 
+        return /* STRUCTURE_SPAWN */0;
+    case "storage" : 
+        return /* STRUCTURE_STORAGE */9;
+    case "terminal" : 
+        return /* STRUCTURE_TERMINAL */16;
+    case "tower" : 
+        return /* STRUCTURE_TOWER */10;
+    default:
+      throw [
+            StringNotOfType,
+            sc
+          ];
+  }
+}
+
+exports.NumNotOfType        = NumNotOfType;
+exports.StringNotOfType     = StringNotOfType;
+exports.toNumResult         = toNumResult;
+exports.fromNumResult       = fromNumResult;
+exports.toNumFilter         = toNumFilter;
+exports.fromNumFilter       = fromNumFilter;
+exports.toStringStructure   = toStringStructure;
+exports.fromStringStructure = fromStringStructure;
 /* No side effect */
 
 
@@ -5214,6 +5450,10 @@ function getCreep(creepName) {
   return Game.creeps[creepName];
 }
 
+function getRoom(creep) {
+  return creep.room;
+}
+
 function getRoomFromCreep(creep) {
   return creep.room;
 }
@@ -5228,6 +5468,7 @@ exports.doWatcher = doWatcher;
 exports.getCreep = getCreep;
 exports.getCreepEnergy = getCreepEnergy;
 exports.getSources = getSources;
+exports.getRoom = getRoom;
 
 
 /***/ }),

@@ -22,7 +22,7 @@ type creep =
     name : string;
   }
 
-type source =
+type roomObject =
   {
     id : string;
   }
@@ -31,7 +31,6 @@ type room =
   {
     name : string;
   }
-
 (* From the wiki *)
 
 type bodyPart =
@@ -70,8 +69,8 @@ let bodyPartToString(part : bodyPart) : string =
 external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
-external getRoomFromCreep : creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
-external getSources : creep -> source array = "" [@@bs.module "./supplemental", "Supplement"]
+external getRoom: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
+external getSources : creep -> roomObject array = "" [@@bs.module "./supplemental", "Supplement"]
 
 let spawnCreep(spawn : string) (body : bodyPart array) : unit =
   let bodyCost = (arraySum(Array.map bodyPartToCost body )) in
@@ -87,6 +86,9 @@ type role =
 type memoryField =
   | Working of bool
   | Memory_Role of role
+  (* | Destination of roomObject *)
+
+
 
 external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 
@@ -98,8 +100,11 @@ external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.modu
         | true -> "true";
         | false-> "false");
     | Memory_Role(occupation) ->
-      match occupation with
-      | Harvester -> defineMemoryHelper(creepName)("role")("harvester")
+      (match occupation with
+       | Harvester -> defineMemoryHelper(creepName)("role")("harvester"))
+
+
+
 
 
 type roomPosition =
@@ -111,8 +116,19 @@ type roomPosition =
 
 external get_carry : creep -> int = "carryCapacity" [@@bs.get]
 external get_load : creep -> int = "energy" [@@bs.get] [@@bs.scope "carry"]
-external harvest : creep -> source -> int = "harvest" [@@bs.send]
-external moveTo : creep -> source -> unit = "moveTo" [@@bs.send]
+external get_room : creep -> room = "room" [@@bs.get]
+external getStructureTypeHelper : roomObject -> string = "structureType" [@@bs.get]
+external get_closest : creep -> roomObject array -> roomObject = "findClosestByPath" [@@bs.send] [@@bs.scope "pos"]
+external harvest : creep -> roomObject -> int = "harvest" [@@bs.send]
+external moveTo : creep -> roomObject -> unit = "moveTo" [@@bs.send]
+external findHelper : room -> int -> roomObject array = "find" [@@bs.send]
+
+let get_struct_type(r : roomObject) : structureConst =
+  let structString = getStructureTypeHelper r in
+  fromStringStructure structString
+
+let find(r : room) (f : filterConst) : roomObject array  =
+  findHelper r (toNumFilter f)
 
 let iterateCreeps () : unit =
   match Array.length creeps  with
@@ -124,15 +140,23 @@ let iterateCreeps () : unit =
       let creep = getCreep(creepName) in
       let carryCap = get_carry creep in
       let load = get_load creep in
-      let energySources = getSources(creep) in
+      let currentRoom = get_room creep in
+      let energySources = find currentRoom FIND_SOURCES in
       let chosenSource  = Array.get energySources 0 in
       if load < carryCap then
-        (if (harvest creep (chosenSource ) = (toNumResult ERR_NOT_IN_RANGE)) then
+        (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
            moveTo creep chosenSource)
       else
-        ()
+        let structureArray = find currentRoom FIND_STRUCTURES in
+        let isSpawnOrExtension (sc : structureConst) : bool =
+           match sc with
+           | STRUCTURE_SPAWN     -> true;
+           | STRUCTURE_EXTENSION -> true;
+           | _                   -> false
+         in
+         ()
+    done
 
-done
 
 let iterateSpawns () : unit =
   (* match Array.length spawns with
