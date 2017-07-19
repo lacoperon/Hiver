@@ -1,9 +1,12 @@
 let creeps : string array = [%bs.raw{|Object.keys(Game.creeps)|}]
 let creepsArray = creeps
+let creepsObject = [%bs.raw{|Game.creeps|}]
 (* let creepsObj : *)
 let spawns : string array = [%bs.raw{|Object.keys(Game.spawns)|}]
 let spawnsArray : string array = spawns
 let spawnsObject = [%bs.raw{|Game.spawns|}]
+
+open ConstantConv
 
 let rec arraySumRecursive (numArray : int array) (currentSum : int) (currentIndex : int) : int =
   if Array.length numArray = currentIndex then currentSum
@@ -11,6 +14,18 @@ let rec arraySumRecursive (numArray : int array) (currentSum : int) (currentInde
 (* For convenience *)
 let arraySum (numArray : int array) : int =
   arraySumRecursive(numArray)(0)(0)
+
+
+type creep =
+  {
+    carryCapacity : int;
+    name : string;
+  }
+
+type source =
+  {
+    id : string;
+  }
 
 (* From the wiki *)
 
@@ -48,11 +63,13 @@ let bodyPartToString(part : bodyPart) : string =
   | CLAIM -> "claim"
 
 external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
-external doWatcher : string -> unit = "" [@@bs.module "./supplemental"]
+external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
+external getSources : creep -> source array = "" [@@bs.module "./supplemental", "Supplement"]
 
 let spawnCreep(spawn : string) (body : bodyPart array) : unit =
   let bodyCost = (arraySum(Array.map bodyPartToCost body )) in
-  if bodyCost >
+  (* if bodyCost > *)
   spawnCreepHelper (spawn) (Array.map bodyPartToString body) ;
   Js.log("Spawning a new creep!")
 
@@ -86,15 +103,29 @@ type roomPosition =
     roomName : string
   }
 
+external get_carry : creep -> int = "carryCapacity" [@@bs.get]
+external get_load : creep -> int = "energy" [@@bs.get] [@@bs.scope "carry"]
+external harvest : creep -> source -> int = "harvest" [@@bs.send]
+external moveTo : creep -> source -> unit = "moveTo" [@@bs.send]
+
 let iterateCreeps () : unit =
   match Array.length creeps  with
   | 0 -> Js.log("There are no creeps to iterate over") ;
   | x -> Js.log("There are " ^ (string_of_int x) ^ " creeps currently") ;
   (* Js.log(creeps); *)
-for i=0 to Array.length creeps - 1 do
-  (* Js.log(Array.get creeps i) *)
-  let creepName = Array.get creeps i in
-  setMemoryField(creepName)(Working(false))
+    for i=0 to Array.length creeps - 1 do
+      let creepName = Array.get creeps i in
+      let creep = getCreep(creepName) in
+      let carryCap = get_carry creep in
+      let load = get_load creep in
+      let energySources = getSources(creep) in
+      let chosenSource  = Array.get energySources 0 in
+      if load < carryCap then
+        if (harvest creep (chosenSource ) = (toNum ERR_NOT_IN_RANGE)) then
+          moveTo creep chosenSource ;
+
+
+      setMemoryField(creepName)(Working(false))
 
 done
 

@@ -1,1 +1,1 @@
-src/main.cmj :
+src/main.cmj : src/constantConv.cmj

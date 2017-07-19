@@ -1,2 +1,2 @@
-let run (name : string) =
-  ( Js.log("Harvested!") )
+(* let run (creepName : string) : unit = 
+   *)
