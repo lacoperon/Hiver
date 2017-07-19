@@ -27,6 +27,11 @@ type source =
     id : string;
   }
 
+type room =
+  {
+    name : string;
+  }
+
 (* From the wiki *)
 
 type bodyPart =
@@ -65,6 +70,7 @@ let bodyPartToString(part : bodyPart) : string =
 external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
+external getRoomFromCreep : creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 external getSources : creep -> source array = "" [@@bs.module "./supplemental", "Supplement"]
 
 let spawnCreep(spawn : string) (body : bodyPart array) : unit =
@@ -121,11 +127,10 @@ let iterateCreeps () : unit =
       let energySources = getSources(creep) in
       let chosenSource  = Array.get energySources 0 in
       if load < carryCap then
-        if (harvest creep (chosenSource ) = (toNum ERR_NOT_IN_RANGE)) then
-          moveTo creep chosenSource ;
-
-
-      setMemoryField(creepName)(Working(false))
+        (if (harvest creep (chosenSource ) = (toNumResult ERR_NOT_IN_RANGE)) then
+           moveTo creep chosenSource)
+      else
+        ()
 
 done
 

@@ -988,23 +988,6 @@ exports.isCamlExceptionOrOpenVariant = isCamlExceptionOrOpenVariant;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-
-function __(tag, block) {
-  block.tag = tag;
-  return block;
-}
-
-exports.__ = __;
-/* No side effect */
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1194,13 +1177,13 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Block                   = __webpack_require__(4);
+var Block                   = __webpack_require__(6);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_obj_dup(x) {
@@ -1506,6 +1489,23 @@ exports.caml_lessequal         = caml_lessequal;
 
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+function __(tag, block) {
+  block.tag = tag;
+  return block;
+}
+
+exports.__ = __;
+/* No side effect */
+
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1601,7 +1601,6 @@ exports.repeat = repeat;
 
 
 var $$Array      = __webpack_require__(10);
-var Block        = __webpack_require__(4);
 var Caml_array   = __webpack_require__(2);
 var Pervasives   = __webpack_require__(12);
 var ConstantConv = __webpack_require__(20);
@@ -1706,12 +1705,12 @@ function iterateCreeps() {
       var energySources = Supplement.getSources(creep);
       var chosenSource = Caml_array.caml_array_get(energySources, 0);
       if (load < carryCap) {
-        if (creep.harvest(chosenSource) === ConstantConv.toNum(/* ERR_NOT_IN_RANGE */0)) {
+        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
           creep.moveTo(chosenSource);
         }
         
       }
-      setMemoryField(creepName, /* Working */Block.__(0, [/* false */0]));
+      
     }
     return /* () */0;
   } else {
@@ -2274,7 +2273,7 @@ exports.raiseUriError            = raiseUriError;
 
 var Curry                    = __webpack_require__(1);
 var Caml_io                  = __webpack_require__(13);
-var Caml_obj                 = __webpack_require__(6);
+var Caml_obj                 = __webpack_require__(5);
 var Caml_sys                 = __webpack_require__(14);
 var Caml_format              = __webpack_require__(15);
 var Caml_string              = __webpack_require__(17);
@@ -3102,7 +3101,7 @@ exports.caml_ml_input_char          = caml_ml_input_char;
 exports.caml_ml_out_channels_list   = caml_ml_out_channels_list;
 /* stdin Not a pure module */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 14 */
@@ -3202,7 +3201,7 @@ exports.caml_sys_is_directory   = caml_sys_is_directory;
 exports.caml_sys_file_exists    = caml_sys_file_exists;
 /* No side effect */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 15 */
@@ -4019,7 +4018,7 @@ exports.caml_nativeint_of_string = caml_nativeint_of_string;
 "use strict";
 
 
-var Caml_obj                = __webpack_require__(6);
+var Caml_obj                = __webpack_require__(5);
 var Caml_int32              = __webpack_require__(7);
 var Caml_utils              = __webpack_require__(8);
 var Caml_builtin_exceptions = __webpack_require__(0);
@@ -4850,7 +4849,7 @@ exports.not_implemented = not_implemented;
 "use strict";
 
 
-var Block = __webpack_require__(4);
+var Block = __webpack_require__(6);
 
 function erase_rel(param) {
   if (typeof param === "number") {
@@ -5087,11 +5086,94 @@ exports.concat_fmt   = concat_fmt;
 
 
 
-function toNum() {
-  return -9;
+function toNumResult(sc) {
+  switch (sc) {
+    case 0 : 
+        return 0;
+    case 1 : 
+        return -1;
+    case 2 : 
+        return -2;
+    case 3 : 
+        return -3;
+    case 4 : 
+        return -4;
+    case 5 : 
+        return -5;
+    case 7 : 
+        return -7;
+    case 8 : 
+        return -8;
+    case 9 : 
+        return -9;
+    case 10 : 
+        return -10;
+    case 11 : 
+        return -11;
+    case 12 : 
+        return -12;
+    case 6 : 
+    case 13 : 
+        return -6;
+    case 14 : 
+        return -14;
+    case 15 : 
+        return -15;
+    
+  }
 }
 
-exports.toNum = toNum;
+function toNumFilter(sc) {
+  switch (sc) {
+    case 0 : 
+        return 1;
+    case 1 : 
+        return 3;
+    case 2 : 
+        return 5;
+    case 3 : 
+        return 7;
+    case 4 : 
+        return 10;
+    case 5 : 
+        return 101;
+    case 6 : 
+        return 102;
+    case 7 : 
+        return 103;
+    case 8 : 
+        return 104;
+    case 9 : 
+        return 105;
+    case 10 : 
+    case 11 : 
+        return 106;
+    case 12 : 
+        return 107;
+    case 13 : 
+        return 108;
+    case 14 : 
+        return 109;
+    case 15 : 
+        return 110;
+    case 16 : 
+        return 111;
+    case 17 : 
+        return 112;
+    case 18 : 
+        return 113;
+    case 19 : 
+        return 114;
+    case 20 : 
+        return 115;
+    case 21 : 
+        return 116;
+    
+  }
+}
+
+exports.toNumResult = toNumResult;
+exports.toNumFilter = toNumFilter;
 /* No side effect */
 
 
@@ -5130,6 +5212,14 @@ function getSources(creep) {
 
 function getCreep(creepName) {
   return Game.creeps[creepName];
+}
+
+function getRoomFromCreep(creep) {
+  return creep.room;
+}
+
+function findInRoom(room, thing) {
+  return room.find(thing);
 }
 
 exports.spawnCreepHelper = spawnCreepHelper;
