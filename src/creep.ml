@@ -9,3 +9,8 @@ external moveTo : creep -> roomObject -> unit = "moveTo" [@@bs.send]
 external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
 external getRoomFromCreep: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 external transfer : creep -> roomObject -> string -> int = "transfer" [@@bs.send]
+
+(* Defines all of the memory fields I allow to be set on creeps programmatically *)
+type memoryField =
+  | Working of bool
+  | Memory_Role of role

@@ -1,57 +1,16 @@
 open BaseTypes
 open ConstantConv
 open HelperFunctions
+open Room
+open RoomObject
+open Spawn
 open Creep
 
+(* Gets both creeps and spawns using raw JS code *)
 let creeps : string array = [%bs.raw{|Object.keys(Game.creeps)|}]
 let spawns : string array = [%bs.raw{|Object.keys(Game.spawns)|}]
 
-(* Defines all possible roles available to Creeps *)
-type role =
-  | Harvester
-
-(* Defines all of the memory fields I allow to be set on creeps programmatically *)
-type memoryField =
-  | Working of bool
-  | Memory_Role of role
-  | None
-
-let roleToString (role : role) =
-  match role with
-  | Harvester -> "harvester"
-
-
-external getSpawn: string -> spawn = "" [@@bs.module "./supplemental", "Supplement"]
-external getRoomFromSpawn : spawn -> room = "room" [@@bs.get]
-external getEnergyInRoom : room -> int = "energyAvailable" [@@bs.get]
-
-let setMemoryField(creepName : string) (memory : memoryField) : unit =
-  match memory with
-  | Working(x) ->
-    defineMemoryHelper(creepName)("working")
-      (match x with
-       | true -> "true";
-       | false-> "false");
-  | Memory_Role(occupation) ->
-    defineMemoryHelper(creepName)("role")(roleToString occupation)
-  | None -> ()
-
-
-let spawnCreepWithMemory(spawn : string) (body : bodyPart array) (mfa : memoryField) : int =
-  spawnCreepWithMemoryHelper(spawn)(Array.map bodyPartToString body)
-  (match mfa with
-    |   None -> [||];
-    |   Memory_Role(role) -> ([|"role"; roleToString role|]);
-    |   Working(x) -> ([|"working"; if x then "true" else "false"|]) )
-
-
-let get_struct_type(r : roomObject) : structureConst =
-  let structString = getStructureTypeHelper r in
-  fromStringStructure structString
-
-let find(r : room) (f : filterConst) : roomObject array  =
-  findHelper r (toNumFilter f)
-
+(* This function iterates over all my units, trying to give them tasks *)
 let iterateCreeps () : unit =
   match Array.length creeps  with
   | 0 -> Js.log("There are no creeps to iterate over") ;
@@ -82,6 +41,7 @@ let iterateCreeps () : unit =
          moveTo creep chosenStructure
     done
 
+(* This function iterates over all of my spawns, trying to give them units to spawn *)
 let iterateSpawns () : unit =
   for i=0 to Array.length spawns - 1 do
     let body = [|WORK; CARRY; MOVE; MOVE|] in
@@ -94,9 +54,10 @@ let iterateSpawns () : unit =
           Js.log("Spawning new creep"))
   done
 
+(* Baseline loop code. Calls all subfunctions*)
 let run () : unit =
   ignore (iterateSpawns());
-  ignore (doWatcher(""));
-  iterateCreeps()
+  ignore (iterateCreeps());
+  doWatcher("")
 
 let runEachTick : unit = run()

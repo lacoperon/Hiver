@@ -1,1 +1,1 @@
-src/constantConv.cmj :
+src/constantConv.cmj : src/baseTypes.cmj

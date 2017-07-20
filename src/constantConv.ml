@@ -1,19 +1,9 @@
+open BaseTypes
+
 exception NumNotOfType of int
 exception StringNotOfType of string
 
 (* From the wiki *)
-
-type bodyPart =
-  | MOVE
-  | WORK
-  | CARRY
-  | ATTACK
-  | RANGED_ATTACK
-  | HEAL
-  | TOUGH
-  | CLAIM
-
-
 let bodyPartToCost(part : bodyPart) : int =
   match part with
   | MOVE -> 50;

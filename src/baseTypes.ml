@@ -1,3 +1,5 @@
+
+
 type creep =
   {
     carryCapacity : int;
@@ -19,5 +21,25 @@ type room =
     name : string;
   }
 
-let creepsArray : string array = [%bs.raw{|Object.keys(Game.creeps)|}]
-let spawnsArray : string array = [%bs.raw{|Object.keys(Game.spawns)|}]
+type bodyPart =
+  | MOVE
+  | WORK
+  | CARRY
+  | ATTACK
+  | RANGED_ATTACK
+  | HEAL
+  | TOUGH
+  | CLAIM
+
+(* Defines all possible roles available to Creeps *)
+type role =
+  | Harvester
+
+let roleToString (role : role) =
+  match role with
+  | Harvester -> "harvester"
+
+(* Defines all of the memory fields I allow to be set on creeps programmatically *)
+type memoryField =
+  | Working of bool
+  | Memory_Role of role

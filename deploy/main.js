@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -993,337 +993,8 @@ exports.isCamlExceptionOrOpenVariant = isCamlExceptionOrOpenVariant;
 "use strict";
 
 
-
-function __(tag, block) {
-  block.tag = tag;
-  return block;
-}
-
-exports.__ = __;
-/* No side effect */
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Block                   = __webpack_require__(4);
-var Caml_builtin_exceptions = __webpack_require__(0);
-
-function caml_obj_dup(x) {
-  var len = x.length;
-  var v = new Array(len);
-  for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
-    v[i] = x[i];
-  }
-  v.tag = x.tag | 0;
-  return v;
-}
-
-function caml_obj_truncate(x, new_size) {
-  var len = x.length;
-  if (new_size <= 0 || new_size > len) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "Obj.truncate"
-        ];
-  } else if (len !== new_size) {
-    for(var i = new_size ,i_finish = len - 1 | 0; i <= i_finish; ++i){
-      x[i] = 0;
-    }
-    x.length = new_size;
-    return /* () */0;
-  } else {
-    return 0;
-  }
-}
-
-function caml_lazy_make_forward(x) {
-  return Block.__(250, [x]);
-}
-
-function caml_update_dummy(x, y) {
-  var len = y.length;
-  for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
-    x[i] = y[i];
-  }
-  var y_tag = y.tag | 0;
-  if (y_tag !== 0) {
-    x.tag = y_tag;
-    return /* () */0;
-  } else {
-    return 0;
-  }
-}
-
-function caml_int_compare(x, y) {
-  if (x < y) {
-    return -1;
-  } else if (x === y) {
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
-function caml_compare(_a, _b) {
-  while(true) {
-    var b = _b;
-    var a = _a;
-    var a_type = typeof a;
-    var b_type = typeof b;
-    if (a_type === "string") {
-      var x = a;
-      var y = b;
-      if (x < y) {
-        return -1;
-      } else if (x === y) {
-        return 0;
-      } else {
-        return 1;
-      }
-    } else {
-      var is_a_number = +(a_type === "number");
-      var is_b_number = +(b_type === "number");
-      if (is_a_number !== 0) {
-        if (is_b_number !== 0) {
-          return caml_int_compare(a, b);
-        } else {
-          return -1;
-        }
-      } else if (is_b_number !== 0) {
-        return 1;
-      } else if (a_type === "boolean" || a_type === "undefined" || a === null) {
-        var x$1 = a;
-        var y$1 = b;
-        if (x$1 === y$1) {
-          return 0;
-        } else if (x$1 < y$1) {
-          return -1;
-        } else {
-          return 1;
-        }
-      } else if (a_type === "function" || b_type === "function") {
-        throw [
-              Caml_builtin_exceptions.invalid_argument,
-              "compare: functional value"
-            ];
-      } else {
-        var tag_a = a.tag | 0;
-        var tag_b = b.tag | 0;
-        if (tag_a === 250) {
-          _a = a[0];
-          continue ;
-          
-        } else if (tag_b === 250) {
-          _b = b[0];
-          continue ;
-          
-        } else if (tag_a === 248) {
-          return caml_int_compare(a[1], b[1]);
-        } else if (tag_a === 251) {
-          throw [
-                Caml_builtin_exceptions.invalid_argument,
-                "equal: abstract value"
-              ];
-        } else if (tag_a !== tag_b) {
-          if (tag_a < tag_b) {
-            return -1;
-          } else {
-            return 1;
-          }
-        } else {
-          var len_a = a.length;
-          var len_b = b.length;
-          if (len_a === len_b) {
-            var a$1 = a;
-            var b$1 = b;
-            var _i = 0;
-            var same_length = len_a;
-            while(true) {
-              var i = _i;
-              if (i === same_length) {
-                return 0;
-              } else {
-                var res = caml_compare(a$1[i], b$1[i]);
-                if (res !== 0) {
-                  return res;
-                } else {
-                  _i = i + 1 | 0;
-                  continue ;
-                  
-                }
-              }
-            };
-          } else if (len_a < len_b) {
-            var a$2 = a;
-            var b$2 = b;
-            var _i$1 = 0;
-            var short_length = len_a;
-            while(true) {
-              var i$1 = _i$1;
-              if (i$1 === short_length) {
-                return -1;
-              } else {
-                var res$1 = caml_compare(a$2[i$1], b$2[i$1]);
-                if (res$1 !== 0) {
-                  return res$1;
-                } else {
-                  _i$1 = i$1 + 1 | 0;
-                  continue ;
-                  
-                }
-              }
-            };
-          } else {
-            var a$3 = a;
-            var b$3 = b;
-            var _i$2 = 0;
-            var short_length$1 = len_b;
-            while(true) {
-              var i$2 = _i$2;
-              if (i$2 === short_length$1) {
-                return 1;
-              } else {
-                var res$2 = caml_compare(a$3[i$2], b$3[i$2]);
-                if (res$2 !== 0) {
-                  return res$2;
-                } else {
-                  _i$2 = i$2 + 1 | 0;
-                  continue ;
-                  
-                }
-              }
-            };
-          }
-        }
-      }
-    }
-  };
-}
-
-function caml_equal(_a, _b) {
-  while(true) {
-    var b = _b;
-    var a = _a;
-    if (a === b) {
-      return /* true */1;
-    } else {
-      var a_type = typeof a;
-      if (a_type === "string" || a_type === "number" || a_type === "boolean" || a_type === "undefined" || a === null) {
-        return /* false */0;
-      } else {
-        var b_type = typeof b;
-        if (a_type === "function" || b_type === "function") {
-          throw [
-                Caml_builtin_exceptions.invalid_argument,
-                "equal: functional value"
-              ];
-        } else if (b_type === "number" || b_type === "undefined" || b === null) {
-          return /* false */0;
-        } else {
-          var tag_a = a.tag | 0;
-          var tag_b = b.tag | 0;
-          if (tag_a === 250) {
-            _a = a[0];
-            continue ;
-            
-          } else if (tag_b === 250) {
-            _b = b[0];
-            continue ;
-            
-          } else if (tag_a === 248) {
-            return +(a[1] === b[1]);
-          } else if (tag_a === 251) {
-            throw [
-                  Caml_builtin_exceptions.invalid_argument,
-                  "equal: abstract value"
-                ];
-          } else if (tag_a !== tag_b) {
-            return /* false */0;
-          } else {
-            var len_a = a.length;
-            var len_b = b.length;
-            if (len_a === len_b) {
-              var a$1 = a;
-              var b$1 = b;
-              var _i = 0;
-              var same_length = len_a;
-              while(true) {
-                var i = _i;
-                if (i === same_length) {
-                  return /* true */1;
-                } else if (caml_equal(a$1[i], b$1[i])) {
-                  _i = i + 1 | 0;
-                  continue ;
-                  
-                } else {
-                  return /* false */0;
-                }
-              };
-            } else {
-              return /* false */0;
-            }
-          }
-        }
-      }
-    }
-  };
-}
-
-function caml_notequal(a, b) {
-  return 1 - caml_equal(a, b);
-}
-
-function caml_greaterequal(a, b) {
-  return +(caml_compare(a, b) >= 0);
-}
-
-function caml_greaterthan(a, b) {
-  return +(caml_compare(a, b) > 0);
-}
-
-function caml_lessequal(a, b) {
-  return +(caml_compare(a, b) <= 0);
-}
-
-function caml_lessthan(a, b) {
-  return +(caml_compare(a, b) < 0);
-}
-
-var caml_int32_compare = caml_int_compare;
-
-var caml_nativeint_compare = caml_int_compare;
-
-exports.caml_obj_dup           = caml_obj_dup;
-exports.caml_obj_truncate      = caml_obj_truncate;
-exports.caml_lazy_make_forward = caml_lazy_make_forward;
-exports.caml_update_dummy      = caml_update_dummy;
-exports.caml_int_compare       = caml_int_compare;
-exports.caml_int32_compare     = caml_int32_compare;
-exports.caml_nativeint_compare = caml_nativeint_compare;
-exports.caml_compare           = caml_compare;
-exports.caml_equal             = caml_equal;
-exports.caml_notequal          = caml_notequal;
-exports.caml_greaterequal      = caml_greaterequal;
-exports.caml_greaterthan       = caml_greaterthan;
-exports.caml_lessthan          = caml_lessthan;
-exports.caml_lessequal         = caml_lessequal;
-/* No side effect */
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var Curry                   = __webpack_require__(1);
-var Js_exn                  = __webpack_require__(11);
+var Js_exn                  = __webpack_require__(14);
 var Caml_array              = __webpack_require__(2);
 var Caml_exceptions         = __webpack_require__(3);
 var Caml_builtin_exceptions = __webpack_require__(0);
@@ -1755,485 +1426,24 @@ exports.fast_sort     = fast_sort;
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Caml_builtin_exceptions = __webpack_require__(0);
-
-function div(x, y) {
-  if (y === 0) {
-    throw Caml_builtin_exceptions.division_by_zero;
-  } else {
-    return x / y | 0;
-  }
-}
-
-function mod_(x, y) {
-  if (y === 0) {
-    throw Caml_builtin_exceptions.division_by_zero;
-  } else {
-    return x % y;
-  }
-}
-
-function caml_bswap16(x) {
-  return ((x & 255) << 8) | ((x & 65280) >>> 8);
-}
-
-function caml_int32_bswap(x) {
-  return ((x & 255) << 24) | ((x & 65280) << 8) | ((x & 16711680) >>> 8) | ((x & 4278190080) >>> 24);
-}
-
-var imul = ( Math.imul || function (x,y) {
-  y |= 0; return ((((x >> 16) * y) << 16) + (x & 0xffff) * y)|0; 
-}
-);
-
-var caml_nativeint_bswap = caml_int32_bswap;
-
-exports.div                  = div;
-exports.mod_                 = mod_;
-exports.caml_bswap16         = caml_bswap16;
-exports.caml_int32_bswap     = caml_int32_bswap;
-exports.caml_nativeint_bswap = caml_nativeint_bswap;
-exports.imul                 = imul;
-/* imul Not a pure module */
-
-
-/***/ }),
-/* 9 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 
-var repeat = ( (String.prototype.repeat && function (count,self){return self.repeat(count)}) ||
-                                                  function(count , self) {
-        if (self.length == 0 || count == 0) {
-            return '';
-        }
-        // Ensuring count is a 31-bit integer allows us to heavily optimize the
-        // main part. But anyway, most current (August 2014) browsers can't handle
-        // strings 1 << 28 chars or longer, so:
-        if (self.length * count >= 1 << 28) {
-            throw new RangeError('repeat count must not overflow maximum string size');
-        }
-        var rpt = '';
-        for (;;) {
-            if ((count & 1) == 1) {
-                rpt += self;
-            }
-            count >>>= 1;
-            if (count == 0) {
-                break;
-            }
-            self += self;
-        }
-        return rpt;
-    }
-);
-
-exports.repeat = repeat;
-/* repeat Not a pure module */
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
-
-
-var $$Array         = __webpack_require__(6);
-var Block           = __webpack_require__(4);
-var Caml_array      = __webpack_require__(2);
-var ConstantConv    = __webpack_require__(12);
-var Supplement      = __webpack_require__(13);
-var HelperFunctions = __webpack_require__(15);
-
-var creeps = (Object.keys(Game.creeps));
-
-var spawns = (Object.keys(Game.spawns));
-
-function roleToString() {
-  return "harvester";
+function __(tag, block) {
+  block.tag = tag;
+  return block;
 }
 
-function setMemoryField(creepName, memory) {
-  if (typeof memory === "number") {
-    return /* () */0;
-  } else if (memory.tag) {
-    Supplement.defineMemoryHelper(creepName, "role", "harvester");
-    return /* () */0;
-  } else {
-    Supplement.defineMemoryHelper(creepName, "working", memory[0] !== 0 ? "true" : "false");
-    return /* () */0;
-  }
-}
-
-function spawnCreepWithMemory(spawn, body, mfa) {
-  var $js;
-  $js = typeof mfa === "number" ? /* array */[] : (
-      mfa.tag ? /* array */[
-          "role",
-          "harvester"
-        ] : /* array */[
-          "working",
-          mfa[0] ? "true" : "false"
-        ]
-    );
-  return Supplement.spawnCreepWithMemoryHelper(spawn, $$Array.map(ConstantConv.bodyPartToString, body), $js);
-}
-
-function get_struct_type(r) {
-  return ConstantConv.fromStringStructure(r.structureType);
-}
-
-function find(r, f) {
-  return r.find(ConstantConv.toNumFilter(f));
-}
-
-function iterateCreeps() {
-  var x = creeps.length;
-  if (x !== 0) {
-    for(var i = 0 ,i_finish = x - 1 | 0; i <= i_finish; ++i){
-      var creepName = Caml_array.caml_array_get(creeps, i);
-      var creep = Supplement.getCreep(creepName);
-      var carryCap = creep.carryCapacity;
-      var load = creep.carry.energy;
-      var currentRoom = creep.room;
-      var energySources = currentRoom.find(ConstantConv.toNumFilter(/* FIND_SOURCES */9));
-      var chosenSource = Caml_array.caml_array_get(energySources, 0);
-      if (load < carryCap) {
-        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
-          creep.moveTo(chosenSource);
-        }
-        
-      } else {
-        var structureArray = currentRoom.find(ConstantConv.toNumFilter(/* FIND_STRUCTURES */12));
-        var isSpawnOrExtension = function (ro) {
-          var match = ConstantConv.fromStringStructure(ro.structureType);
-          if (match >= 2) {
-            return /* false */0;
-          } else {
-            return /* true */1;
-          }
-        };
-        var spawnsAndExtensions = HelperFunctions.arrayFilter(isSpawnOrExtension, structureArray);
-        var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
-        creep.transfer(chosenStructure, "energy");
-        creep.moveTo(chosenStructure);
-      }
-    }
-    return /* () */0;
-  } else {
-    console.log("There are no creeps to iterate over");
-    return /* () */0;
-  }
-}
-
-function iterateSpawns() {
-  for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
-    var body = /* int array */[
-      /* WORK */1,
-      /* CARRY */2,
-      /* MOVE */0,
-      /* MOVE */0
-    ];
-    var spawn = Supplement.getSpawn(Caml_array.caml_array_get(spawns, i));
-    var room = spawn.room;
-    var energyAvailable = room.energyAvailable;
-    var bodyCost = HelperFunctions.arraySum($$Array.map(ConstantConv.bodyPartToCost, body));
-    if (bodyCost <= energyAvailable) {
-      spawnCreepWithMemory(Caml_array.caml_array_get(spawns, i), body, /* Memory_Role */Block.__(1, [/* Harvester */0]));
-      console.log("Spawning new creep");
-    }
-    
-  }
-  return /* () */0;
-}
-
-function run() {
-  iterateSpawns(/* () */0);
-  Supplement.doWatcher("");
-  return iterateCreeps(/* () */0);
-}
-
-var runEachTick = run(/* () */0);
-
-exports.creeps               = creeps;
-exports.spawns               = spawns;
-exports.roleToString         = roleToString;
-exports.setMemoryField       = setMemoryField;
-exports.spawnCreepWithMemory = spawnCreepWithMemory;
-exports.get_struct_type      = get_struct_type;
-exports.find                 = find;
-exports.iterateCreeps        = iterateCreeps;
-exports.iterateSpawns        = iterateSpawns;
-exports.run                  = run;
-exports.runEachTick          = runEachTick;
-/* creeps Not a pure module */
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Caml_exceptions = __webpack_require__(3);
-
-var $$Error = Caml_exceptions.create("Js_exn.Error");
-
-function internalToOCamlException(e) {
-  if (Caml_exceptions.isCamlExceptionOrOpenVariant(e)) {
-    return e;
-  } else {
-    return [
-            $$Error,
-            e
-          ];
-  }
-}
-
-function raiseError(str) {
-  throw new Error(str);
-}
-
-function raiseEvalError(str) {
-  throw new EvalError(str);
-}
-
-function raiseRangeError(str) {
-  throw new RangeError(str);
-}
-
-function raiseReferenceError(str) {
-  throw new ReferenceError(str);
-}
-
-function raiseSyntaxError(str) {
-  throw new SyntaxError(str);
-}
-
-function raiseTypeError(str) {
-  throw new TypeError(str);
-}
-
-function raiseUriError(str) {
-  throw new URIError(str);
-}
-
-exports.$$Error                  = $$Error;
-exports.internalToOCamlException = internalToOCamlException;
-exports.raiseError               = raiseError;
-exports.raiseEvalError           = raiseEvalError;
-exports.raiseRangeError          = raiseRangeError;
-exports.raiseReferenceError      = raiseReferenceError;
-exports.raiseSyntaxError         = raiseSyntaxError;
-exports.raiseTypeError           = raiseTypeError;
-exports.raiseUriError            = raiseUriError;
+exports.__ = __;
 /* No side effect */
 
 
 /***/ }),
-/* 12 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2602,7 +1812,7 @@ exports.fromStringStructure = fromStringStructure;
 
 
 /***/ }),
-/* 13 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* NOTE: This is the only file in this folder not transpiled by BUCKLESCRIPT.
@@ -2618,7 +1828,7 @@ function defineMemoryHelper(creepName, fieldName, value) {
 }
 
 function doWatcher(empty) {
-  var watcher = __webpack_require__(14);
+  var watcher = __webpack_require__(16);
   watcher();
 }
 
@@ -2673,7 +1883,803 @@ exports.getSpawn = getSpawn;
 
 
 /***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Block                   = __webpack_require__(5);
+var Caml_builtin_exceptions = __webpack_require__(0);
+
+function caml_obj_dup(x) {
+  var len = x.length;
+  var v = new Array(len);
+  for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
+    v[i] = x[i];
+  }
+  v.tag = x.tag | 0;
+  return v;
+}
+
+function caml_obj_truncate(x, new_size) {
+  var len = x.length;
+  if (new_size <= 0 || new_size > len) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "Obj.truncate"
+        ];
+  } else if (len !== new_size) {
+    for(var i = new_size ,i_finish = len - 1 | 0; i <= i_finish; ++i){
+      x[i] = 0;
+    }
+    x.length = new_size;
+    return /* () */0;
+  } else {
+    return 0;
+  }
+}
+
+function caml_lazy_make_forward(x) {
+  return Block.__(250, [x]);
+}
+
+function caml_update_dummy(x, y) {
+  var len = y.length;
+  for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
+    x[i] = y[i];
+  }
+  var y_tag = y.tag | 0;
+  if (y_tag !== 0) {
+    x.tag = y_tag;
+    return /* () */0;
+  } else {
+    return 0;
+  }
+}
+
+function caml_int_compare(x, y) {
+  if (x < y) {
+    return -1;
+  } else if (x === y) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+function caml_compare(_a, _b) {
+  while(true) {
+    var b = _b;
+    var a = _a;
+    var a_type = typeof a;
+    var b_type = typeof b;
+    if (a_type === "string") {
+      var x = a;
+      var y = b;
+      if (x < y) {
+        return -1;
+      } else if (x === y) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } else {
+      var is_a_number = +(a_type === "number");
+      var is_b_number = +(b_type === "number");
+      if (is_a_number !== 0) {
+        if (is_b_number !== 0) {
+          return caml_int_compare(a, b);
+        } else {
+          return -1;
+        }
+      } else if (is_b_number !== 0) {
+        return 1;
+      } else if (a_type === "boolean" || a_type === "undefined" || a === null) {
+        var x$1 = a;
+        var y$1 = b;
+        if (x$1 === y$1) {
+          return 0;
+        } else if (x$1 < y$1) {
+          return -1;
+        } else {
+          return 1;
+        }
+      } else if (a_type === "function" || b_type === "function") {
+        throw [
+              Caml_builtin_exceptions.invalid_argument,
+              "compare: functional value"
+            ];
+      } else {
+        var tag_a = a.tag | 0;
+        var tag_b = b.tag | 0;
+        if (tag_a === 250) {
+          _a = a[0];
+          continue ;
+          
+        } else if (tag_b === 250) {
+          _b = b[0];
+          continue ;
+          
+        } else if (tag_a === 248) {
+          return caml_int_compare(a[1], b[1]);
+        } else if (tag_a === 251) {
+          throw [
+                Caml_builtin_exceptions.invalid_argument,
+                "equal: abstract value"
+              ];
+        } else if (tag_a !== tag_b) {
+          if (tag_a < tag_b) {
+            return -1;
+          } else {
+            return 1;
+          }
+        } else {
+          var len_a = a.length;
+          var len_b = b.length;
+          if (len_a === len_b) {
+            var a$1 = a;
+            var b$1 = b;
+            var _i = 0;
+            var same_length = len_a;
+            while(true) {
+              var i = _i;
+              if (i === same_length) {
+                return 0;
+              } else {
+                var res = caml_compare(a$1[i], b$1[i]);
+                if (res !== 0) {
+                  return res;
+                } else {
+                  _i = i + 1 | 0;
+                  continue ;
+                  
+                }
+              }
+            };
+          } else if (len_a < len_b) {
+            var a$2 = a;
+            var b$2 = b;
+            var _i$1 = 0;
+            var short_length = len_a;
+            while(true) {
+              var i$1 = _i$1;
+              if (i$1 === short_length) {
+                return -1;
+              } else {
+                var res$1 = caml_compare(a$2[i$1], b$2[i$1]);
+                if (res$1 !== 0) {
+                  return res$1;
+                } else {
+                  _i$1 = i$1 + 1 | 0;
+                  continue ;
+                  
+                }
+              }
+            };
+          } else {
+            var a$3 = a;
+            var b$3 = b;
+            var _i$2 = 0;
+            var short_length$1 = len_b;
+            while(true) {
+              var i$2 = _i$2;
+              if (i$2 === short_length$1) {
+                return 1;
+              } else {
+                var res$2 = caml_compare(a$3[i$2], b$3[i$2]);
+                if (res$2 !== 0) {
+                  return res$2;
+                } else {
+                  _i$2 = i$2 + 1 | 0;
+                  continue ;
+                  
+                }
+              }
+            };
+          }
+        }
+      }
+    }
+  };
+}
+
+function caml_equal(_a, _b) {
+  while(true) {
+    var b = _b;
+    var a = _a;
+    if (a === b) {
+      return /* true */1;
+    } else {
+      var a_type = typeof a;
+      if (a_type === "string" || a_type === "number" || a_type === "boolean" || a_type === "undefined" || a === null) {
+        return /* false */0;
+      } else {
+        var b_type = typeof b;
+        if (a_type === "function" || b_type === "function") {
+          throw [
+                Caml_builtin_exceptions.invalid_argument,
+                "equal: functional value"
+              ];
+        } else if (b_type === "number" || b_type === "undefined" || b === null) {
+          return /* false */0;
+        } else {
+          var tag_a = a.tag | 0;
+          var tag_b = b.tag | 0;
+          if (tag_a === 250) {
+            _a = a[0];
+            continue ;
+            
+          } else if (tag_b === 250) {
+            _b = b[0];
+            continue ;
+            
+          } else if (tag_a === 248) {
+            return +(a[1] === b[1]);
+          } else if (tag_a === 251) {
+            throw [
+                  Caml_builtin_exceptions.invalid_argument,
+                  "equal: abstract value"
+                ];
+          } else if (tag_a !== tag_b) {
+            return /* false */0;
+          } else {
+            var len_a = a.length;
+            var len_b = b.length;
+            if (len_a === len_b) {
+              var a$1 = a;
+              var b$1 = b;
+              var _i = 0;
+              var same_length = len_a;
+              while(true) {
+                var i = _i;
+                if (i === same_length) {
+                  return /* true */1;
+                } else if (caml_equal(a$1[i], b$1[i])) {
+                  _i = i + 1 | 0;
+                  continue ;
+                  
+                } else {
+                  return /* false */0;
+                }
+              };
+            } else {
+              return /* false */0;
+            }
+          }
+        }
+      }
+    }
+  };
+}
+
+function caml_notequal(a, b) {
+  return 1 - caml_equal(a, b);
+}
+
+function caml_greaterequal(a, b) {
+  return +(caml_compare(a, b) >= 0);
+}
+
+function caml_greaterthan(a, b) {
+  return +(caml_compare(a, b) > 0);
+}
+
+function caml_lessequal(a, b) {
+  return +(caml_compare(a, b) <= 0);
+}
+
+function caml_lessthan(a, b) {
+  return +(caml_compare(a, b) < 0);
+}
+
+var caml_int32_compare = caml_int_compare;
+
+var caml_nativeint_compare = caml_int_compare;
+
+exports.caml_obj_dup           = caml_obj_dup;
+exports.caml_obj_truncate      = caml_obj_truncate;
+exports.caml_lazy_make_forward = caml_lazy_make_forward;
+exports.caml_update_dummy      = caml_update_dummy;
+exports.caml_int_compare       = caml_int_compare;
+exports.caml_int32_compare     = caml_int32_compare;
+exports.caml_nativeint_compare = caml_nativeint_compare;
+exports.caml_compare           = caml_compare;
+exports.caml_equal             = caml_equal;
+exports.caml_notequal          = caml_notequal;
+exports.caml_greaterequal      = caml_greaterequal;
+exports.caml_greaterthan       = caml_greaterthan;
+exports.caml_lessthan          = caml_lessthan;
+exports.caml_lessequal         = caml_lessequal;
+/* No side effect */
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+
+function roleToString() {
+  return "harvester";
+}
+
+exports.roleToString = roleToString;
+/* No side effect */
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Caml_builtin_exceptions = __webpack_require__(0);
+
+function div(x, y) {
+  if (y === 0) {
+    throw Caml_builtin_exceptions.division_by_zero;
+  } else {
+    return x / y | 0;
+  }
+}
+
+function mod_(x, y) {
+  if (y === 0) {
+    throw Caml_builtin_exceptions.division_by_zero;
+  } else {
+    return x % y;
+  }
+}
+
+function caml_bswap16(x) {
+  return ((x & 255) << 8) | ((x & 65280) >>> 8);
+}
+
+function caml_int32_bswap(x) {
+  return ((x & 255) << 24) | ((x & 65280) << 8) | ((x & 16711680) >>> 8) | ((x & 4278190080) >>> 24);
+}
+
+var imul = ( Math.imul || function (x,y) {
+  y |= 0; return ((((x >> 16) * y) << 16) + (x & 0xffff) * y)|0; 
+}
+);
+
+var caml_nativeint_bswap = caml_int32_bswap;
+
+exports.div                  = div;
+exports.mod_                 = mod_;
+exports.caml_bswap16         = caml_bswap16;
+exports.caml_int32_bswap     = caml_int32_bswap;
+exports.caml_nativeint_bswap = caml_nativeint_bswap;
+exports.imul                 = imul;
+/* imul Not a pure module */
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var repeat = ( (String.prototype.repeat && function (count,self){return self.repeat(count)}) ||
+                                                  function(count , self) {
+        if (self.length == 0 || count == 0) {
+            return '';
+        }
+        // Ensuring count is a 31-bit integer allows us to heavily optimize the
+        // main part. But anyway, most current (August 2014) browsers can't handle
+        // strings 1 << 28 chars or longer, so:
+        if (self.length * count >= 1 << 28) {
+            throw new RangeError('repeat count must not overflow maximum string size');
+        }
+        var rpt = '';
+        for (;;) {
+            if ((count & 1) == 1) {
+                rpt += self;
+            }
+            count >>>= 1;
+            if (count == 0) {
+                break;
+            }
+            self += self;
+        }
+        return rpt;
+    }
+);
+
+exports.repeat = repeat;
+/* repeat Not a pure module */
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+var $$Array         = __webpack_require__(4);
+var Block           = __webpack_require__(5);
+var Spawn           = __webpack_require__(15);
+var Caml_array      = __webpack_require__(2);
+var RoomObject      = __webpack_require__(17);
+var ConstantConv    = __webpack_require__(6);
+var Supplement      = __webpack_require__(7);
+var HelperFunctions = __webpack_require__(18);
+
+var creeps = (Object.keys(Game.creeps));
+
+var spawns = (Object.keys(Game.spawns));
+
+function iterateCreeps() {
+  var x = creeps.length;
+  if (x !== 0) {
+    for(var i = 0 ,i_finish = x - 1 | 0; i <= i_finish; ++i){
+      var creepName = Caml_array.caml_array_get(creeps, i);
+      var creep = Supplement.getCreep(creepName);
+      var carryCap = creep.carryCapacity;
+      var load = creep.carry.energy;
+      var currentRoom = creep.room;
+      var energySources = RoomObject.find(currentRoom, /* FIND_SOURCES */9);
+      var chosenSource = Caml_array.caml_array_get(energySources, 0);
+      if (load < carryCap) {
+        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
+          creep.moveTo(chosenSource);
+        }
+        
+      } else {
+        var structureArray = RoomObject.find(currentRoom, /* FIND_STRUCTURES */12);
+        var isSpawnOrExtension = function (ro) {
+          var match = RoomObject.get_struct_type(ro);
+          if (match >= 2) {
+            return /* false */0;
+          } else {
+            return /* true */1;
+          }
+        };
+        var spawnsAndExtensions = HelperFunctions.arrayFilter(isSpawnOrExtension, structureArray);
+        var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
+        creep.transfer(chosenStructure, "energy");
+        creep.moveTo(chosenStructure);
+      }
+    }
+    return /* () */0;
+  } else {
+    console.log("There are no creeps to iterate over");
+    return /* () */0;
+  }
+}
+
+function iterateSpawns() {
+  for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
+    var body = /* int array */[
+      /* WORK */1,
+      /* CARRY */2,
+      /* MOVE */0,
+      /* MOVE */0
+    ];
+    var spawn = Supplement.getSpawn(Caml_array.caml_array_get(spawns, i));
+    var room = spawn.room;
+    var energyAvailable = room.energyAvailable;
+    var bodyCost = HelperFunctions.arraySum($$Array.map(ConstantConv.bodyPartToCost, body));
+    if (bodyCost <= energyAvailable) {
+      Spawn.spawnCreepWithMemory(Caml_array.caml_array_get(spawns, i), body, /* Memory_Role */Block.__(1, [/* Harvester */0]));
+      console.log("Spawning new creep");
+    }
+    
+  }
+  return /* () */0;
+}
+
+function run() {
+  iterateSpawns(/* () */0);
+  iterateCreeps(/* () */0);
+  Supplement.doWatcher("");
+  return /* () */0;
+}
+
+var runEachTick = run(/* () */0);
+
+exports.creeps        = creeps;
+exports.spawns        = spawns;
+exports.iterateCreeps = iterateCreeps;
+exports.iterateSpawns = iterateSpawns;
+exports.run           = run;
+exports.runEachTick   = runEachTick;
+/* creeps Not a pure module */
+
+
+/***/ }),
 /* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Caml_exceptions = __webpack_require__(3);
+
+var $$Error = Caml_exceptions.create("Js_exn.Error");
+
+function internalToOCamlException(e) {
+  if (Caml_exceptions.isCamlExceptionOrOpenVariant(e)) {
+    return e;
+  } else {
+    return [
+            $$Error,
+            e
+          ];
+  }
+}
+
+function raiseError(str) {
+  throw new Error(str);
+}
+
+function raiseEvalError(str) {
+  throw new EvalError(str);
+}
+
+function raiseRangeError(str) {
+  throw new RangeError(str);
+}
+
+function raiseReferenceError(str) {
+  throw new ReferenceError(str);
+}
+
+function raiseSyntaxError(str) {
+  throw new SyntaxError(str);
+}
+
+function raiseTypeError(str) {
+  throw new TypeError(str);
+}
+
+function raiseUriError(str) {
+  throw new URIError(str);
+}
+
+exports.$$Error                  = $$Error;
+exports.internalToOCamlException = internalToOCamlException;
+exports.raiseError               = raiseError;
+exports.raiseEvalError           = raiseEvalError;
+exports.raiseRangeError          = raiseRangeError;
+exports.raiseReferenceError      = raiseReferenceError;
+exports.raiseSyntaxError         = raiseSyntaxError;
+exports.raiseTypeError           = raiseTypeError;
+exports.raiseUriError            = raiseUriError;
+/* No side effect */
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+var $$Array      = __webpack_require__(4);
+var BaseTypes    = __webpack_require__(9);
+var ConstantConv = __webpack_require__(6);
+var Supplement   = __webpack_require__(7);
+
+function spawnCreepWithMemory(spawn, body, mfa) {
+  var $js;
+  $js = mfa.tag ? /* array */[
+      "role",
+      BaseTypes.roleToString(mfa[0])
+    ] : /* array */[
+      "working",
+      mfa[0] ? "true" : "false"
+    ];
+  return Supplement.spawnCreepWithMemoryHelper(spawn, $$Array.map(ConstantConv.bodyPartToString, body), $js);
+}
+
+exports.spawnCreepWithMemory = spawnCreepWithMemory;
+/* ./supplemental Not a pure module */
+
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -2704,16 +2710,41 @@ module.exports = function() {
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 // Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
 
 
-var List       = __webpack_require__(16);
-var $$Array    = __webpack_require__(6);
+var ConstantConv = __webpack_require__(6);
+
+function get_struct_type(r) {
+  return ConstantConv.fromStringStructure(r.structureType);
+}
+
+function find(r, f) {
+  return r.find(ConstantConv.toNumFilter(f));
+}
+
+exports.get_struct_type = get_struct_type;
+exports.find            = find;
+/* No side effect */
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+var List       = __webpack_require__(19);
+var $$Array    = __webpack_require__(4);
+var BaseTypes  = __webpack_require__(9);
 var Caml_array = __webpack_require__(2);
+var Supplement = __webpack_require__(7);
 
 function arrayFilter(filter, array) {
   var list = $$Array.to_list(array);
@@ -2739,22 +2770,33 @@ function arraySum(numArray) {
   return arraySumRecursive(numArray, 0, 0);
 }
 
+function setMemoryField(creepName, memory) {
+  if (memory.tag) {
+    Supplement.defineMemoryHelper(creepName, "role", BaseTypes.roleToString(memory[0]));
+    return /* () */0;
+  } else {
+    Supplement.defineMemoryHelper(creepName, "working", memory[0] !== 0 ? "true" : "false");
+    return /* () */0;
+  }
+}
+
 exports.arrayFilter       = arrayFilter;
 exports.arraySumRecursive = arraySumRecursive;
 exports.arraySum          = arraySum;
-/* No side effect */
+exports.setMemoryField    = setMemoryField;
+/* ./supplemental Not a pure module */
 
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Curry                   = __webpack_require__(1);
-var Caml_obj                = __webpack_require__(5);
-var Pervasives              = __webpack_require__(17);
+var Caml_obj                = __webpack_require__(8);
+var Pervasives              = __webpack_require__(20);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function length(l) {
@@ -4444,22 +4486,22 @@ exports.merge        = merge;
 
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Curry                    = __webpack_require__(1);
-var Caml_io                  = __webpack_require__(18);
-var Caml_obj                 = __webpack_require__(5);
-var Caml_sys                 = __webpack_require__(19);
-var Caml_format              = __webpack_require__(20);
-var Caml_string              = __webpack_require__(22);
+var Caml_io                  = __webpack_require__(21);
+var Caml_obj                 = __webpack_require__(8);
+var Caml_sys                 = __webpack_require__(22);
+var Caml_format              = __webpack_require__(23);
+var Caml_string              = __webpack_require__(25);
 var Caml_exceptions          = __webpack_require__(3);
-var Caml_missing_polyfill    = __webpack_require__(23);
+var Caml_missing_polyfill    = __webpack_require__(26);
 var Caml_builtin_exceptions  = __webpack_require__(0);
-var CamlinternalFormatBasics = __webpack_require__(24);
+var CamlinternalFormatBasics = __webpack_require__(27);
 
 function failwith(s) {
   throw [
@@ -5145,7 +5187,7 @@ exports.do_at_exit          = do_at_exit;
 
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5280,10 +5322,10 @@ exports.caml_ml_input_char          = caml_ml_input_char;
 exports.caml_ml_out_channels_list   = caml_ml_out_channels_list;
 /* stdin Not a pure module */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5380,19 +5422,19 @@ exports.caml_sys_is_directory   = caml_sys_is_directory;
 exports.caml_sys_file_exists    = caml_sys_file_exists;
 /* No side effect */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Curry                   = __webpack_require__(1);
-var Caml_int32              = __webpack_require__(8);
-var Caml_int64              = __webpack_require__(21);
-var Caml_utils              = __webpack_require__(9);
+var Caml_int32              = __webpack_require__(11);
+var Caml_int64              = __webpack_require__(24);
+var Caml_utils              = __webpack_require__(12);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_failwith(s) {
@@ -6191,15 +6233,15 @@ exports.caml_nativeint_of_string = caml_nativeint_of_string;
 
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Caml_obj                = __webpack_require__(5);
-var Caml_int32              = __webpack_require__(8);
-var Caml_utils              = __webpack_require__(9);
+var Caml_obj                = __webpack_require__(8);
+var Caml_int32              = __webpack_require__(11);
+var Caml_utils              = __webpack_require__(12);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 var min_int = /* record */[
@@ -6798,7 +6840,7 @@ exports.get64         = get64;
 
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7008,7 +7050,7 @@ exports.get                       = get;
 
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7022,13 +7064,13 @@ exports.not_implemented = not_implemented;
 
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Block = __webpack_require__(4);
+var Block = __webpack_require__(5);
 
 function erase_rel(param) {
   if (typeof param === "number") {

@@ -19,3 +19,13 @@ external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplem
 external getStructureTypeHelper : roomObject -> string = "structureType" [@@bs.get]
 external findHelper : room -> int -> roomObject array = "find" [@@bs.send]
 external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+
+let setMemoryField(creepName : string) (memory : memoryField) : unit =
+  match memory with
+  | Working(x) ->
+    defineMemoryHelper(creepName)("working")
+      (match x with
+       | true -> "true";
+       | false-> "false");
+  | Memory_Role(occupation) ->
+    defineMemoryHelper(creepName)("role")(roleToString occupation)

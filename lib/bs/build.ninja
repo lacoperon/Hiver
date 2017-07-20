@@ -27,13 +27,25 @@ rule build_cmj_cmi
   description = [34mBuilding[39m [2m${out}[22m
 build src/main.cmj $src_root_dir/lib/js/src/main.js src/main.cmi : build_cmj_cmi src/main.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/room.mlast : build_ast_and_deps $src_root_dir/src/room.ml
+build src/room.mlast.d : build_deps src/room.mlast
+build src/room.cmj $src_root_dir/lib/js/src/room.js src/room.cmi : build_cmj_cmi src/room.mlast
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
 build src/creep.mlast : build_ast_and_deps $src_root_dir/src/creep.ml
 build src/creep.mlast.d : build_deps src/creep.mlast
 build src/creep.cmj $src_root_dir/lib/js/src/creep.js src/creep.cmi : build_cmj_cmi src/creep.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/spawn.mlast : build_ast_and_deps $src_root_dir/src/spawn.ml
+build src/spawn.mlast.d : build_deps src/spawn.mlast
+build src/spawn.cmj $src_root_dir/lib/js/src/spawn.js src/spawn.cmi : build_cmj_cmi src/spawn.mlast
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
 build src/baseTypes.mlast : build_ast_and_deps $src_root_dir/src/baseTypes.ml
 build src/baseTypes.mlast.d : build_deps src/baseTypes.mlast
 build src/baseTypes.cmj $src_root_dir/lib/js/src/baseTypes.js src/baseTypes.cmi : build_cmj_cmi src/baseTypes.mlast
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/roomObject.mlast : build_ast_and_deps $src_root_dir/src/roomObject.ml
+build src/roomObject.mlast.d : build_deps src/roomObject.mlast
+build src/roomObject.cmj $src_root_dir/lib/js/src/roomObject.js src/roomObject.cmi : build_cmj_cmi src/roomObject.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
 build src/constantConv.mlast : build_ast_and_deps $src_root_dir/src/constantConv.ml
 build src/constantConv.mlast.d : build_deps src/constantConv.mlast
@@ -47,4 +59,4 @@ build src/helperFunctions.mlast : build_ast_and_deps $src_root_dir/src/helperFun
 build src/helperFunctions.mlast.d : build_deps src/helperFunctions.mlast
 build src/helperFunctions.cmj $src_root_dir/lib/js/src/helperFunctions.js src/helperFunctions.cmi : build_cmj_cmi src/helperFunctions.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
-build build.ninja : phony  ||  src/helperFunctions.mlast.d src/roleharvester.mlast.d src/constantConv.mlast.d src/baseTypes.mlast.d src/creep.mlast.d src/main.mlast.d
+build build.ninja : phony  ||  src/helperFunctions.mlast.d src/roleharvester.mlast.d src/constantConv.mlast.d src/roomObject.mlast.d src/baseTypes.mlast.d src/spawn.mlast.d src/creep.mlast.d src/room.mlast.d src/main.mlast.d
