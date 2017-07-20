@@ -1,1 +1,1 @@
-src/creep.cmj : src/baseTypes.cmj
+src/creep.cmj : src/helperFunctions.cmj src/baseTypes.cmj

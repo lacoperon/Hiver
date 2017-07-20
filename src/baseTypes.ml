@@ -1,25 +1,36 @@
+(* These types are 'placeholders' I made in OCaml, allowing me to delineate
+   what 'is' and 'is not' a member of the type.
 
+   Given that converting a JS Object into OCaml requires me to accept a loss of
+   generality (IE no function overloading, no null checks, etc.), I can't convert
+   these objects into 'true' OCaml, so I just have types that help me keep track
+   of exactly where they are and are not.
+
+   IE I'm jerryrigging them so that OCaml will still typecheck that they are where
+   they're meant to be, and not where they're not meant to be, despite their
+   inability to be imported into OCaml *)
 
 type creep =
   {
-    carryCapacity : int;
-    name : string;
+    isJustAJSObject : string;
   }
 
 type spawn =
   {
-    name : string;
+    isJustAJSObject : string;
   }
 
 type roomObject =
   {
-    id : string;
+    isJustAJSObject : string;
   }
 
 type room =
   {
-    name : string;
+    isJustAJSObject : string;
   }
+
+(* These are the types of bodyParts in Screeps *)
 
 type bodyPart =
   | MOVE
@@ -31,7 +42,7 @@ type bodyPart =
   | TOUGH
   | CLAIM
 
-(* Defines all possible roles available to Creeps *)
+(* Defines all possible roles I make available to Creeps *)
 type role =
   | Harvester
 

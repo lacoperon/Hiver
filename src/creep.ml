@@ -1,4 +1,5 @@
 open BaseTypes
+open HelperFunctions
 
 external get_carry : creep -> int = "carryCapacity" [@@bs.get]
 external get_load : creep -> int = "energy" [@@bs.get] [@@bs.scope "carry"]
@@ -10,7 +11,12 @@ external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Suppleme
 external getRoomFromCreep: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 external transfer : creep -> roomObject -> string -> int = "transfer" [@@bs.send]
 
-(* Defines all of the memory fields I allow to be set on creeps programmatically *)
-type memoryField =
-  | Working of bool
-  | Memory_Role of role
+let setMemoryField(creepName : string) (memory : memoryField) : unit =
+  match memory with
+  | Working(x) ->
+    defineMemoryHelper(creepName)("working")
+      (match x with
+       | true -> "true";
+       | false-> "false");
+  | Memory_Role(occupation) ->
+    defineMemoryHelper(creepName)("role")(roleToString occupation)

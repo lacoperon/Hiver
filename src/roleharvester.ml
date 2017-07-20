@@ -1,2 +1,1 @@
-(* let run (creepName : string) : unit = 
-   *)
+(* TODO: Extract this code from iterateCreeps loop *)
