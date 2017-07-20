@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -988,202 +988,12 @@ exports.caml_array_set    = caml_array_set;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Block                   = __webpack_require__(6);
+var Block                   = __webpack_require__(5);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_obj_dup(x) {
@@ -1489,7 +1299,7 @@ exports.caml_lessequal         = caml_lessequal;
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1506,793 +1316,22 @@ exports.__ = __;
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Caml_builtin_exceptions = __webpack_require__(0);
-
-function div(x, y) {
-  if (y === 0) {
-    throw Caml_builtin_exceptions.division_by_zero;
-  } else {
-    return x / y | 0;
-  }
-}
-
-function mod_(x, y) {
-  if (y === 0) {
-    throw Caml_builtin_exceptions.division_by_zero;
-  } else {
-    return x % y;
-  }
-}
-
-function caml_bswap16(x) {
-  return ((x & 255) << 8) | ((x & 65280) >>> 8);
-}
-
-function caml_int32_bswap(x) {
-  return ((x & 255) << 24) | ((x & 65280) << 8) | ((x & 16711680) >>> 8) | ((x & 4278190080) >>> 24);
-}
-
-var imul = ( Math.imul || function (x,y) {
-  y |= 0; return ((((x >> 16) * y) << 16) + (x & 0xffff) * y)|0; 
-}
-);
-
-var caml_nativeint_bswap = caml_int32_bswap;
-
-exports.div                  = div;
-exports.mod_                 = mod_;
-exports.caml_bswap16         = caml_bswap16;
-exports.caml_int32_bswap     = caml_int32_bswap;
-exports.caml_nativeint_bswap = caml_nativeint_bswap;
-exports.imul                 = imul;
-/* imul Not a pure module */
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-
-var repeat = ( (String.prototype.repeat && function (count,self){return self.repeat(count)}) ||
-                                                  function(count , self) {
-        if (self.length == 0 || count == 0) {
-            return '';
-        }
-        // Ensuring count is a 31-bit integer allows us to heavily optimize the
-        // main part. But anyway, most current (August 2014) browsers can't handle
-        // strings 1 << 28 chars or longer, so:
-        if (self.length * count >= 1 << 28) {
-            throw new RangeError('repeat count must not overflow maximum string size');
-        }
-        var rpt = '';
-        for (;;) {
-            if ((count & 1) == 1) {
-                rpt += self;
-            }
-            count >>>= 1;
-            if (count == 0) {
-                break;
-            }
-            self += self;
-        }
-        return rpt;
-    }
-);
-
-exports.repeat = repeat;
-/* repeat Not a pure module */
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
-
-
-var $$Array      = __webpack_require__(10);
-var Caml_array   = __webpack_require__(3);
-var Pervasives   = __webpack_require__(12);
-var ConstantConv = __webpack_require__(20);
-var Supplement   = __webpack_require__(21);
-
-var creeps = (Object.keys(Game.creeps));
-
-var creepsObject = (Game.creeps);
-
-var spawns = (Object.keys(Game.spawns));
-
-var spawnsObject = (Game.spawns);
-
-function arraySumRecursive(numArray, _currentSum, _currentIndex) {
-  while(true) {
-    var currentIndex = _currentIndex;
-    var currentSum = _currentSum;
-    if (numArray.length === currentIndex) {
-      return currentSum;
-    } else {
-      _currentIndex = currentIndex + 1 | 0;
-      _currentSum = currentSum + Caml_array.caml_array_get(numArray, currentIndex) | 0;
-      continue ;
-      
-    }
-  };
-}
-
-function arraySum(numArray) {
-  return arraySumRecursive(numArray, 0, 0);
-}
-
-function bodyPartToCost(part) {
-  switch (part) {
-    case 1 : 
-        return 100;
-    case 0 : 
-    case 2 : 
-        return 50;
-    case 3 : 
-        return 80;
-    case 4 : 
-        return 150;
-    case 5 : 
-        return 250;
-    case 6 : 
-        return 10;
-    case 7 : 
-        return 600;
-    
-  }
-}
-
-function bodyPartToString(part) {
-  switch (part) {
-    case 0 : 
-        return "move";
-    case 1 : 
-        return "work";
-    case 2 : 
-        return "carry";
-    case 3 : 
-        return "attack";
-    case 4 : 
-        return "ranged_attack";
-    case 5 : 
-        return "heal";
-    case 6 : 
-        return "tough";
-    case 7 : 
-        return "claim";
-    
-  }
-}
-
-function spawnCreep(spawn, body) {
-  arraySumRecursive($$Array.map(bodyPartToCost, body), 0, 0);
-  Supplement.spawnCreepHelper(spawn, $$Array.map(bodyPartToString, body));
-  console.log("Spawning a new creep!");
-  return /* () */0;
-}
-
-function setMemoryField(creepName, memory) {
-  if (memory.tag) {
-    Supplement.defineMemoryHelper(creepName, "role", "harvester");
-    return /* () */0;
-  } else {
-    Supplement.defineMemoryHelper(creepName, "working", memory[0] !== 0 ? "true" : "false");
-    return /* () */0;
-  }
-}
-
-function get_struct_type(r) {
-  return ConstantConv.fromStringStructure(r.structureType);
-}
-
-function find(r, f) {
-  return r.find(ConstantConv.toNumFilter(f));
-}
-
-function iterateCreeps() {
-  var x = creeps.length;
-  if (x !== 0) {
-    console.log("There are " + (Pervasives.string_of_int(x) + " creeps currently"));
-    for(var i = 0 ,i_finish = creeps.length - 1 | 0; i <= i_finish; ++i){
-      var creepName = Caml_array.caml_array_get(creeps, i);
-      var creep = Supplement.getCreep(creepName);
-      var carryCap = creep.carryCapacity;
-      var load = creep.carry.energy;
-      var currentRoom = creep.room;
-      var energySources = currentRoom.find(ConstantConv.toNumFilter(/* FIND_SOURCES */9));
-      var chosenSource = Caml_array.caml_array_get(energySources, 0);
-      if (load < carryCap) {
-        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
-          creep.moveTo(chosenSource);
-        }
-        
-      } else {
-        currentRoom.find(ConstantConv.toNumFilter(/* FIND_STRUCTURES */12));
-      }
-    }
-    return /* () */0;
-  } else {
-    console.log("There are no creeps to iterate over");
-    return /* () */0;
-  }
-}
-
-function iterateSpawns() {
-  for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
-    var body = /* int array */[
-      /* WORK */1,
-      /* CARRY */2,
-      /* MOVE */0,
-      /* MOVE */0
-    ];
-    spawnCreep(Caml_array.caml_array_get(spawns, i), body);
-  }
-  return /* () */0;
-}
-
-function run() {
-  iterateSpawns(/* () */0);
-  Supplement.doWatcher("");
-  return iterateCreeps(/* () */0);
-}
-
-var runEachTick = run(/* () */0);
-
-var creepsArray = creeps;
-
-var spawnsArray = spawns;
-
-exports.creeps            = creeps;
-exports.creepsArray       = creepsArray;
-exports.creepsObject      = creepsObject;
-exports.spawns            = spawns;
-exports.spawnsArray       = spawnsArray;
-exports.spawnsObject      = spawnsObject;
-exports.arraySumRecursive = arraySumRecursive;
-exports.arraySum          = arraySum;
-exports.bodyPartToCost    = bodyPartToCost;
-exports.bodyPartToString  = bodyPartToString;
-exports.spawnCreep        = spawnCreep;
-exports.setMemoryField    = setMemoryField;
-exports.get_struct_type   = get_struct_type;
-exports.find              = find;
-exports.iterateCreeps     = iterateCreeps;
-exports.iterateSpawns     = iterateSpawns;
-exports.run               = run;
-exports.runEachTick       = runEachTick;
-/* creeps Not a pure module */
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Curry                   = __webpack_require__(1);
-var Js_exn                  = __webpack_require__(11);
-var Caml_array              = __webpack_require__(3);
-var Caml_exceptions         = __webpack_require__(2);
-var Caml_builtin_exceptions = __webpack_require__(0);
-
-function init(l, f) {
-  if (l) {
-    if (l < 0) {
-      throw [
-            Caml_builtin_exceptions.invalid_argument,
-            "Array.init"
-          ];
-    } else {
-      var res = Caml_array.caml_make_vect(l, Curry._1(f, 0));
-      for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
-        res[i] = Curry._1(f, i);
-      }
-      return res;
-    }
-  } else {
-    return /* array */[];
-  }
-}
-
-function make_matrix(sx, sy, init) {
-  var res = Caml_array.caml_make_vect(sx, /* array */[]);
-  for(var x = 0 ,x_finish = sx - 1 | 0; x <= x_finish; ++x){
-    res[x] = Caml_array.caml_make_vect(sy, init);
-  }
-  return res;
-}
-
-function copy(a) {
-  var l = a.length;
-  if (l) {
-    return Caml_array.caml_array_sub(a, 0, l);
-  } else {
-    return /* array */[];
-  }
-}
-
-function append(a1, a2) {
-  var l1 = a1.length;
-  if (l1) {
-    if (a2.length) {
-      return a1.concat(a2);
-    } else {
-      return Caml_array.caml_array_sub(a1, 0, l1);
-    }
-  } else {
-    return copy(a2);
-  }
-}
-
-function sub(a, ofs, len) {
-  if (len < 0 || ofs > (a.length - len | 0)) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "Array.sub"
-        ];
-  } else {
-    return Caml_array.caml_array_sub(a, ofs, len);
-  }
-}
-
-function fill(a, ofs, len, v) {
-  if (ofs < 0 || len < 0 || ofs > (a.length - len | 0)) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "Array.fill"
-        ];
-  } else {
-    for(var i = ofs ,i_finish = (ofs + len | 0) - 1 | 0; i <= i_finish; ++i){
-      a[i] = v;
-    }
-    return /* () */0;
-  }
-}
-
-function blit(a1, ofs1, a2, ofs2, len) {
-  if (len < 0 || ofs1 < 0 || ofs1 > (a1.length - len | 0) || ofs2 < 0 || ofs2 > (a2.length - len | 0)) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "Array.blit"
-        ];
-  } else {
-    return Caml_array.caml_array_blit(a1, ofs1, a2, ofs2, len);
-  }
-}
-
-function iter(f, a) {
-  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
-    Curry._1(f, a[i]);
-  }
-  return /* () */0;
-}
-
-function map(f, a) {
-  var l = a.length;
-  if (l) {
-    var r = Caml_array.caml_make_vect(l, Curry._1(f, a[0]));
-    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
-      r[i] = Curry._1(f, a[i]);
-    }
-    return r;
-  } else {
-    return /* array */[];
-  }
-}
-
-function iteri(f, a) {
-  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
-    Curry._2(f, i, a[i]);
-  }
-  return /* () */0;
-}
-
-function mapi(f, a) {
-  var l = a.length;
-  if (l) {
-    var r = Caml_array.caml_make_vect(l, Curry._2(f, 0, a[0]));
-    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
-      r[i] = Curry._2(f, i, a[i]);
-    }
-    return r;
-  } else {
-    return /* array */[];
-  }
-}
-
-function to_list(a) {
-  var _i = a.length - 1 | 0;
-  var _res = /* [] */0;
-  while(true) {
-    var res = _res;
-    var i = _i;
-    if (i < 0) {
-      return res;
-    } else {
-      _res = /* :: */[
-        a[i],
-        res
-      ];
-      _i = i - 1 | 0;
-      continue ;
-      
-    }
-  };
-}
-
-function list_length(_accu, _param) {
-  while(true) {
-    var param = _param;
-    var accu = _accu;
-    if (param) {
-      _param = param[1];
-      _accu = accu + 1 | 0;
-      continue ;
-      
-    } else {
-      return accu;
-    }
-  };
-}
-
-function of_list(l) {
-  if (l) {
-    var a = Caml_array.caml_make_vect(list_length(0, l), l[0]);
-    var _i = 1;
-    var _param = l[1];
-    while(true) {
-      var param = _param;
-      var i = _i;
-      if (param) {
-        a[i] = param[0];
-        _param = param[1];
-        _i = i + 1 | 0;
-        continue ;
-        
-      } else {
-        return a;
-      }
-    };
-  } else {
-    return /* array */[];
-  }
-}
-
-function fold_left(f, x, a) {
-  var r = x;
-  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
-    r = Curry._2(f, r, a[i]);
-  }
-  return r;
-}
-
-function fold_right(f, a, x) {
-  var r = x;
-  for(var i = a.length - 1 | 0; i >= 0; --i){
-    r = Curry._2(f, a[i], r);
-  }
-  return r;
-}
-
-var Bottom = Caml_exceptions.create("Array.Bottom");
-
-function sort(cmp, a) {
-  var maxson = function (l, i) {
-    var i31 = ((i + i | 0) + i | 0) + 1 | 0;
-    var x = i31;
-    if ((i31 + 2 | 0) < l) {
-      if (Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
-        x = i31 + 1 | 0;
-      }
-      if (Curry._2(cmp, Caml_array.caml_array_get(a, x), Caml_array.caml_array_get(a, i31 + 2 | 0)) < 0) {
-        x = i31 + 2 | 0;
-      }
-      return x;
-    } else if ((i31 + 1 | 0) < l && Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
-      return i31 + 1 | 0;
-    } else if (i31 < l) {
-      return i31;
-    } else {
-      throw [
-            Bottom,
-            i
-          ];
-    }
-  };
-  var trickle = function (l, i, e) {
-    try {
-      var l$1 = l;
-      var _i = i;
-      var e$1 = e;
-      while(true) {
-        var i$1 = _i;
-        var j = maxson(l$1, i$1);
-        if (Curry._2(cmp, Caml_array.caml_array_get(a, j), e$1) > 0) {
-          Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
-          _i = j;
-          continue ;
-          
-        } else {
-          return Caml_array.caml_array_set(a, i$1, e$1);
-        }
-      };
-    }
-    catch (raw_exn){
-      var exn = Js_exn.internalToOCamlException(raw_exn);
-      if (exn[0] === Bottom) {
-        return Caml_array.caml_array_set(a, exn[1], e);
-      } else {
-        throw exn;
-      }
-    }
-  };
-  var bubble = function (l, i) {
-    try {
-      var l$1 = l;
-      var _i = i;
-      while(true) {
-        var i$1 = _i;
-        var j = maxson(l$1, i$1);
-        Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
-        _i = j;
-        continue ;
-        
-      };
-    }
-    catch (raw_exn){
-      var exn = Js_exn.internalToOCamlException(raw_exn);
-      if (exn[0] === Bottom) {
-        return exn[1];
-      } else {
-        throw exn;
-      }
-    }
-  };
-  var trickleup = function (_i, e) {
-    while(true) {
-      var i = _i;
-      var father = (i - 1 | 0) / 3 | 0;
-      if (i === father) {
-        throw [
-              Caml_builtin_exceptions.assert_failure,
-              [
-                "array.ml",
-                168,
-                4
-              ]
-            ];
-      }
-      if (Curry._2(cmp, Caml_array.caml_array_get(a, father), e) < 0) {
-        Caml_array.caml_array_set(a, i, Caml_array.caml_array_get(a, father));
-        if (father > 0) {
-          _i = father;
-          continue ;
-          
-        } else {
-          return Caml_array.caml_array_set(a, 0, e);
-        }
-      } else {
-        return Caml_array.caml_array_set(a, i, e);
-      }
-    };
-  };
-  var l = a.length;
-  for(var i = ((l + 1 | 0) / 3 | 0) - 1 | 0; i >= 0; --i){
-    trickle(l, i, Caml_array.caml_array_get(a, i));
-  }
-  for(var i$1 = l - 1 | 0; i$1 >= 2; --i$1){
-    var e = Caml_array.caml_array_get(a, i$1);
-    Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, 0));
-    trickleup(bubble(i$1, 0), e);
-  }
-  if (l > 1) {
-    var e$1 = Caml_array.caml_array_get(a, 1);
-    Caml_array.caml_array_set(a, 1, Caml_array.caml_array_get(a, 0));
-    return Caml_array.caml_array_set(a, 0, e$1);
-  } else {
-    return 0;
-  }
-}
-
-function stable_sort(cmp, a) {
-  var merge = function (src1ofs, src1len, src2, src2ofs, src2len, dst, dstofs) {
-    var src1r = src1ofs + src1len | 0;
-    var src2r = src2ofs + src2len | 0;
-    var _i1 = src1ofs;
-    var _s1 = Caml_array.caml_array_get(a, src1ofs);
-    var _i2 = src2ofs;
-    var _s2 = Caml_array.caml_array_get(src2, src2ofs);
-    var _d = dstofs;
-    while(true) {
-      var d = _d;
-      var s2 = _s2;
-      var i2 = _i2;
-      var s1 = _s1;
-      var i1 = _i1;
-      if (Curry._2(cmp, s1, s2) <= 0) {
-        Caml_array.caml_array_set(dst, d, s1);
-        var i1$1 = i1 + 1 | 0;
-        if (i1$1 < src1r) {
-          _d = d + 1 | 0;
-          _s1 = Caml_array.caml_array_get(a, i1$1);
-          _i1 = i1$1;
-          continue ;
-          
-        } else {
-          return blit(src2, i2, dst, d + 1 | 0, src2r - i2 | 0);
-        }
-      } else {
-        Caml_array.caml_array_set(dst, d, s2);
-        var i2$1 = i2 + 1 | 0;
-        if (i2$1 < src2r) {
-          _d = d + 1 | 0;
-          _s2 = Caml_array.caml_array_get(src2, i2$1);
-          _i2 = i2$1;
-          continue ;
-          
-        } else {
-          return blit(a, i1, dst, d + 1 | 0, src1r - i1 | 0);
-        }
-      }
-    };
-  };
-  var isortto = function (srcofs, dst, dstofs, len) {
-    for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
-      var e = Caml_array.caml_array_get(a, srcofs + i | 0);
-      var j = (dstofs + i | 0) - 1 | 0;
-      while(j >= dstofs && Curry._2(cmp, Caml_array.caml_array_get(dst, j), e) > 0) {
-        Caml_array.caml_array_set(dst, j + 1 | 0, Caml_array.caml_array_get(dst, j));
-        j = j - 1 | 0;
-      };
-      Caml_array.caml_array_set(dst, j + 1 | 0, e);
-    }
-    return /* () */0;
-  };
-  var sortto = function (srcofs, dst, dstofs, len) {
-    if (len <= 5) {
-      return isortto(srcofs, dst, dstofs, len);
-    } else {
-      var l1 = len / 2 | 0;
-      var l2 = len - l1 | 0;
-      sortto(srcofs + l1 | 0, dst, dstofs + l1 | 0, l2);
-      sortto(srcofs, a, srcofs + l2 | 0, l1);
-      return merge(srcofs + l2 | 0, l1, dst, dstofs + l1 | 0, l2, dst, dstofs);
-    }
-  };
-  var l = a.length;
-  if (l <= 5) {
-    return isortto(0, a, 0, l);
-  } else {
-    var l1 = l / 2 | 0;
-    var l2 = l - l1 | 0;
-    var t = Caml_array.caml_make_vect(l2, Caml_array.caml_array_get(a, 0));
-    sortto(l1, t, 0, l2);
-    sortto(0, a, l2, l1);
-    return merge(l2, l1, t, 0, l2, a, 0);
-  }
-}
-
-var create_matrix = make_matrix;
-
-var concat = Caml_array.caml_array_concat;
-
-var fast_sort = stable_sort;
-
-exports.init          = init;
-exports.make_matrix   = make_matrix;
-exports.create_matrix = create_matrix;
-exports.append        = append;
-exports.concat        = concat;
-exports.sub           = sub;
-exports.copy          = copy;
-exports.fill          = fill;
-exports.blit          = blit;
-exports.to_list       = to_list;
-exports.of_list       = of_list;
-exports.iter          = iter;
-exports.map           = map;
-exports.iteri         = iteri;
-exports.mapi          = mapi;
-exports.fold_left     = fold_left;
-exports.fold_right    = fold_right;
-exports.sort          = sort;
-exports.stable_sort   = stable_sort;
-exports.fast_sort     = fast_sort;
-/* No side effect */
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Caml_exceptions = __webpack_require__(2);
-
-var $$Error = Caml_exceptions.create("Js_exn.Error");
-
-function internalToOCamlException(e) {
-  if (Caml_exceptions.isCamlExceptionOrOpenVariant(e)) {
-    return e;
-  } else {
-    return [
-            $$Error,
-            e
-          ];
-  }
-}
-
-function raiseError(str) {
-  throw new Error(str);
-}
-
-function raiseEvalError(str) {
-  throw new EvalError(str);
-}
-
-function raiseRangeError(str) {
-  throw new RangeError(str);
-}
-
-function raiseReferenceError(str) {
-  throw new ReferenceError(str);
-}
-
-function raiseSyntaxError(str) {
-  throw new SyntaxError(str);
-}
-
-function raiseTypeError(str) {
-  throw new TypeError(str);
-}
-
-function raiseUriError(str) {
-  throw new URIError(str);
-}
-
-exports.$$Error                  = $$Error;
-exports.internalToOCamlException = internalToOCamlException;
-exports.raiseError               = raiseError;
-exports.raiseEvalError           = raiseEvalError;
-exports.raiseRangeError          = raiseRangeError;
-exports.raiseReferenceError      = raiseReferenceError;
-exports.raiseSyntaxError         = raiseSyntaxError;
-exports.raiseTypeError           = raiseTypeError;
-exports.raiseUriError            = raiseUriError;
-/* No side effect */
-
-
-/***/ }),
-/* 12 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Curry                    = __webpack_require__(1);
-var Caml_io                  = __webpack_require__(13);
-var Caml_obj                 = __webpack_require__(5);
-var Caml_sys                 = __webpack_require__(14);
-var Caml_format              = __webpack_require__(15);
-var Caml_string              = __webpack_require__(17);
+var Caml_io                  = __webpack_require__(12);
+var Caml_obj                 = __webpack_require__(4);
+var Caml_sys                 = __webpack_require__(13);
+var Caml_format              = __webpack_require__(14);
+var Caml_string              = __webpack_require__(16);
 var Caml_exceptions          = __webpack_require__(2);
-var Caml_missing_polyfill    = __webpack_require__(18);
+var Caml_missing_polyfill    = __webpack_require__(17);
 var Caml_builtin_exceptions  = __webpack_require__(0);
-var CamlinternalFormatBasics = __webpack_require__(19);
+var CamlinternalFormatBasics = __webpack_require__(18);
 
 function failwith(s) {
   throw [
@@ -2978,7 +2017,2207 @@ exports.do_at_exit          = do_at_exit;
 
 
 /***/ }),
-/* 13 */
+/* 7 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Caml_builtin_exceptions = __webpack_require__(0);
+
+function div(x, y) {
+  if (y === 0) {
+    throw Caml_builtin_exceptions.division_by_zero;
+  } else {
+    return x / y | 0;
+  }
+}
+
+function mod_(x, y) {
+  if (y === 0) {
+    throw Caml_builtin_exceptions.division_by_zero;
+  } else {
+    return x % y;
+  }
+}
+
+function caml_bswap16(x) {
+  return ((x & 255) << 8) | ((x & 65280) >>> 8);
+}
+
+function caml_int32_bswap(x) {
+  return ((x & 255) << 24) | ((x & 65280) << 8) | ((x & 16711680) >>> 8) | ((x & 4278190080) >>> 24);
+}
+
+var imul = ( Math.imul || function (x,y) {
+  y |= 0; return ((((x >> 16) * y) << 16) + (x & 0xffff) * y)|0; 
+}
+);
+
+var caml_nativeint_bswap = caml_int32_bswap;
+
+exports.div                  = div;
+exports.mod_                 = mod_;
+exports.caml_bswap16         = caml_bswap16;
+exports.caml_int32_bswap     = caml_int32_bswap;
+exports.caml_nativeint_bswap = caml_nativeint_bswap;
+exports.imul                 = imul;
+/* imul Not a pure module */
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var repeat = ( (String.prototype.repeat && function (count,self){return self.repeat(count)}) ||
+                                                  function(count , self) {
+        if (self.length == 0 || count == 0) {
+            return '';
+        }
+        // Ensuring count is a 31-bit integer allows us to heavily optimize the
+        // main part. But anyway, most current (August 2014) browsers can't handle
+        // strings 1 << 28 chars or longer, so:
+        if (self.length * count >= 1 << 28) {
+            throw new RangeError('repeat count must not overflow maximum string size');
+        }
+        var rpt = '';
+        for (;;) {
+            if ((count & 1) == 1) {
+                rpt += self;
+            }
+            count >>>= 1;
+            if (count == 0) {
+                break;
+            }
+            self += self;
+        }
+        return rpt;
+    }
+);
+
+exports.repeat = repeat;
+/* repeat Not a pure module */
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+var List         = __webpack_require__(11);
+var $$Array      = __webpack_require__(19);
+var Caml_array   = __webpack_require__(3);
+var Pervasives   = __webpack_require__(6);
+var ConstantConv = __webpack_require__(21);
+var Supplement   = __webpack_require__(22);
+
+var creeps = (Object.keys(Game.creeps));
+
+var creepsObject = (Game.creeps);
+
+var spawns = (Object.keys(Game.spawns));
+
+var spawnsObject = (Game.spawns);
+
+function arrayFilter(filter, array) {
+  var list = $$Array.to_list(array);
+  return $$Array.of_list(List.filter(filter)(list));
+}
+
+function arraySumRecursive(numArray, _currentSum, _currentIndex) {
+  while(true) {
+    var currentIndex = _currentIndex;
+    var currentSum = _currentSum;
+    if (numArray.length === currentIndex) {
+      return currentSum;
+    } else {
+      _currentIndex = currentIndex + 1 | 0;
+      _currentSum = currentSum + Caml_array.caml_array_get(numArray, currentIndex) | 0;
+      continue ;
+      
+    }
+  };
+}
+
+function arraySum(numArray) {
+  return arraySumRecursive(numArray, 0, 0);
+}
+
+function bodyPartToCost(part) {
+  switch (part) {
+    case 1 : 
+        return 100;
+    case 0 : 
+    case 2 : 
+        return 50;
+    case 3 : 
+        return 80;
+    case 4 : 
+        return 150;
+    case 5 : 
+        return 250;
+    case 6 : 
+        return 10;
+    case 7 : 
+        return 600;
+    
+  }
+}
+
+function bodyPartToString(part) {
+  switch (part) {
+    case 0 : 
+        return "move";
+    case 1 : 
+        return "work";
+    case 2 : 
+        return "carry";
+    case 3 : 
+        return "attack";
+    case 4 : 
+        return "ranged_attack";
+    case 5 : 
+        return "heal";
+    case 6 : 
+        return "tough";
+    case 7 : 
+        return "claim";
+    
+  }
+}
+
+function roleToString() {
+  return "harvester";
+}
+
+function setMemoryField(creepName, memory) {
+  if (typeof memory === "number") {
+    return /* () */0;
+  } else if (memory.tag) {
+    Supplement.defineMemoryHelper(creepName, "role", "harvester");
+    return /* () */0;
+  } else {
+    Supplement.defineMemoryHelper(creepName, "working", memory[0] !== 0 ? "true" : "false");
+    return /* () */0;
+  }
+}
+
+function spawnCreep(spawn, body) {
+  arraySumRecursive($$Array.map(bodyPartToCost, body), 0, 0);
+  Supplement.spawnCreepHelper(spawn, $$Array.map(bodyPartToString, body));
+  console.log("Spawning a new creep!");
+  return /* () */0;
+}
+
+function spawnCreepWithMemory(spawn, body, mfa) {
+  var $js;
+  $js = typeof mfa === "number" ? /* array */[] : (
+      mfa.tag ? /* array */[
+          "role",
+          "harvester"
+        ] : /* array */[
+          "working",
+          mfa[0] ? "true" : "false"
+        ]
+    );
+  return Supplement.spawnCreepWithMemoryHelper(spawn, $$Array.map(bodyPartToString, body), $js);
+}
+
+function get_struct_type(r) {
+  return ConstantConv.fromStringStructure(r.structureType);
+}
+
+function find(r, f) {
+  return r.find(ConstantConv.toNumFilter(f));
+}
+
+function iterateCreeps() {
+  var x = creeps.length;
+  if (x !== 0) {
+    console.log("There are " + (Pervasives.string_of_int(x) + " creeps currently"));
+    for(var i = 0 ,i_finish = creeps.length - 1 | 0; i <= i_finish; ++i){
+      var creepName = Caml_array.caml_array_get(creeps, i);
+      var creep = Supplement.getCreep(creepName);
+      var carryCap = creep.carryCapacity;
+      var load = creep.carry.energy;
+      var currentRoom = creep.room;
+      var energySources = currentRoom.find(ConstantConv.toNumFilter(/* FIND_SOURCES */9));
+      var chosenSource = Caml_array.caml_array_get(energySources, 0);
+      if (load < carryCap) {
+        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
+          creep.moveTo(chosenSource);
+        }
+        
+      } else {
+        var structureArray = currentRoom.find(ConstantConv.toNumFilter(/* FIND_STRUCTURES */12));
+        var isSpawnOrExtension = function (ro) {
+          var match = ConstantConv.fromStringStructure(ro.structureType);
+          if (match >= 2) {
+            return /* false */0;
+          } else {
+            return /* true */1;
+          }
+        };
+        var spawnsAndExtensions = arrayFilter(isSpawnOrExtension, structureArray);
+        var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
+        console.log(chosenStructure);
+        creep.transfer(chosenStructure, "energy");
+        creep.moveTo(chosenStructure);
+      }
+    }
+    return /* () */0;
+  } else {
+    console.log("There are no creeps to iterate over");
+    return /* () */0;
+  }
+}
+
+function iterateSpawns() {
+  for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
+    var body = /* int array */[
+      /* WORK */1,
+      /* CARRY */2,
+      /* MOVE */0,
+      /* MOVE */0
+    ];
+    spawnCreep(Caml_array.caml_array_get(spawns, i), body);
+  }
+  return /* () */0;
+}
+
+function run() {
+  iterateSpawns(/* () */0);
+  Supplement.doWatcher("");
+  return iterateCreeps(/* () */0);
+}
+
+var runEachTick = run(/* () */0);
+
+var creepsArray = creeps;
+
+var spawnsArray = spawns;
+
+exports.creeps               = creeps;
+exports.creepsArray          = creepsArray;
+exports.creepsObject         = creepsObject;
+exports.spawns               = spawns;
+exports.spawnsArray          = spawnsArray;
+exports.spawnsObject         = spawnsObject;
+exports.arrayFilter          = arrayFilter;
+exports.arraySumRecursive    = arraySumRecursive;
+exports.arraySum             = arraySum;
+exports.bodyPartToCost       = bodyPartToCost;
+exports.bodyPartToString     = bodyPartToString;
+exports.roleToString         = roleToString;
+exports.setMemoryField       = setMemoryField;
+exports.spawnCreep           = spawnCreep;
+exports.spawnCreepWithMemory = spawnCreepWithMemory;
+exports.get_struct_type      = get_struct_type;
+exports.find                 = find;
+exports.iterateCreeps        = iterateCreeps;
+exports.iterateSpawns        = iterateSpawns;
+exports.run                  = run;
+exports.runEachTick          = runEachTick;
+/* creeps Not a pure module */
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Curry                   = __webpack_require__(1);
+var Caml_obj                = __webpack_require__(4);
+var Pervasives              = __webpack_require__(6);
+var Caml_builtin_exceptions = __webpack_require__(0);
+
+function length(l) {
+  var _len = 0;
+  var _param = l;
+  while(true) {
+    var param = _param;
+    var len = _len;
+    if (param) {
+      _param = param[1];
+      _len = len + 1 | 0;
+      continue ;
+      
+    } else {
+      return len;
+    }
+  };
+}
+
+function hd(param) {
+  if (param) {
+    return param[0];
+  } else {
+    throw [
+          Caml_builtin_exceptions.failure,
+          "hd"
+        ];
+  }
+}
+
+function tl(param) {
+  if (param) {
+    return param[1];
+  } else {
+    throw [
+          Caml_builtin_exceptions.failure,
+          "tl"
+        ];
+  }
+}
+
+function nth(l, n) {
+  if (n < 0) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "List.nth"
+        ];
+  } else {
+    var _l = l;
+    var _n = n;
+    while(true) {
+      var n$1 = _n;
+      var l$1 = _l;
+      if (l$1) {
+        if (n$1) {
+          _n = n$1 - 1 | 0;
+          _l = l$1[1];
+          continue ;
+          
+        } else {
+          return l$1[0];
+        }
+      } else {
+        throw [
+              Caml_builtin_exceptions.failure,
+              "nth"
+            ];
+      }
+    };
+  }
+}
+
+function rev_append(_l1, _l2) {
+  while(true) {
+    var l2 = _l2;
+    var l1 = _l1;
+    if (l1) {
+      _l2 = /* :: */[
+        l1[0],
+        l2
+      ];
+      _l1 = l1[1];
+      continue ;
+      
+    } else {
+      return l2;
+    }
+  };
+}
+
+function rev(l) {
+  return rev_append(l, /* [] */0);
+}
+
+function flatten(param) {
+  if (param) {
+    return Pervasives.$at(param[0], flatten(param[1]));
+  } else {
+    return /* [] */0;
+  }
+}
+
+function map(f, param) {
+  if (param) {
+    var r = Curry._1(f, param[0]);
+    return /* :: */[
+            r,
+            map(f, param[1])
+          ];
+  } else {
+    return /* [] */0;
+  }
+}
+
+function mapi(i, f, param) {
+  if (param) {
+    var r = Curry._2(f, i, param[0]);
+    return /* :: */[
+            r,
+            mapi(i + 1 | 0, f, param[1])
+          ];
+  } else {
+    return /* [] */0;
+  }
+}
+
+function mapi$1(f, l) {
+  return mapi(0, f, l);
+}
+
+function rev_map(f, l) {
+  var _accu = /* [] */0;
+  var _param = l;
+  while(true) {
+    var param = _param;
+    var accu = _accu;
+    if (param) {
+      _param = param[1];
+      _accu = /* :: */[
+        Curry._1(f, param[0]),
+        accu
+      ];
+      continue ;
+      
+    } else {
+      return accu;
+    }
+  };
+}
+
+function iter(f, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      Curry._1(f, param[0]);
+      _param = param[1];
+      continue ;
+      
+    } else {
+      return /* () */0;
+    }
+  };
+}
+
+function iteri(f, l) {
+  var _i = 0;
+  var f$1 = f;
+  var _param = l;
+  while(true) {
+    var param = _param;
+    var i = _i;
+    if (param) {
+      Curry._2(f$1, i, param[0]);
+      _param = param[1];
+      _i = i + 1 | 0;
+      continue ;
+      
+    } else {
+      return /* () */0;
+    }
+  };
+}
+
+function fold_left(f, _accu, _l) {
+  while(true) {
+    var l = _l;
+    var accu = _accu;
+    if (l) {
+      _l = l[1];
+      _accu = Curry._2(f, accu, l[0]);
+      continue ;
+      
+    } else {
+      return accu;
+    }
+  };
+}
+
+function fold_right(f, l, accu) {
+  if (l) {
+    return Curry._2(f, l[0], fold_right(f, l[1], accu));
+  } else {
+    return accu;
+  }
+}
+
+function map2(f, l1, l2) {
+  if (l1) {
+    if (l2) {
+      var r = Curry._2(f, l1[0], l2[0]);
+      return /* :: */[
+              r,
+              map2(f, l1[1], l2[1])
+            ];
+    } else {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.map2"
+          ];
+    }
+  } else if (l2) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "List.map2"
+        ];
+  } else {
+    return /* [] */0;
+  }
+}
+
+function rev_map2(f, l1, l2) {
+  var _accu = /* [] */0;
+  var _l1 = l1;
+  var _l2 = l2;
+  while(true) {
+    var l2$1 = _l2;
+    var l1$1 = _l1;
+    var accu = _accu;
+    if (l1$1) {
+      if (l2$1) {
+        _l2 = l2$1[1];
+        _l1 = l1$1[1];
+        _accu = /* :: */[
+          Curry._2(f, l1$1[0], l2$1[0]),
+          accu
+        ];
+        continue ;
+        
+      } else {
+        throw [
+              Caml_builtin_exceptions.invalid_argument,
+              "List.rev_map2"
+            ];
+      }
+    } else if (l2$1) {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.rev_map2"
+          ];
+    } else {
+      return accu;
+    }
+  };
+}
+
+function iter2(f, _l1, _l2) {
+  while(true) {
+    var l2 = _l2;
+    var l1 = _l1;
+    if (l1) {
+      if (l2) {
+        Curry._2(f, l1[0], l2[0]);
+        _l2 = l2[1];
+        _l1 = l1[1];
+        continue ;
+        
+      } else {
+        throw [
+              Caml_builtin_exceptions.invalid_argument,
+              "List.iter2"
+            ];
+      }
+    } else if (l2) {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.iter2"
+          ];
+    } else {
+      return /* () */0;
+    }
+  };
+}
+
+function fold_left2(f, _accu, _l1, _l2) {
+  while(true) {
+    var l2 = _l2;
+    var l1 = _l1;
+    var accu = _accu;
+    if (l1) {
+      if (l2) {
+        _l2 = l2[1];
+        _l1 = l1[1];
+        _accu = Curry._3(f, accu, l1[0], l2[0]);
+        continue ;
+        
+      } else {
+        throw [
+              Caml_builtin_exceptions.invalid_argument,
+              "List.fold_left2"
+            ];
+      }
+    } else if (l2) {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.fold_left2"
+          ];
+    } else {
+      return accu;
+    }
+  };
+}
+
+function fold_right2(f, l1, l2, accu) {
+  if (l1) {
+    if (l2) {
+      return Curry._3(f, l1[0], l2[0], fold_right2(f, l1[1], l2[1], accu));
+    } else {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.fold_right2"
+          ];
+    }
+  } else if (l2) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "List.fold_right2"
+        ];
+  } else {
+    return accu;
+  }
+}
+
+function for_all(p, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      if (Curry._1(p, param[0])) {
+        _param = param[1];
+        continue ;
+        
+      } else {
+        return /* false */0;
+      }
+    } else {
+      return /* true */1;
+    }
+  };
+}
+
+function exists(p, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      if (Curry._1(p, param[0])) {
+        return /* true */1;
+      } else {
+        _param = param[1];
+        continue ;
+        
+      }
+    } else {
+      return /* false */0;
+    }
+  };
+}
+
+function for_all2(p, _l1, _l2) {
+  while(true) {
+    var l2 = _l2;
+    var l1 = _l1;
+    if (l1) {
+      if (l2) {
+        if (Curry._2(p, l1[0], l2[0])) {
+          _l2 = l2[1];
+          _l1 = l1[1];
+          continue ;
+          
+        } else {
+          return /* false */0;
+        }
+      } else {
+        throw [
+              Caml_builtin_exceptions.invalid_argument,
+              "List.for_all2"
+            ];
+      }
+    } else if (l2) {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.for_all2"
+          ];
+    } else {
+      return /* true */1;
+    }
+  };
+}
+
+function exists2(p, _l1, _l2) {
+  while(true) {
+    var l2 = _l2;
+    var l1 = _l1;
+    if (l1) {
+      if (l2) {
+        if (Curry._2(p, l1[0], l2[0])) {
+          return /* true */1;
+        } else {
+          _l2 = l2[1];
+          _l1 = l1[1];
+          continue ;
+          
+        }
+      } else {
+        throw [
+              Caml_builtin_exceptions.invalid_argument,
+              "List.exists2"
+            ];
+      }
+    } else if (l2) {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.exists2"
+          ];
+    } else {
+      return /* false */0;
+    }
+  };
+}
+
+function mem(x, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      if (Caml_obj.caml_compare(param[0], x)) {
+        _param = param[1];
+        continue ;
+        
+      } else {
+        return /* true */1;
+      }
+    } else {
+      return /* false */0;
+    }
+  };
+}
+
+function memq(x, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      if (param[0] === x) {
+        return /* true */1;
+      } else {
+        _param = param[1];
+        continue ;
+        
+      }
+    } else {
+      return /* false */0;
+    }
+  };
+}
+
+function assoc(x, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      var match = param[0];
+      if (Caml_obj.caml_compare(match[0], x)) {
+        _param = param[1];
+        continue ;
+        
+      } else {
+        return match[1];
+      }
+    } else {
+      throw Caml_builtin_exceptions.not_found;
+    }
+  };
+}
+
+function assq(x, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      var match = param[0];
+      if (match[0] === x) {
+        return match[1];
+      } else {
+        _param = param[1];
+        continue ;
+        
+      }
+    } else {
+      throw Caml_builtin_exceptions.not_found;
+    }
+  };
+}
+
+function mem_assoc(x, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      if (Caml_obj.caml_compare(param[0][0], x)) {
+        _param = param[1];
+        continue ;
+        
+      } else {
+        return /* true */1;
+      }
+    } else {
+      return /* false */0;
+    }
+  };
+}
+
+function mem_assq(x, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      if (param[0][0] === x) {
+        return /* true */1;
+      } else {
+        _param = param[1];
+        continue ;
+        
+      }
+    } else {
+      return /* false */0;
+    }
+  };
+}
+
+function remove_assoc(x, param) {
+  if (param) {
+    var l = param[1];
+    var pair = param[0];
+    if (Caml_obj.caml_compare(pair[0], x)) {
+      return /* :: */[
+              pair,
+              remove_assoc(x, l)
+            ];
+    } else {
+      return l;
+    }
+  } else {
+    return /* [] */0;
+  }
+}
+
+function remove_assq(x, param) {
+  if (param) {
+    var l = param[1];
+    var pair = param[0];
+    if (pair[0] === x) {
+      return l;
+    } else {
+      return /* :: */[
+              pair,
+              remove_assq(x, l)
+            ];
+    }
+  } else {
+    return /* [] */0;
+  }
+}
+
+function find(p, _param) {
+  while(true) {
+    var param = _param;
+    if (param) {
+      var x = param[0];
+      if (Curry._1(p, x)) {
+        return x;
+      } else {
+        _param = param[1];
+        continue ;
+        
+      }
+    } else {
+      throw Caml_builtin_exceptions.not_found;
+    }
+  };
+}
+
+function find_all(p) {
+  return (function (param) {
+      var _accu = /* [] */0;
+      var _param = param;
+      while(true) {
+        var param$1 = _param;
+        var accu = _accu;
+        if (param$1) {
+          var l = param$1[1];
+          var x = param$1[0];
+          if (Curry._1(p, x)) {
+            _param = l;
+            _accu = /* :: */[
+              x,
+              accu
+            ];
+            continue ;
+            
+          } else {
+            _param = l;
+            continue ;
+            
+          }
+        } else {
+          return rev_append(accu, /* [] */0);
+        }
+      };
+    });
+}
+
+function partition(p, l) {
+  var _yes = /* [] */0;
+  var _no = /* [] */0;
+  var _param = l;
+  while(true) {
+    var param = _param;
+    var no = _no;
+    var yes = _yes;
+    if (param) {
+      var l$1 = param[1];
+      var x = param[0];
+      if (Curry._1(p, x)) {
+        _param = l$1;
+        _yes = /* :: */[
+          x,
+          yes
+        ];
+        continue ;
+        
+      } else {
+        _param = l$1;
+        _no = /* :: */[
+          x,
+          no
+        ];
+        continue ;
+        
+      }
+    } else {
+      return /* tuple */[
+              rev_append(yes, /* [] */0),
+              rev_append(no, /* [] */0)
+            ];
+    }
+  };
+}
+
+function split(param) {
+  if (param) {
+    var match = param[0];
+    var match$1 = split(param[1]);
+    return /* tuple */[
+            /* :: */[
+              match[0],
+              match$1[0]
+            ],
+            /* :: */[
+              match[1],
+              match$1[1]
+            ]
+          ];
+  } else {
+    return /* tuple */[
+            /* [] */0,
+            /* [] */0
+          ];
+  }
+}
+
+function combine(l1, l2) {
+  if (l1) {
+    if (l2) {
+      return /* :: */[
+              /* tuple */[
+                l1[0],
+                l2[0]
+              ],
+              combine(l1[1], l2[1])
+            ];
+    } else {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "List.combine"
+          ];
+    }
+  } else if (l2) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "List.combine"
+        ];
+  } else {
+    return /* [] */0;
+  }
+}
+
+function merge(cmp, l1, l2) {
+  if (l1) {
+    if (l2) {
+      var h2 = l2[0];
+      var h1 = l1[0];
+      if (Curry._2(cmp, h1, h2) <= 0) {
+        return /* :: */[
+                h1,
+                merge(cmp, l1[1], l2)
+              ];
+      } else {
+        return /* :: */[
+                h2,
+                merge(cmp, l1, l2[1])
+              ];
+      }
+    } else {
+      return l1;
+    }
+  } else {
+    return l2;
+  }
+}
+
+function chop(_k, _l) {
+  while(true) {
+    var l = _l;
+    var k = _k;
+    if (k) {
+      if (l) {
+        _l = l[1];
+        _k = k - 1 | 0;
+        continue ;
+        
+      } else {
+        throw [
+              Caml_builtin_exceptions.assert_failure,
+              [
+                "list.ml",
+                223,
+                11
+              ]
+            ];
+      }
+    } else {
+      return l;
+    }
+  };
+}
+
+function stable_sort(cmp, l) {
+  var sort = function (n, l) {
+    var exit = 0;
+    if (n !== 2) {
+      if (n !== 3) {
+        exit = 1;
+      } else if (l) {
+        var match = l[1];
+        if (match) {
+          var match$1 = match[1];
+          if (match$1) {
+            var x3 = match$1[0];
+            var x2 = match[0];
+            var x1 = l[0];
+            if (Curry._2(cmp, x1, x2) <= 0) {
+              if (Curry._2(cmp, x2, x3) <= 0) {
+                return /* :: */[
+                        x1,
+                        /* :: */[
+                          x2,
+                          /* :: */[
+                            x3,
+                            /* [] */0
+                          ]
+                        ]
+                      ];
+              } else if (Curry._2(cmp, x1, x3) <= 0) {
+                return /* :: */[
+                        x1,
+                        /* :: */[
+                          x3,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ]
+                      ];
+              } else {
+                return /* :: */[
+                        x3,
+                        /* :: */[
+                          x1,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ]
+                      ];
+              }
+            } else if (Curry._2(cmp, x1, x3) <= 0) {
+              return /* :: */[
+                      x2,
+                      /* :: */[
+                        x1,
+                        /* :: */[
+                          x3,
+                          /* [] */0
+                        ]
+                      ]
+                    ];
+            } else if (Curry._2(cmp, x2, x3) <= 0) {
+              return /* :: */[
+                      x2,
+                      /* :: */[
+                        x3,
+                        /* :: */[
+                          x1,
+                          /* [] */0
+                        ]
+                      ]
+                    ];
+            } else {
+              return /* :: */[
+                      x3,
+                      /* :: */[
+                        x2,
+                        /* :: */[
+                          x1,
+                          /* [] */0
+                        ]
+                      ]
+                    ];
+            }
+          } else {
+            exit = 1;
+          }
+        } else {
+          exit = 1;
+        }
+      } else {
+        exit = 1;
+      }
+    } else if (l) {
+      var match$2 = l[1];
+      if (match$2) {
+        var x2$1 = match$2[0];
+        var x1$1 = l[0];
+        if (Curry._2(cmp, x1$1, x2$1) <= 0) {
+          return /* :: */[
+                  x1$1,
+                  /* :: */[
+                    x2$1,
+                    /* [] */0
+                  ]
+                ];
+        } else {
+          return /* :: */[
+                  x2$1,
+                  /* :: */[
+                    x1$1,
+                    /* [] */0
+                  ]
+                ];
+        }
+      } else {
+        exit = 1;
+      }
+    } else {
+      exit = 1;
+    }
+    if (exit === 1) {
+      var n1 = (n >> 1);
+      var n2 = n - n1 | 0;
+      var l2 = chop(n1, l);
+      var s1 = rev_sort(n1, l);
+      var s2 = rev_sort(n2, l2);
+      var _l1 = s1;
+      var _l2 = s2;
+      var _accu = /* [] */0;
+      while(true) {
+        var accu = _accu;
+        var l2$1 = _l2;
+        var l1 = _l1;
+        if (l1) {
+          if (l2$1) {
+            var h2 = l2$1[0];
+            var h1 = l1[0];
+            if (Curry._2(cmp, h1, h2) > 0) {
+              _accu = /* :: */[
+                h1,
+                accu
+              ];
+              _l1 = l1[1];
+              continue ;
+              
+            } else {
+              _accu = /* :: */[
+                h2,
+                accu
+              ];
+              _l2 = l2$1[1];
+              continue ;
+              
+            }
+          } else {
+            return rev_append(l1, accu);
+          }
+        } else {
+          return rev_append(l2$1, accu);
+        }
+      };
+    }
+    
+  };
+  var rev_sort = function (n, l) {
+    var exit = 0;
+    if (n !== 2) {
+      if (n !== 3) {
+        exit = 1;
+      } else if (l) {
+        var match = l[1];
+        if (match) {
+          var match$1 = match[1];
+          if (match$1) {
+            var x3 = match$1[0];
+            var x2 = match[0];
+            var x1 = l[0];
+            if (Curry._2(cmp, x1, x2) > 0) {
+              if (Curry._2(cmp, x2, x3) > 0) {
+                return /* :: */[
+                        x1,
+                        /* :: */[
+                          x2,
+                          /* :: */[
+                            x3,
+                            /* [] */0
+                          ]
+                        ]
+                      ];
+              } else if (Curry._2(cmp, x1, x3) > 0) {
+                return /* :: */[
+                        x1,
+                        /* :: */[
+                          x3,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ]
+                      ];
+              } else {
+                return /* :: */[
+                        x3,
+                        /* :: */[
+                          x1,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ]
+                      ];
+              }
+            } else if (Curry._2(cmp, x1, x3) > 0) {
+              return /* :: */[
+                      x2,
+                      /* :: */[
+                        x1,
+                        /* :: */[
+                          x3,
+                          /* [] */0
+                        ]
+                      ]
+                    ];
+            } else if (Curry._2(cmp, x2, x3) > 0) {
+              return /* :: */[
+                      x2,
+                      /* :: */[
+                        x3,
+                        /* :: */[
+                          x1,
+                          /* [] */0
+                        ]
+                      ]
+                    ];
+            } else {
+              return /* :: */[
+                      x3,
+                      /* :: */[
+                        x2,
+                        /* :: */[
+                          x1,
+                          /* [] */0
+                        ]
+                      ]
+                    ];
+            }
+          } else {
+            exit = 1;
+          }
+        } else {
+          exit = 1;
+        }
+      } else {
+        exit = 1;
+      }
+    } else if (l) {
+      var match$2 = l[1];
+      if (match$2) {
+        var x2$1 = match$2[0];
+        var x1$1 = l[0];
+        if (Curry._2(cmp, x1$1, x2$1) > 0) {
+          return /* :: */[
+                  x1$1,
+                  /* :: */[
+                    x2$1,
+                    /* [] */0
+                  ]
+                ];
+        } else {
+          return /* :: */[
+                  x2$1,
+                  /* :: */[
+                    x1$1,
+                    /* [] */0
+                  ]
+                ];
+        }
+      } else {
+        exit = 1;
+      }
+    } else {
+      exit = 1;
+    }
+    if (exit === 1) {
+      var n1 = (n >> 1);
+      var n2 = n - n1 | 0;
+      var l2 = chop(n1, l);
+      var s1 = sort(n1, l);
+      var s2 = sort(n2, l2);
+      var _l1 = s1;
+      var _l2 = s2;
+      var _accu = /* [] */0;
+      while(true) {
+        var accu = _accu;
+        var l2$1 = _l2;
+        var l1 = _l1;
+        if (l1) {
+          if (l2$1) {
+            var h2 = l2$1[0];
+            var h1 = l1[0];
+            if (Curry._2(cmp, h1, h2) <= 0) {
+              _accu = /* :: */[
+                h1,
+                accu
+              ];
+              _l1 = l1[1];
+              continue ;
+              
+            } else {
+              _accu = /* :: */[
+                h2,
+                accu
+              ];
+              _l2 = l2$1[1];
+              continue ;
+              
+            }
+          } else {
+            return rev_append(l1, accu);
+          }
+        } else {
+          return rev_append(l2$1, accu);
+        }
+      };
+    }
+    
+  };
+  var len = length(l);
+  if (len < 2) {
+    return l;
+  } else {
+    return sort(len, l);
+  }
+}
+
+function sort_uniq(cmp, l) {
+  var sort = function (n, l) {
+    var exit = 0;
+    if (n !== 2) {
+      if (n !== 3) {
+        exit = 1;
+      } else if (l) {
+        var match = l[1];
+        if (match) {
+          var match$1 = match[1];
+          if (match$1) {
+            var x3 = match$1[0];
+            var x2 = match[0];
+            var x1 = l[0];
+            var c = Curry._2(cmp, x1, x2);
+            if (c) {
+              if (c < 0) {
+                var c$1 = Curry._2(cmp, x2, x3);
+                if (c$1) {
+                  if (c$1 < 0) {
+                    return /* :: */[
+                            x1,
+                            /* :: */[
+                              x2,
+                              /* :: */[
+                                x3,
+                                /* [] */0
+                              ]
+                            ]
+                          ];
+                  } else {
+                    var c$2 = Curry._2(cmp, x1, x3);
+                    if (c$2) {
+                      if (c$2 < 0) {
+                        return /* :: */[
+                                x1,
+                                /* :: */[
+                                  x3,
+                                  /* :: */[
+                                    x2,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      } else {
+                        return /* :: */[
+                                x3,
+                                /* :: */[
+                                  x1,
+                                  /* :: */[
+                                    x2,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      }
+                    } else {
+                      return /* :: */[
+                              x1,
+                              /* :: */[
+                                x2,
+                                /* [] */0
+                              ]
+                            ];
+                    }
+                  }
+                } else {
+                  return /* :: */[
+                          x1,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ];
+                }
+              } else {
+                var c$3 = Curry._2(cmp, x1, x3);
+                if (c$3) {
+                  if (c$3 < 0) {
+                    return /* :: */[
+                            x2,
+                            /* :: */[
+                              x1,
+                              /* :: */[
+                                x3,
+                                /* [] */0
+                              ]
+                            ]
+                          ];
+                  } else {
+                    var c$4 = Curry._2(cmp, x2, x3);
+                    if (c$4) {
+                      if (c$4 < 0) {
+                        return /* :: */[
+                                x2,
+                                /* :: */[
+                                  x3,
+                                  /* :: */[
+                                    x1,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      } else {
+                        return /* :: */[
+                                x3,
+                                /* :: */[
+                                  x2,
+                                  /* :: */[
+                                    x1,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      }
+                    } else {
+                      return /* :: */[
+                              x2,
+                              /* :: */[
+                                x1,
+                                /* [] */0
+                              ]
+                            ];
+                    }
+                  }
+                } else {
+                  return /* :: */[
+                          x2,
+                          /* :: */[
+                            x1,
+                            /* [] */0
+                          ]
+                        ];
+                }
+              }
+            } else {
+              var c$5 = Curry._2(cmp, x2, x3);
+              if (c$5) {
+                if (c$5 < 0) {
+                  return /* :: */[
+                          x2,
+                          /* :: */[
+                            x3,
+                            /* [] */0
+                          ]
+                        ];
+                } else {
+                  return /* :: */[
+                          x3,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ];
+                }
+              } else {
+                return /* :: */[
+                        x2,
+                        /* [] */0
+                      ];
+              }
+            }
+          } else {
+            exit = 1;
+          }
+        } else {
+          exit = 1;
+        }
+      } else {
+        exit = 1;
+      }
+    } else if (l) {
+      var match$2 = l[1];
+      if (match$2) {
+        var x2$1 = match$2[0];
+        var x1$1 = l[0];
+        var c$6 = Curry._2(cmp, x1$1, x2$1);
+        if (c$6) {
+          if (c$6 < 0) {
+            return /* :: */[
+                    x1$1,
+                    /* :: */[
+                      x2$1,
+                      /* [] */0
+                    ]
+                  ];
+          } else {
+            return /* :: */[
+                    x2$1,
+                    /* :: */[
+                      x1$1,
+                      /* [] */0
+                    ]
+                  ];
+          }
+        } else {
+          return /* :: */[
+                  x1$1,
+                  /* [] */0
+                ];
+        }
+      } else {
+        exit = 1;
+      }
+    } else {
+      exit = 1;
+    }
+    if (exit === 1) {
+      var n1 = (n >> 1);
+      var n2 = n - n1 | 0;
+      var l2 = chop(n1, l);
+      var s1 = rev_sort(n1, l);
+      var s2 = rev_sort(n2, l2);
+      var _l1 = s1;
+      var _l2 = s2;
+      var _accu = /* [] */0;
+      while(true) {
+        var accu = _accu;
+        var l2$1 = _l2;
+        var l1 = _l1;
+        if (l1) {
+          if (l2$1) {
+            var t2 = l2$1[1];
+            var h2 = l2$1[0];
+            var t1 = l1[1];
+            var h1 = l1[0];
+            var c$7 = Curry._2(cmp, h1, h2);
+            if (c$7) {
+              if (c$7 > 0) {
+                _accu = /* :: */[
+                  h1,
+                  accu
+                ];
+                _l1 = t1;
+                continue ;
+                
+              } else {
+                _accu = /* :: */[
+                  h2,
+                  accu
+                ];
+                _l2 = t2;
+                continue ;
+                
+              }
+            } else {
+              _accu = /* :: */[
+                h1,
+                accu
+              ];
+              _l2 = t2;
+              _l1 = t1;
+              continue ;
+              
+            }
+          } else {
+            return rev_append(l1, accu);
+          }
+        } else {
+          return rev_append(l2$1, accu);
+        }
+      };
+    }
+    
+  };
+  var rev_sort = function (n, l) {
+    var exit = 0;
+    if (n !== 2) {
+      if (n !== 3) {
+        exit = 1;
+      } else if (l) {
+        var match = l[1];
+        if (match) {
+          var match$1 = match[1];
+          if (match$1) {
+            var x3 = match$1[0];
+            var x2 = match[0];
+            var x1 = l[0];
+            var c = Curry._2(cmp, x1, x2);
+            if (c) {
+              if (c > 0) {
+                var c$1 = Curry._2(cmp, x2, x3);
+                if (c$1) {
+                  if (c$1 > 0) {
+                    return /* :: */[
+                            x1,
+                            /* :: */[
+                              x2,
+                              /* :: */[
+                                x3,
+                                /* [] */0
+                              ]
+                            ]
+                          ];
+                  } else {
+                    var c$2 = Curry._2(cmp, x1, x3);
+                    if (c$2) {
+                      if (c$2 > 0) {
+                        return /* :: */[
+                                x1,
+                                /* :: */[
+                                  x3,
+                                  /* :: */[
+                                    x2,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      } else {
+                        return /* :: */[
+                                x3,
+                                /* :: */[
+                                  x1,
+                                  /* :: */[
+                                    x2,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      }
+                    } else {
+                      return /* :: */[
+                              x1,
+                              /* :: */[
+                                x2,
+                                /* [] */0
+                              ]
+                            ];
+                    }
+                  }
+                } else {
+                  return /* :: */[
+                          x1,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ];
+                }
+              } else {
+                var c$3 = Curry._2(cmp, x1, x3);
+                if (c$3) {
+                  if (c$3 > 0) {
+                    return /* :: */[
+                            x2,
+                            /* :: */[
+                              x1,
+                              /* :: */[
+                                x3,
+                                /* [] */0
+                              ]
+                            ]
+                          ];
+                  } else {
+                    var c$4 = Curry._2(cmp, x2, x3);
+                    if (c$4) {
+                      if (c$4 > 0) {
+                        return /* :: */[
+                                x2,
+                                /* :: */[
+                                  x3,
+                                  /* :: */[
+                                    x1,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      } else {
+                        return /* :: */[
+                                x3,
+                                /* :: */[
+                                  x2,
+                                  /* :: */[
+                                    x1,
+                                    /* [] */0
+                                  ]
+                                ]
+                              ];
+                      }
+                    } else {
+                      return /* :: */[
+                              x2,
+                              /* :: */[
+                                x1,
+                                /* [] */0
+                              ]
+                            ];
+                    }
+                  }
+                } else {
+                  return /* :: */[
+                          x2,
+                          /* :: */[
+                            x1,
+                            /* [] */0
+                          ]
+                        ];
+                }
+              }
+            } else {
+              var c$5 = Curry._2(cmp, x2, x3);
+              if (c$5) {
+                if (c$5 > 0) {
+                  return /* :: */[
+                          x2,
+                          /* :: */[
+                            x3,
+                            /* [] */0
+                          ]
+                        ];
+                } else {
+                  return /* :: */[
+                          x3,
+                          /* :: */[
+                            x2,
+                            /* [] */0
+                          ]
+                        ];
+                }
+              } else {
+                return /* :: */[
+                        x2,
+                        /* [] */0
+                      ];
+              }
+            }
+          } else {
+            exit = 1;
+          }
+        } else {
+          exit = 1;
+        }
+      } else {
+        exit = 1;
+      }
+    } else if (l) {
+      var match$2 = l[1];
+      if (match$2) {
+        var x2$1 = match$2[0];
+        var x1$1 = l[0];
+        var c$6 = Curry._2(cmp, x1$1, x2$1);
+        if (c$6) {
+          if (c$6 > 0) {
+            return /* :: */[
+                    x1$1,
+                    /* :: */[
+                      x2$1,
+                      /* [] */0
+                    ]
+                  ];
+          } else {
+            return /* :: */[
+                    x2$1,
+                    /* :: */[
+                      x1$1,
+                      /* [] */0
+                    ]
+                  ];
+          }
+        } else {
+          return /* :: */[
+                  x1$1,
+                  /* [] */0
+                ];
+        }
+      } else {
+        exit = 1;
+      }
+    } else {
+      exit = 1;
+    }
+    if (exit === 1) {
+      var n1 = (n >> 1);
+      var n2 = n - n1 | 0;
+      var l2 = chop(n1, l);
+      var s1 = sort(n1, l);
+      var s2 = sort(n2, l2);
+      var _l1 = s1;
+      var _l2 = s2;
+      var _accu = /* [] */0;
+      while(true) {
+        var accu = _accu;
+        var l2$1 = _l2;
+        var l1 = _l1;
+        if (l1) {
+          if (l2$1) {
+            var t2 = l2$1[1];
+            var h2 = l2$1[0];
+            var t1 = l1[1];
+            var h1 = l1[0];
+            var c$7 = Curry._2(cmp, h1, h2);
+            if (c$7) {
+              if (c$7 < 0) {
+                _accu = /* :: */[
+                  h1,
+                  accu
+                ];
+                _l1 = t1;
+                continue ;
+                
+              } else {
+                _accu = /* :: */[
+                  h2,
+                  accu
+                ];
+                _l2 = t2;
+                continue ;
+                
+              }
+            } else {
+              _accu = /* :: */[
+                h1,
+                accu
+              ];
+              _l2 = t2;
+              _l1 = t1;
+              continue ;
+              
+            }
+          } else {
+            return rev_append(l1, accu);
+          }
+        } else {
+          return rev_append(l2$1, accu);
+        }
+      };
+    }
+    
+  };
+  var len = length(l);
+  if (len < 2) {
+    return l;
+  } else {
+    return sort(len, l);
+  }
+}
+
+var append = Pervasives.$at;
+
+var concat = flatten;
+
+var filter = find_all;
+
+var sort = stable_sort;
+
+var fast_sort = stable_sort;
+
+exports.length       = length;
+exports.hd           = hd;
+exports.tl           = tl;
+exports.nth          = nth;
+exports.rev          = rev;
+exports.append       = append;
+exports.rev_append   = rev_append;
+exports.concat       = concat;
+exports.flatten      = flatten;
+exports.iter         = iter;
+exports.iteri        = iteri;
+exports.map          = map;
+exports.mapi         = mapi$1;
+exports.rev_map      = rev_map;
+exports.fold_left    = fold_left;
+exports.fold_right   = fold_right;
+exports.iter2        = iter2;
+exports.map2         = map2;
+exports.rev_map2     = rev_map2;
+exports.fold_left2   = fold_left2;
+exports.fold_right2  = fold_right2;
+exports.for_all      = for_all;
+exports.exists       = exists;
+exports.for_all2     = for_all2;
+exports.exists2      = exists2;
+exports.mem          = mem;
+exports.memq         = memq;
+exports.find         = find;
+exports.filter       = filter;
+exports.find_all     = find_all;
+exports.partition    = partition;
+exports.assoc        = assoc;
+exports.assq         = assq;
+exports.mem_assoc    = mem_assoc;
+exports.mem_assq     = mem_assq;
+exports.remove_assoc = remove_assoc;
+exports.remove_assq  = remove_assq;
+exports.split        = split;
+exports.combine      = combine;
+exports.sort         = sort;
+exports.stable_sort  = stable_sort;
+exports.fast_sort    = fast_sort;
+exports.sort_uniq    = sort_uniq;
+exports.merge        = merge;
+/* No side effect */
+
+
+/***/ }),
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3113,10 +4352,10 @@ exports.caml_ml_input_char          = caml_ml_input_char;
 exports.caml_ml_out_channels_list   = caml_ml_out_channels_list;
 /* stdin Not a pure module */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3213,19 +4452,19 @@ exports.caml_sys_is_directory   = caml_sys_is_directory;
 exports.caml_sys_file_exists    = caml_sys_file_exists;
 /* No side effect */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Curry                   = __webpack_require__(1);
-var Caml_int32              = __webpack_require__(7);
-var Caml_int64              = __webpack_require__(16);
-var Caml_utils              = __webpack_require__(8);
+var Caml_int32              = __webpack_require__(8);
+var Caml_int64              = __webpack_require__(15);
+var Caml_utils              = __webpack_require__(9);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_failwith(s) {
@@ -4024,15 +5263,15 @@ exports.caml_nativeint_of_string = caml_nativeint_of_string;
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Caml_obj                = __webpack_require__(5);
-var Caml_int32              = __webpack_require__(7);
-var Caml_utils              = __webpack_require__(8);
+var Caml_obj                = __webpack_require__(4);
+var Caml_int32              = __webpack_require__(8);
+var Caml_utils              = __webpack_require__(9);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 var min_int = /* record */[
@@ -4631,7 +5870,7 @@ exports.get64         = get64;
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4841,7 +6080,7 @@ exports.get                       = get;
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4855,13 +6094,13 @@ exports.not_implemented = not_implemented;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Block = __webpack_require__(6);
+var Block = __webpack_require__(5);
 
 function erase_rel(param) {
   if (typeof param === "number") {
@@ -5090,7 +6329,508 @@ exports.concat_fmt   = concat_fmt;
 
 
 /***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Curry                   = __webpack_require__(1);
+var Js_exn                  = __webpack_require__(20);
+var Caml_array              = __webpack_require__(3);
+var Caml_exceptions         = __webpack_require__(2);
+var Caml_builtin_exceptions = __webpack_require__(0);
+
+function init(l, f) {
+  if (l) {
+    if (l < 0) {
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "Array.init"
+          ];
+    } else {
+      var res = Caml_array.caml_make_vect(l, Curry._1(f, 0));
+      for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
+        res[i] = Curry._1(f, i);
+      }
+      return res;
+    }
+  } else {
+    return /* array */[];
+  }
+}
+
+function make_matrix(sx, sy, init) {
+  var res = Caml_array.caml_make_vect(sx, /* array */[]);
+  for(var x = 0 ,x_finish = sx - 1 | 0; x <= x_finish; ++x){
+    res[x] = Caml_array.caml_make_vect(sy, init);
+  }
+  return res;
+}
+
+function copy(a) {
+  var l = a.length;
+  if (l) {
+    return Caml_array.caml_array_sub(a, 0, l);
+  } else {
+    return /* array */[];
+  }
+}
+
+function append(a1, a2) {
+  var l1 = a1.length;
+  if (l1) {
+    if (a2.length) {
+      return a1.concat(a2);
+    } else {
+      return Caml_array.caml_array_sub(a1, 0, l1);
+    }
+  } else {
+    return copy(a2);
+  }
+}
+
+function sub(a, ofs, len) {
+  if (len < 0 || ofs > (a.length - len | 0)) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "Array.sub"
+        ];
+  } else {
+    return Caml_array.caml_array_sub(a, ofs, len);
+  }
+}
+
+function fill(a, ofs, len, v) {
+  if (ofs < 0 || len < 0 || ofs > (a.length - len | 0)) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "Array.fill"
+        ];
+  } else {
+    for(var i = ofs ,i_finish = (ofs + len | 0) - 1 | 0; i <= i_finish; ++i){
+      a[i] = v;
+    }
+    return /* () */0;
+  }
+}
+
+function blit(a1, ofs1, a2, ofs2, len) {
+  if (len < 0 || ofs1 < 0 || ofs1 > (a1.length - len | 0) || ofs2 < 0 || ofs2 > (a2.length - len | 0)) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "Array.blit"
+        ];
+  } else {
+    return Caml_array.caml_array_blit(a1, ofs1, a2, ofs2, len);
+  }
+}
+
+function iter(f, a) {
+  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
+    Curry._1(f, a[i]);
+  }
+  return /* () */0;
+}
+
+function map(f, a) {
+  var l = a.length;
+  if (l) {
+    var r = Caml_array.caml_make_vect(l, Curry._1(f, a[0]));
+    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
+      r[i] = Curry._1(f, a[i]);
+    }
+    return r;
+  } else {
+    return /* array */[];
+  }
+}
+
+function iteri(f, a) {
+  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
+    Curry._2(f, i, a[i]);
+  }
+  return /* () */0;
+}
+
+function mapi(f, a) {
+  var l = a.length;
+  if (l) {
+    var r = Caml_array.caml_make_vect(l, Curry._2(f, 0, a[0]));
+    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
+      r[i] = Curry._2(f, i, a[i]);
+    }
+    return r;
+  } else {
+    return /* array */[];
+  }
+}
+
+function to_list(a) {
+  var _i = a.length - 1 | 0;
+  var _res = /* [] */0;
+  while(true) {
+    var res = _res;
+    var i = _i;
+    if (i < 0) {
+      return res;
+    } else {
+      _res = /* :: */[
+        a[i],
+        res
+      ];
+      _i = i - 1 | 0;
+      continue ;
+      
+    }
+  };
+}
+
+function list_length(_accu, _param) {
+  while(true) {
+    var param = _param;
+    var accu = _accu;
+    if (param) {
+      _param = param[1];
+      _accu = accu + 1 | 0;
+      continue ;
+      
+    } else {
+      return accu;
+    }
+  };
+}
+
+function of_list(l) {
+  if (l) {
+    var a = Caml_array.caml_make_vect(list_length(0, l), l[0]);
+    var _i = 1;
+    var _param = l[1];
+    while(true) {
+      var param = _param;
+      var i = _i;
+      if (param) {
+        a[i] = param[0];
+        _param = param[1];
+        _i = i + 1 | 0;
+        continue ;
+        
+      } else {
+        return a;
+      }
+    };
+  } else {
+    return /* array */[];
+  }
+}
+
+function fold_left(f, x, a) {
+  var r = x;
+  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
+    r = Curry._2(f, r, a[i]);
+  }
+  return r;
+}
+
+function fold_right(f, a, x) {
+  var r = x;
+  for(var i = a.length - 1 | 0; i >= 0; --i){
+    r = Curry._2(f, a[i], r);
+  }
+  return r;
+}
+
+var Bottom = Caml_exceptions.create("Array.Bottom");
+
+function sort(cmp, a) {
+  var maxson = function (l, i) {
+    var i31 = ((i + i | 0) + i | 0) + 1 | 0;
+    var x = i31;
+    if ((i31 + 2 | 0) < l) {
+      if (Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
+        x = i31 + 1 | 0;
+      }
+      if (Curry._2(cmp, Caml_array.caml_array_get(a, x), Caml_array.caml_array_get(a, i31 + 2 | 0)) < 0) {
+        x = i31 + 2 | 0;
+      }
+      return x;
+    } else if ((i31 + 1 | 0) < l && Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
+      return i31 + 1 | 0;
+    } else if (i31 < l) {
+      return i31;
+    } else {
+      throw [
+            Bottom,
+            i
+          ];
+    }
+  };
+  var trickle = function (l, i, e) {
+    try {
+      var l$1 = l;
+      var _i = i;
+      var e$1 = e;
+      while(true) {
+        var i$1 = _i;
+        var j = maxson(l$1, i$1);
+        if (Curry._2(cmp, Caml_array.caml_array_get(a, j), e$1) > 0) {
+          Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
+          _i = j;
+          continue ;
+          
+        } else {
+          return Caml_array.caml_array_set(a, i$1, e$1);
+        }
+      };
+    }
+    catch (raw_exn){
+      var exn = Js_exn.internalToOCamlException(raw_exn);
+      if (exn[0] === Bottom) {
+        return Caml_array.caml_array_set(a, exn[1], e);
+      } else {
+        throw exn;
+      }
+    }
+  };
+  var bubble = function (l, i) {
+    try {
+      var l$1 = l;
+      var _i = i;
+      while(true) {
+        var i$1 = _i;
+        var j = maxson(l$1, i$1);
+        Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
+        _i = j;
+        continue ;
+        
+      };
+    }
+    catch (raw_exn){
+      var exn = Js_exn.internalToOCamlException(raw_exn);
+      if (exn[0] === Bottom) {
+        return exn[1];
+      } else {
+        throw exn;
+      }
+    }
+  };
+  var trickleup = function (_i, e) {
+    while(true) {
+      var i = _i;
+      var father = (i - 1 | 0) / 3 | 0;
+      if (i === father) {
+        throw [
+              Caml_builtin_exceptions.assert_failure,
+              [
+                "array.ml",
+                168,
+                4
+              ]
+            ];
+      }
+      if (Curry._2(cmp, Caml_array.caml_array_get(a, father), e) < 0) {
+        Caml_array.caml_array_set(a, i, Caml_array.caml_array_get(a, father));
+        if (father > 0) {
+          _i = father;
+          continue ;
+          
+        } else {
+          return Caml_array.caml_array_set(a, 0, e);
+        }
+      } else {
+        return Caml_array.caml_array_set(a, i, e);
+      }
+    };
+  };
+  var l = a.length;
+  for(var i = ((l + 1 | 0) / 3 | 0) - 1 | 0; i >= 0; --i){
+    trickle(l, i, Caml_array.caml_array_get(a, i));
+  }
+  for(var i$1 = l - 1 | 0; i$1 >= 2; --i$1){
+    var e = Caml_array.caml_array_get(a, i$1);
+    Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, 0));
+    trickleup(bubble(i$1, 0), e);
+  }
+  if (l > 1) {
+    var e$1 = Caml_array.caml_array_get(a, 1);
+    Caml_array.caml_array_set(a, 1, Caml_array.caml_array_get(a, 0));
+    return Caml_array.caml_array_set(a, 0, e$1);
+  } else {
+    return 0;
+  }
+}
+
+function stable_sort(cmp, a) {
+  var merge = function (src1ofs, src1len, src2, src2ofs, src2len, dst, dstofs) {
+    var src1r = src1ofs + src1len | 0;
+    var src2r = src2ofs + src2len | 0;
+    var _i1 = src1ofs;
+    var _s1 = Caml_array.caml_array_get(a, src1ofs);
+    var _i2 = src2ofs;
+    var _s2 = Caml_array.caml_array_get(src2, src2ofs);
+    var _d = dstofs;
+    while(true) {
+      var d = _d;
+      var s2 = _s2;
+      var i2 = _i2;
+      var s1 = _s1;
+      var i1 = _i1;
+      if (Curry._2(cmp, s1, s2) <= 0) {
+        Caml_array.caml_array_set(dst, d, s1);
+        var i1$1 = i1 + 1 | 0;
+        if (i1$1 < src1r) {
+          _d = d + 1 | 0;
+          _s1 = Caml_array.caml_array_get(a, i1$1);
+          _i1 = i1$1;
+          continue ;
+          
+        } else {
+          return blit(src2, i2, dst, d + 1 | 0, src2r - i2 | 0);
+        }
+      } else {
+        Caml_array.caml_array_set(dst, d, s2);
+        var i2$1 = i2 + 1 | 0;
+        if (i2$1 < src2r) {
+          _d = d + 1 | 0;
+          _s2 = Caml_array.caml_array_get(src2, i2$1);
+          _i2 = i2$1;
+          continue ;
+          
+        } else {
+          return blit(a, i1, dst, d + 1 | 0, src1r - i1 | 0);
+        }
+      }
+    };
+  };
+  var isortto = function (srcofs, dst, dstofs, len) {
+    for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
+      var e = Caml_array.caml_array_get(a, srcofs + i | 0);
+      var j = (dstofs + i | 0) - 1 | 0;
+      while(j >= dstofs && Curry._2(cmp, Caml_array.caml_array_get(dst, j), e) > 0) {
+        Caml_array.caml_array_set(dst, j + 1 | 0, Caml_array.caml_array_get(dst, j));
+        j = j - 1 | 0;
+      };
+      Caml_array.caml_array_set(dst, j + 1 | 0, e);
+    }
+    return /* () */0;
+  };
+  var sortto = function (srcofs, dst, dstofs, len) {
+    if (len <= 5) {
+      return isortto(srcofs, dst, dstofs, len);
+    } else {
+      var l1 = len / 2 | 0;
+      var l2 = len - l1 | 0;
+      sortto(srcofs + l1 | 0, dst, dstofs + l1 | 0, l2);
+      sortto(srcofs, a, srcofs + l2 | 0, l1);
+      return merge(srcofs + l2 | 0, l1, dst, dstofs + l1 | 0, l2, dst, dstofs);
+    }
+  };
+  var l = a.length;
+  if (l <= 5) {
+    return isortto(0, a, 0, l);
+  } else {
+    var l1 = l / 2 | 0;
+    var l2 = l - l1 | 0;
+    var t = Caml_array.caml_make_vect(l2, Caml_array.caml_array_get(a, 0));
+    sortto(l1, t, 0, l2);
+    sortto(0, a, l2, l1);
+    return merge(l2, l1, t, 0, l2, a, 0);
+  }
+}
+
+var create_matrix = make_matrix;
+
+var concat = Caml_array.caml_array_concat;
+
+var fast_sort = stable_sort;
+
+exports.init          = init;
+exports.make_matrix   = make_matrix;
+exports.create_matrix = create_matrix;
+exports.append        = append;
+exports.concat        = concat;
+exports.sub           = sub;
+exports.copy          = copy;
+exports.fill          = fill;
+exports.blit          = blit;
+exports.to_list       = to_list;
+exports.of_list       = of_list;
+exports.iter          = iter;
+exports.map           = map;
+exports.iteri         = iteri;
+exports.mapi          = mapi;
+exports.fold_left     = fold_left;
+exports.fold_right    = fold_right;
+exports.sort          = sort;
+exports.stable_sort   = stable_sort;
+exports.fast_sort     = fast_sort;
+/* No side effect */
+
+
+/***/ }),
 /* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Caml_exceptions = __webpack_require__(2);
+
+var $$Error = Caml_exceptions.create("Js_exn.Error");
+
+function internalToOCamlException(e) {
+  if (Caml_exceptions.isCamlExceptionOrOpenVariant(e)) {
+    return e;
+  } else {
+    return [
+            $$Error,
+            e
+          ];
+  }
+}
+
+function raiseError(str) {
+  throw new Error(str);
+}
+
+function raiseEvalError(str) {
+  throw new EvalError(str);
+}
+
+function raiseRangeError(str) {
+  throw new RangeError(str);
+}
+
+function raiseReferenceError(str) {
+  throw new ReferenceError(str);
+}
+
+function raiseSyntaxError(str) {
+  throw new SyntaxError(str);
+}
+
+function raiseTypeError(str) {
+  throw new TypeError(str);
+}
+
+function raiseUriError(str) {
+  throw new URIError(str);
+}
+
+exports.$$Error                  = $$Error;
+exports.internalToOCamlException = internalToOCamlException;
+exports.raiseError               = raiseError;
+exports.raiseEvalError           = raiseEvalError;
+exports.raiseRangeError          = raiseRangeError;
+exports.raiseReferenceError      = raiseReferenceError;
+exports.raiseSyntaxError         = raiseSyntaxError;
+exports.raiseTypeError           = raiseTypeError;
+exports.raiseUriError            = raiseUriError;
+/* No side effect */
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5414,7 +7154,7 @@ exports.fromStringStructure = fromStringStructure;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* NOTE: This is the only file in this folder not transpiled by BUCKLESCRIPT.
@@ -5430,7 +7170,7 @@ function defineMemoryHelper(creepName, fieldName, value) {
 }
 
 function doWatcher(empty) {
-  var watcher = __webpack_require__(22);
+  var watcher = __webpack_require__(23);
   watcher();
 }
 
@@ -5440,10 +7180,6 @@ function getCreepEnergy(creepName) {
 
 function getCreepCarryCapacity(creepName) {
   return Game.creeps[creepName].carryCapacity;
-}
-
-function getSources(creep) {
-  return creep.room.find(FIND_SOURCES);
 }
 
 function getCreep(creepName) {
@@ -5462,17 +7198,24 @@ function findInRoom(room, thing) {
   return room.find(thing);
 }
 
+function spawnCreepWithMemoryHelper(spawnstring, body, memoryArray) {
+  memoryObject = {};
+  for(i=0; i < memoryArray.length; i = i + 2) {
+    memoryObject[memoryArray[i]] = memoryObject[i+1]
+  }
+  Game.spawns[spawnstring].createCreep(body, null, memoryObject);
+}
+
 exports.spawnCreepHelper = spawnCreepHelper;
 exports.defineMemoryHelper = defineMemoryHelper;
 exports.doWatcher = doWatcher;
 exports.getCreep = getCreep;
 exports.getCreepEnergy = getCreepEnergy;
-exports.getSources = getSources;
 exports.getRoom = getRoom;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = function() {

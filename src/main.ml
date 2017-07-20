@@ -5,6 +5,10 @@ let creepsObject = [%bs.raw{|Game.creeps|}]
 let spawns : string array = [%bs.raw{|Object.keys(Game.spawns)|}]
 let spawnsArray : string array = spawns
 let spawnsObject = [%bs.raw{|Game.spawns|}]
+let arrayFilter (filter : 'a -> bool) (array : 'a array) : 'a array =
+  let list = Array.to_list array in
+  let filteredList = List.filter filter list in
+  Array.of_list filteredList
 
 open ConstantConv
 
@@ -66,42 +70,54 @@ let bodyPartToString(part : bodyPart) : string =
   | HEAL -> "heal" ;
   | CLAIM -> "claim"
 
-external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
-external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
-external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
-external getRoom: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
-external getSources : creep -> roomObject array = "" [@@bs.module "./supplemental", "Supplement"]
-
-let spawnCreep(spawn : string) (body : bodyPart array) : unit =
-  let bodyCost = (arraySum(Array.map bodyPartToCost body )) in
-  (* if bodyCost > *)
-  spawnCreepHelper (spawn) (Array.map bodyPartToString body) ;
-  Js.log("Spawning a new creep!")
-
 (* Defines all possible roles available to Creeps *)
 type role =
   | Harvester
+
 
 (* Defines all of the memory fields I allow to be set on creeps programmatically *)
 type memoryField =
   | Working of bool
   | Memory_Role of role
+  | None
+
+let roleToString (role : role) =
+  match role with
+  | Harvester -> "harvester"
   (* | Destination of roomObject *)
-
-
 
 external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 
-  let setMemoryField(creepName : string) (memory : memoryField) : unit =
-    match memory with
-    | Working(x) ->
-      defineMemoryHelper(creepName)("working")
-        (match x with
-        | true -> "true";
-        | false-> "false");
-    | Memory_Role(occupation) ->
-      (match occupation with
-       | Harvester -> defineMemoryHelper(creepName)("role")("harvester"))
+let setMemoryField(creepName : string) (memory : memoryField) : unit =
+  match memory with
+  | Working(x) ->
+    defineMemoryHelper(creepName)("working")
+      (match x with
+       | true -> "true";
+       | false-> "false");
+  | Memory_Role(occupation) ->
+    defineMemoryHelper(creepName)("role")(roleToString occupation)
+  | None -> ()
+
+
+external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+external spawnCreepWithMemoryHelper : string -> string array -> string array -> int = "" [@@bs.module "./supplemental", "Supplement"]
+external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
+external getRoom: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
+
+let spawnCreep(spawn : string) (body : bodyPart array) : unit =
+  let bodyCost = (arraySum(Array.map bodyPartToCost body )) in
+  spawnCreepHelper (spawn) (Array.map bodyPartToString body) ;
+  Js.log("Spawning a new creep!")
+
+let spawnCreepWithMemory(spawn : string) (body : bodyPart array) (mfa : memoryField) : int =
+  spawnCreepWithMemoryHelper(spawn)(Array.map bodyPartToString body)
+  (match mfa with
+    |   None -> [||];
+    |   Memory_Role(role) -> ([|"role"; roleToString role|]);
+    |   Working(x) -> ([|"working"; if x then "true" else "false"|]) )
+
 
 
 
@@ -122,7 +138,7 @@ external get_closest : creep -> roomObject array -> roomObject = "findClosestByP
 external harvest : creep -> roomObject -> int = "harvest" [@@bs.send]
 external moveTo : creep -> roomObject -> unit = "moveTo" [@@bs.send]
 external findHelper : room -> int -> roomObject array = "find" [@@bs.send]
-
+external transfer : creep -> roomObject -> string -> int = "transfer" [@@bs.send]
 let get_struct_type(r : roomObject) : structureConst =
   let structString = getStructureTypeHelper r in
   fromStringStructure structString
@@ -148,13 +164,18 @@ let iterateCreeps () : unit =
            moveTo creep chosenSource)
       else
         let structureArray = find currentRoom FIND_STRUCTURES in
-        let isSpawnOrExtension (sc : structureConst) : bool =
-           match sc with
+        let isSpawnOrExtension (ro : roomObject) : bool =
+           match get_struct_type ro with
            | STRUCTURE_SPAWN     -> true;
            | STRUCTURE_EXTENSION -> true;
            | _                   -> false
          in
-         ()
+         let spawnsAndExtensions =  arrayFilter (isSpawnOrExtension) (structureArray)  in
+         let  chosenStructure = Array.get spawnsAndExtensions 0 in
+         Js.log(chosenStructure) ;
+         ignore (transfer creep chosenStructure "energy") ;
+         moveTo creep chosenStructure
+
     done
 
 
