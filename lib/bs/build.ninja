@@ -51,12 +51,16 @@ build src/constantConv.mlast : build_ast_and_deps $src_root_dir/src/constantConv
 build src/constantConv.mlast.d : build_deps src/constantConv.mlast
 build src/constantConv.cmj $src_root_dir/lib/js/src/constantConv.js src/constantConv.cmi : build_cmj_cmi src/constantConv.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
-build src/roleharvester.mlast : build_ast_and_deps $src_root_dir/src/roleharvester.ml
-build src/roleharvester.mlast.d : build_deps src/roleharvester.mlast
-build src/roleharvester.cmj $src_root_dir/lib/js/src/roleharvester.js src/roleharvester.cmi : build_cmj_cmi src/roleharvester.mlast
+build src/roleUpgrader.mlast : build_ast_and_deps $src_root_dir/src/roleUpgrader.ml
+build src/roleUpgrader.mlast.d : build_deps src/roleUpgrader.mlast
+build src/roleUpgrader.cmj $src_root_dir/lib/js/src/roleUpgrader.js src/roleUpgrader.cmi : build_cmj_cmi src/roleUpgrader.mlast
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/roleHarvester.mlast : build_ast_and_deps $src_root_dir/src/roleHarvester.ml
+build src/roleHarvester.mlast.d : build_deps src/roleHarvester.mlast
+build src/roleHarvester.cmj $src_root_dir/lib/js/src/roleHarvester.js src/roleHarvester.cmi : build_cmj_cmi src/roleHarvester.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
 build src/helperFunctions.mlast : build_ast_and_deps $src_root_dir/src/helperFunctions.ml
 build src/helperFunctions.mlast.d : build_deps src/helperFunctions.mlast
 build src/helperFunctions.cmj $src_root_dir/lib/js/src/helperFunctions.js src/helperFunctions.cmi : build_cmj_cmi src/helperFunctions.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
-build build.ninja : phony  ||  src/helperFunctions.mlast.d src/roleharvester.mlast.d src/constantConv.mlast.d src/roomObject.mlast.d src/baseTypes.mlast.d src/spawn.mlast.d src/creep.mlast.d src/room.mlast.d src/main.mlast.d
+build build.ninja : phony  ||  src/helperFunctions.mlast.d src/roleHarvester.mlast.d src/roleUpgrader.mlast.d src/constantConv.mlast.d src/roomObject.mlast.d src/baseTypes.mlast.d src/spawn.mlast.d src/creep.mlast.d src/room.mlast.d src/main.mlast.d

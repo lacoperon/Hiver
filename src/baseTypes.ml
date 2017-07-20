@@ -45,10 +45,12 @@ type bodyPart =
 (* Defines all possible roles I make available to Creeps *)
 type role =
   | Harvester
+  | Upgrader
 
 let roleToString (role : role) =
   match role with
   | Harvester -> "harvester"
+  | Upgrader  -> "upgrader"
 
 (* Defines all of the memory fields I allow to be set on creeps programmatically *)
 type memoryField =

@@ -1,10 +1,12 @@
 open BaseTypes
 
-(* Filters an array based on a condition. WHY IS THIS NOT IMPLEMENTED IN BASE OCAML?*)
-let arrayFilter (filter : 'a -> bool) (array : 'a array) : 'a array =
-  let list = Array.to_list array in
-  let filteredList = List.filter filter list in
-  Array.of_list filteredList
+module Array = struct
+    include Array
+    let filter (cond : 'a -> bool) (array : 'a array) =
+    let list = Array.to_list array in
+    let filteredList = List.filter cond list in
+    Array.of_list filteredList
+  end
 
 (* Recursive helper for arraySum *)
 let rec arraySumRecursive (numArray : int array) (currentSum : int) (currentIndex : int) : int =
@@ -23,4 +25,5 @@ external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.modu
 
 (* Using the 'Getter' provided by BuckleScript *)
 external getStructureTypeHelper : roomObject -> string = "structureType" [@@bs.get]
+external getRoleHelper : creep -> string = "role" [@@bs.get] [@@bs.scope "memory"]
 external findHelper : room -> int -> roomObject array = "find" [@@bs.send]

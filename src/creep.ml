@@ -1,6 +1,8 @@
 open BaseTypes
 open HelperFunctions
 
+exception NotRoleString of string
+
 external get_carry : creep -> int = "carryCapacity" [@@bs.get]
 external get_load : creep -> int = "energy" [@@bs.get] [@@bs.scope "carry"]
 external get_room : creep -> room = "room" [@@bs.get]
@@ -11,6 +13,7 @@ external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Suppleme
 external getRoomFromCreep: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 external transfer : creep -> roomObject -> string -> int = "transfer" [@@bs.send]
 
+
 let setMemoryField(creepName : string) (memory : memoryField) : unit =
   match memory with
   | Working(x) ->
@@ -20,3 +23,8 @@ let setMemoryField(creepName : string) (memory : memoryField) : unit =
        | false-> "false");
   | Memory_Role(occupation) ->
     defineMemoryHelper(creepName)("role")(roleToString occupation)
+
+let getRole(creep : creep) : role =
+  match (getRoleHelper creep) with
+  | "harvester" -> Harvester ;
+  | x           -> raise (NotRoleString(x))

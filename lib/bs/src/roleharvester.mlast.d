@@ -1,1 +1,1 @@
-src/roleharvester.cmj :
+src/roleharvester.cmj : src/baseTypes.cmj

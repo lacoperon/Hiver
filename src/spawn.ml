@@ -7,8 +7,8 @@ external getSpawn: string -> spawn = "" [@@bs.module "./supplemental", "Suppleme
 
 (* Function which spawns a creep with a memory defined in mfa : memoryField *)
 (* TODO: Change mfa to memoryField array option, to make it more generalizable *)
-let spawnCreepWithMemory(spawn : string) (body : bodyPart array) (mfa : memoryField) : int =
-  spawnCreepWithMemoryHelper(spawn)(Array.map bodyPartToString body)
-    (match mfa with
-     |   Memory_Role(role) -> ([|"role"; roleToString role|]);
-     |   Working(x) -> ([|"working"; if x then "true" else "false"|]) )
+let spawnCreepWithRole(spawn : string) (body : bodyPart array) (r : role) : int =
+  spawnCreepWithMemoryHelper(spawn)(Array.map bodyPartToString body)([|"role";
+                                                                       (match r with
+                                                                        | Harvester -> "harvester";
+                                                                        | Upgrader  -> "upgrader")|])
