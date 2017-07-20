@@ -21,6 +21,7 @@ let arraySum (numArray : int array) : int =
 external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external spawnCreepWithMemoryHelper : string -> string array -> string array -> int = "" [@@bs.module "./supplemental", "Supplement"]
 external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+external clearDeadCreepsFromMemory : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 
 (* Using the 'Getter' provided by BuckleScript *)

@@ -1727,6 +1727,14 @@ function spawnCreepWithMemoryHelper(spawnstring, body, memoryArray) {
   Game.spawns[spawnstring].createCreep(body, null, memoryObject);
 }
 
+function clearDeadCreepsFromMemory(emptyString) {
+  for(var i in Memory.creeps) {
+      if(!Game.creeps[i]) {
+          delete Memory.creeps[i];
+      }
+  }
+}
+
 exports.spawnCreepHelper = spawnCreepHelper;
 exports.defineMemoryHelper = defineMemoryHelper;
 exports.doWatcher = doWatcher;
@@ -1736,6 +1744,7 @@ exports.getRoom = getRoom;
 exports.spawnCreepWithMemoryHelper = spawnCreepWithMemoryHelper;
 exports.getRoomfromSpawn = getRoomfromSpawn;
 exports.getSpawn = getSpawn;
+exports.clearDeadCreepsFromMemory = clearDeadCreepsFromMemory;
 
 
 /***/ }),
@@ -2153,23 +2162,34 @@ function iterateSpawns() {
       /* MOVE */0,
       /* MOVE */0
     ];
-    var spawn = Supplement.getSpawn(Caml_array.caml_array_get(spawns, i));
+    var spawnString = Caml_array.caml_array_get(spawns, i);
+    var spawn = Supplement.getSpawn(spawnString);
     var room = spawn.room;
     var energyAvailable = room.energyAvailable;
     var bodyCost = HelperFunctions.arraySum(Curry._2(HelperFunctions.$$Array[/* map */12], ConstantConv.bodyPartToCost, body));
-    var harvesterIntArray = Curry._2(HelperFunctions.$$Array[/* map */12], (function (param) {
-            var r = /* Harvester */0;
-            var creep = param;
-            if (Caml_obj.caml_equal(Creep.getRole(creep), r)) {
-              return 1;
-            } else {
-              return 0;
-            }
-          }), realCreeps);
-    HelperFunctions.arraySum(harvesterIntArray);
+    var roleToOne = function (r, creep) {
+      if (Caml_obj.caml_equal(Creep.getRole(creep), r)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    };
     if (bodyCost <= energyAvailable) {
-      Spawn.spawnCreepWithRole(Caml_array.caml_array_get(spawns, i), body, /* Harvester */0);
-      console.log("Spawning new harvester creep");
+      var harvesterIntArray = Curry._2(HelperFunctions.$$Array[/* map */12], (function (param) {
+              return roleToOne(/* Harvester */0, param);
+            }), realCreeps);
+      var harvesterNum = HelperFunctions.arraySum(harvesterIntArray);
+      var upgraderIntArray = Curry._2(HelperFunctions.$$Array[/* map */12], (function (param) {
+              return roleToOne(/* Upgrader */1, param);
+            }), realCreeps);
+      var upgraderNum = HelperFunctions.arraySum(upgraderIntArray);
+      if (harvesterNum > 4 && upgraderNum < 3) {
+        Spawn.spawnCreepWithRole(spawnString, body, /* Upgrader */1);
+        console.log("Spawning new upgrader creep");
+      } else {
+        Spawn.spawnCreepWithRole(spawnString, body, /* Harvester */0);
+        console.log("Spawning new harvester creep");
+      }
     }
     
   }
@@ -2180,6 +2200,7 @@ function run() {
   iterateSpawns(/* () */0);
   iterateCreeps(/* () */0);
   Supplement.doWatcher("");
+  Supplement.clearDeadCreepsFromMemory("");
   return /* () */0;
 }
 

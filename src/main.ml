@@ -29,31 +29,40 @@ let iterateCreeps () : unit =
 let iterateSpawns () : unit =
   for i=0 to Array.length spawns - 1 do
     let body = [|WORK; CARRY; MOVE; MOVE|] in
-    let spawn = getSpawn (Array.get spawns i) in
+    let spawnString = (Array.get spawns i) in
+    let spawn = getSpawn (spawnString) in
     let room = getRoomFromSpawn spawn in
     let energyAvailable = getEnergyInRoom room in
     let bodyCost = arraySum (Array.map bodyPartToCost body ) in
     let roleToOne (r : role) (creep : creep)  : int =
-
       if (getRole creep) = r then
         1
       else
         0
     in
+    if bodyCost <= energyAvailable
+    then
+    (*TODO: Add room specificity for creeps (currently not scaleable to more
+      than one spawn  *)
     let harvesterIntArray = Array.map (roleToOne Harvester) realCreeps in
     let harvesterNum = arraySum harvesterIntArray in
-    (* Js.log harvesterNum ; *)
-    if bodyCost <= energyAvailable
-
-    then (ignore (spawnCreepWithRole (Array.get spawns i) body (Harvester) );
+    let upgraderIntArray  = Array.map (roleToOne Upgrader ) realCreeps in
+    let upgraderNum  = arraySum upgraderIntArray in
+    if harvesterNum > 4 && upgraderNum < 3
+    then
+      (spawnCreepWithRole spawnString body Upgrader;
+       Js.log "Spawning new upgrader creep")
+    else (ignore (spawnCreepWithRole spawnString body (Harvester) );
           Js.log("Spawning new harvester creep"))
   done
 
 (* Baseline loop code. Calls all subfunctions*)
 let run () : unit =
   (* Js.log "Tick" ; *)
-  ignore (iterateSpawns());
-  ignore (iterateCreeps());
-  doWatcher("")
+  iterateSpawns();
+  iterateCreeps();
+  doWatcher("") ;
+  clearDeadCreepsFromMemory("")
+
 
 let runEachTick : unit = run()
