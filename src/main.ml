@@ -106,22 +106,12 @@ external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplem
 external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
 external getRoom: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 
-let spawnCreep(spawn : string) (body : bodyPart array) : unit =
-  let bodyCost = (arraySum(Array.map bodyPartToCost body )) in
-  spawnCreepHelper (spawn) (Array.map bodyPartToString body) ;
-  Js.log("Spawning a new creep!")
-
 let spawnCreepWithMemory(spawn : string) (body : bodyPart array) (mfa : memoryField) : int =
   spawnCreepWithMemoryHelper(spawn)(Array.map bodyPartToString body)
   (match mfa with
     |   None -> [||];
     |   Memory_Role(role) -> ([|"role"; roleToString role|]);
     |   Working(x) -> ([|"working"; if x then "true" else "false"|]) )
-
-
-
-
-
 
 type roomPosition =
   {
@@ -187,7 +177,7 @@ let iterateSpawns () : unit =
     for i=0 to Array.length spawns - 1 do
       (* Js.log("One is named " ^ Array.get spawns i); *)
       let body = [|WORK; CARRY; MOVE; MOVE|] in
-      spawnCreep(Array.get spawns i) body
+      ignore (spawnCreepWithMemory (Array.get spawns i) body (Memory_Role(Harvester)) )
     done
 
 

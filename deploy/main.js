@@ -2303,6 +2303,7 @@ exports.repeat = repeat;
 
 var List         = __webpack_require__(11);
 var $$Array      = __webpack_require__(19);
+var Block        = __webpack_require__(5);
 var Caml_array   = __webpack_require__(3);
 var Pervasives   = __webpack_require__(6);
 var ConstantConv = __webpack_require__(21);
@@ -2399,13 +2400,6 @@ function setMemoryField(creepName, memory) {
   }
 }
 
-function spawnCreep(spawn, body) {
-  arraySumRecursive($$Array.map(bodyPartToCost, body), 0, 0);
-  Supplement.spawnCreepHelper(spawn, $$Array.map(bodyPartToString, body));
-  console.log("Spawning a new creep!");
-  return /* () */0;
-}
-
 function spawnCreepWithMemory(spawn, body, mfa) {
   var $js;
   $js = typeof mfa === "number" ? /* array */[] : (
@@ -2477,7 +2471,7 @@ function iterateSpawns() {
       /* MOVE */0,
       /* MOVE */0
     ];
-    spawnCreep(Caml_array.caml_array_get(spawns, i), body);
+    spawnCreepWithMemory(Caml_array.caml_array_get(spawns, i), body, /* Memory_Role */Block.__(1, [/* Harvester */0]));
   }
   return /* () */0;
 }
@@ -2507,7 +2501,6 @@ exports.bodyPartToCost       = bodyPartToCost;
 exports.bodyPartToString     = bodyPartToString;
 exports.roleToString         = roleToString;
 exports.setMemoryField       = setMemoryField;
-exports.spawnCreep           = spawnCreep;
 exports.spawnCreepWithMemory = spawnCreepWithMemory;
 exports.get_struct_type      = get_struct_type;
 exports.find                 = find;
@@ -7212,6 +7205,7 @@ exports.doWatcher = doWatcher;
 exports.getCreep = getCreep;
 exports.getCreepEnergy = getCreepEnergy;
 exports.getRoom = getRoom;
+exports.spawnCreepWithMemoryHelper = spawnCreepWithMemoryHelper;
 
 
 /***/ }),
