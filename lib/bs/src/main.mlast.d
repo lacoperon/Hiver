@@ -1,1 +1,1 @@
-src/main.cmj : src/constantConv.cmj
+src/main.cmj : src/helperFunctions.cmj src/creep.cmj src/constantConv.cmj src/baseTypes.cmj

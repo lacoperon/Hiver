@@ -1,6 +1,42 @@
 exception NumNotOfType of int
 exception StringNotOfType of string
 
+(* From the wiki *)
+
+type bodyPart =
+  | MOVE
+  | WORK
+  | CARRY
+  | ATTACK
+  | RANGED_ATTACK
+  | HEAL
+  | TOUGH
+  | CLAIM
+
+
+let bodyPartToCost(part : bodyPart) : int =
+  match part with
+  | MOVE -> 50;
+  | WORK -> 100;
+  | ATTACK -> 80;
+  | CARRY -> 50;
+  | HEAL -> 250;
+  | RANGED_ATTACK -> 150;
+  | TOUGH -> 10;
+  | CLAIM -> 600
+
+let bodyPartToString(part : bodyPart) : string =
+  match part with
+  | MOVE -> "move" ;
+  | WORK -> "work" ;
+  | ATTACK -> "attack" ;
+  | CARRY -> "carry" ;
+  | RANGED_ATTACK -> "ranged_attack" ;
+  | TOUGH -> "tough" ;
+  | HEAL -> "heal" ;
+  | CLAIM -> "claim"
+
+
 type resultConst =
   | OK
   | ERR_NOT_OWNER

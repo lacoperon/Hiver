@@ -177,7 +177,7 @@ exports.undefined_recursive_module = undefined_recursive_module;
 "use strict";
 
 
-var Caml_array = __webpack_require__(3);
+var Caml_array = __webpack_require__(2);
 
 function app(_f, _args) {
   while(true) {
@@ -819,59 +819,6 @@ exports.__8     = __8;
 "use strict";
 
 
-
-var id = [0];
-
-function caml_set_oo_id(b) {
-  b[1] = id[0];
-  id[0] += 1;
-  return b;
-}
-
-function get_id() {
-  id[0] += 1;
-  return id[0];
-}
-
-function create(str) {
-  var v_001 = get_id(/* () */0);
-  var v = /* tuple */[
-    str,
-    v_001
-  ];
-  v.tag = 248;
-  return v;
-}
-
-function isCamlExceptionOrOpenVariant(e) {
-  if (e === undefined) {
-    return /* false */0;
-  } else if (e.tag === 248) {
-    return /* true */1;
-  } else {
-    var slot = e[0];
-    if (slot !== undefined) {
-      return +(slot.tag === 248);
-    } else {
-      return /* false */0;
-    }
-  }
-}
-
-exports.caml_set_oo_id               = caml_set_oo_id;
-exports.get_id                       = get_id;
-exports.create                       = create;
-exports.isCamlExceptionOrOpenVariant = isCamlExceptionOrOpenVariant;
-/* No side effect */
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_array_sub(x, offset, len) {
@@ -987,13 +934,83 @@ exports.caml_array_set    = caml_array_set;
 
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var id = [0];
+
+function caml_set_oo_id(b) {
+  b[1] = id[0];
+  id[0] += 1;
+  return b;
+}
+
+function get_id() {
+  id[0] += 1;
+  return id[0];
+}
+
+function create(str) {
+  var v_001 = get_id(/* () */0);
+  var v = /* tuple */[
+    str,
+    v_001
+  ];
+  v.tag = 248;
+  return v;
+}
+
+function isCamlExceptionOrOpenVariant(e) {
+  if (e === undefined) {
+    return /* false */0;
+  } else if (e.tag === 248) {
+    return /* true */1;
+  } else {
+    var slot = e[0];
+    if (slot !== undefined) {
+      return +(slot.tag === 248);
+    } else {
+      return /* false */0;
+    }
+  }
+}
+
+exports.caml_set_oo_id               = caml_set_oo_id;
+exports.get_id                       = get_id;
+exports.create                       = create;
+exports.isCamlExceptionOrOpenVariant = isCamlExceptionOrOpenVariant;
+/* No side effect */
+
+
+/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Block                   = __webpack_require__(5);
+
+function __(tag, block) {
+  block.tag = tag;
+  return block;
+}
+
+exports.__ = __;
+/* No side effect */
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Block                   = __webpack_require__(4);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function caml_obj_dup(x) {
@@ -1299,720 +1316,441 @@ exports.caml_lessequal         = caml_lessequal;
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-
-function __(tag, block) {
-  block.tag = tag;
-  return block;
-}
-
-exports.__ = __;
-/* No side effect */
-
-
-/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Curry                    = __webpack_require__(1);
-var Caml_io                  = __webpack_require__(12);
-var Caml_obj                 = __webpack_require__(4);
-var Caml_sys                 = __webpack_require__(13);
-var Caml_format              = __webpack_require__(14);
-var Caml_string              = __webpack_require__(16);
-var Caml_exceptions          = __webpack_require__(2);
-var Caml_missing_polyfill    = __webpack_require__(17);
-var Caml_builtin_exceptions  = __webpack_require__(0);
-var CamlinternalFormatBasics = __webpack_require__(18);
+var Curry                   = __webpack_require__(1);
+var Js_exn                  = __webpack_require__(11);
+var Caml_array              = __webpack_require__(2);
+var Caml_exceptions         = __webpack_require__(3);
+var Caml_builtin_exceptions = __webpack_require__(0);
 
-function failwith(s) {
-  throw [
-        Caml_builtin_exceptions.failure,
-        s
-      ];
-}
-
-function invalid_arg(s) {
-  throw [
-        Caml_builtin_exceptions.invalid_argument,
-        s
-      ];
-}
-
-var Exit = Caml_exceptions.create("Pervasives.Exit");
-
-function min(x, y) {
-  if (Caml_obj.caml_lessequal(x, y)) {
-    return x;
-  } else {
-    return y;
-  }
-}
-
-function max(x, y) {
-  if (Caml_obj.caml_greaterequal(x, y)) {
-    return x;
-  } else {
-    return y;
-  }
-}
-
-function abs(x) {
-  if (x >= 0) {
-    return x;
-  } else {
-    return -x | 0;
-  }
-}
-
-function lnot(x) {
-  return x ^ -1;
-}
-
-var min_int = -2147483648;
-
-function $caret(a, b) {
-  return a + b;
-}
-
-function char_of_int(n) {
-  if (n < 0 || n > 255) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "char_of_int"
-        ];
-  } else {
-    return n;
-  }
-}
-
-function string_of_bool(b) {
-  if (b) {
-    return "true";
-  } else {
-    return "false";
-  }
-}
-
-function bool_of_string(param) {
-  switch (param) {
-    case "false" : 
-        return /* false */0;
-    case "true" : 
-        return /* true */1;
-    default:
+function init(l, f) {
+  if (l) {
+    if (l < 0) {
       throw [
             Caml_builtin_exceptions.invalid_argument,
-            "bool_of_string"
+            "Array.init"
           ];
+    } else {
+      var res = Caml_array.caml_make_vect(l, Curry._1(f, 0));
+      for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
+        res[i] = Curry._1(f, i);
+      }
+      return res;
+    }
+  } else {
+    return /* array */[];
   }
 }
 
-function string_of_int(param) {
-  return "" + param;
+function make_matrix(sx, sy, init) {
+  var res = Caml_array.caml_make_vect(sx, /* array */[]);
+  for(var x = 0 ,x_finish = sx - 1 | 0; x <= x_finish; ++x){
+    res[x] = Caml_array.caml_make_vect(sy, init);
+  }
+  return res;
 }
 
-function valid_float_lexem(s) {
-  var l = s.length;
-  var _i = 0;
-  while(true) {
-    var i = _i;
-    if (i >= l) {
-      return $caret(s, ".");
-    } else {
-      var match = Caml_string.get(s, i);
-      if (match >= 48) {
-        if (match >= 58) {
-          return s;
-        } else {
-          _i = i + 1 | 0;
-          continue ;
-          
-        }
-      } else if (match !== 45) {
-        return s;
-      } else {
-        _i = i + 1 | 0;
-        continue ;
-        
-      }
-    }
-  };
+function copy(a) {
+  var l = a.length;
+  if (l) {
+    return Caml_array.caml_array_sub(a, 0, l);
+  } else {
+    return /* array */[];
+  }
 }
 
-function string_of_float(f) {
-  return valid_float_lexem(Caml_format.caml_format_float("%.12g", f));
-}
-
-function $at(l1, l2) {
+function append(a1, a2) {
+  var l1 = a1.length;
   if (l1) {
-    return /* :: */[
-            l1[0],
-            $at(l1[1], l2)
-          ];
-  } else {
-    return l2;
-  }
-}
-
-var stdin = Caml_io.stdin;
-
-var stdout = Caml_io.stdout;
-
-var stderr = Caml_io.stderr;
-
-function open_out_gen(_, _$1, _$2) {
-  return Caml_io.caml_ml_open_descriptor_out(Caml_missing_polyfill.not_implemented("caml_sys_open not implemented by bucklescript yet\n"));
-}
-
-function open_out(name) {
-  return open_out_gen(/* :: */[
-              /* Open_wronly */1,
-              /* :: */[
-                /* Open_creat */3,
-                /* :: */[
-                  /* Open_trunc */4,
-                  /* :: */[
-                    /* Open_text */7,
-                    /* [] */0
-                  ]
-                ]
-              ]
-            ], 438, name);
-}
-
-function open_out_bin(name) {
-  return open_out_gen(/* :: */[
-              /* Open_wronly */1,
-              /* :: */[
-                /* Open_creat */3,
-                /* :: */[
-                  /* Open_trunc */4,
-                  /* :: */[
-                    /* Open_binary */6,
-                    /* [] */0
-                  ]
-                ]
-              ]
-            ], 438, name);
-}
-
-function flush_all() {
-  var _param = Caml_io.caml_ml_out_channels_list(/* () */0);
-  while(true) {
-    var param = _param;
-    if (param) {
-      try {
-        Caml_io.caml_ml_flush(param[0]);
-      }
-      catch (exn){
-        
-      }
-      _param = param[1];
-      continue ;
-      
+    if (a2.length) {
+      return a1.concat(a2);
     } else {
-      return /* () */0;
+      return Caml_array.caml_array_sub(a1, 0, l1);
     }
-  };
+  } else {
+    return copy(a2);
+  }
 }
 
-function output_bytes(oc, s) {
-  return Caml_io.caml_ml_output(oc, s, 0, s.length);
-}
-
-function output_string(oc, s) {
-  return Caml_io.caml_ml_output(oc, s, 0, s.length);
-}
-
-function output(oc, s, ofs, len) {
-  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
+function sub(a, ofs, len) {
+  if (len < 0 || ofs > (a.length - len | 0)) {
     throw [
           Caml_builtin_exceptions.invalid_argument,
-          "output"
+          "Array.sub"
         ];
   } else {
-    return Caml_io.caml_ml_output(oc, s, ofs, len);
+    return Caml_array.caml_array_sub(a, ofs, len);
   }
 }
 
-function output_substring(oc, s, ofs, len) {
-  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
+function fill(a, ofs, len, v) {
+  if (ofs < 0 || len < 0 || ofs > (a.length - len | 0)) {
     throw [
           Caml_builtin_exceptions.invalid_argument,
-          "output_substring"
+          "Array.fill"
         ];
   } else {
-    return Caml_io.caml_ml_output(oc, s, ofs, len);
-  }
-}
-
-function output_value(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_output_value not implemented by bucklescript yet\n");
-}
-
-function close_out(oc) {
-  Caml_io.caml_ml_flush(oc);
-  return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
-}
-
-function close_out_noerr(oc) {
-  try {
-    Caml_io.caml_ml_flush(oc);
-  }
-  catch (exn){
-    
-  }
-  try {
-    return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
-  }
-  catch (exn$1){
+    for(var i = ofs ,i_finish = (ofs + len | 0) - 1 | 0; i <= i_finish; ++i){
+      a[i] = v;
+    }
     return /* () */0;
   }
 }
 
-function open_in_gen(_, _$1, _$2) {
-  return Caml_io.caml_ml_open_descriptor_in(Caml_missing_polyfill.not_implemented("caml_sys_open not implemented by bucklescript yet\n"));
-}
-
-function open_in(name) {
-  return open_in_gen(/* :: */[
-              /* Open_rdonly */0,
-              /* :: */[
-                /* Open_text */7,
-                /* [] */0
-              ]
-            ], 0, name);
-}
-
-function open_in_bin(name) {
-  return open_in_gen(/* :: */[
-              /* Open_rdonly */0,
-              /* :: */[
-                /* Open_binary */6,
-                /* [] */0
-              ]
-            ], 0, name);
-}
-
-function input(_, s, ofs, len) {
-  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
+function blit(a1, ofs1, a2, ofs2, len) {
+  if (len < 0 || ofs1 < 0 || ofs1 > (a1.length - len | 0) || ofs2 < 0 || ofs2 > (a2.length - len | 0)) {
     throw [
           Caml_builtin_exceptions.invalid_argument,
-          "input"
+          "Array.blit"
         ];
   } else {
-    return Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
+    return Caml_array.caml_array_blit(a1, ofs1, a2, ofs2, len);
   }
 }
 
-function unsafe_really_input(_, _$1, _ofs, _len) {
-  while(true) {
-    var len = _len;
-    var ofs = _ofs;
-    if (len <= 0) {
-      return /* () */0;
-    } else {
-      var r = Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
-      if (r) {
-        _len = len - r | 0;
-        _ofs = ofs + r | 0;
-        continue ;
-        
-      } else {
-        throw Caml_builtin_exceptions.end_of_file;
-      }
-    }
-  };
-}
-
-function really_input(ic, s, ofs, len) {
-  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "really_input"
-        ];
-  } else {
-    return unsafe_really_input(ic, s, ofs, len);
+function iter(f, a) {
+  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
+    Curry._1(f, a[i]);
   }
-}
-
-function really_input_string(ic, len) {
-  var s = Caml_string.caml_create_string(len);
-  really_input(ic, s, 0, len);
-  return Caml_string.bytes_to_string(s);
-}
-
-function input_line(chan) {
-  var build_result = function (buf, _pos, _param) {
-    while(true) {
-      var param = _param;
-      var pos = _pos;
-      if (param) {
-        var hd = param[0];
-        var len = hd.length;
-        Caml_string.caml_blit_bytes(hd, 0, buf, pos - len | 0, len);
-        _param = param[1];
-        _pos = pos - len | 0;
-        continue ;
-        
-      } else {
-        return buf;
-      }
-    };
-  };
-  var scan = function (_accu, _len) {
-    while(true) {
-      var len = _len;
-      var accu = _accu;
-      var n = Caml_missing_polyfill.not_implemented("caml_ml_input_scan_line not implemented by bucklescript yet\n");
-      if (n) {
-        if (n > 0) {
-          var res = Caml_string.caml_create_string(n - 1 | 0);
-          Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
-          Caml_io.caml_ml_input_char(chan);
-          if (accu) {
-            var len$1 = (len + n | 0) - 1 | 0;
-            return build_result(Caml_string.caml_create_string(len$1), len$1, /* :: */[
-                        res,
-                        accu
-                      ]);
-          } else {
-            return res;
-          }
-        } else {
-          var beg = Caml_string.caml_create_string(-n | 0);
-          Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
-          _len = len - n | 0;
-          _accu = /* :: */[
-            beg,
-            accu
-          ];
-          continue ;
-          
-        }
-      } else if (accu) {
-        return build_result(Caml_string.caml_create_string(len), len, accu);
-      } else {
-        throw Caml_builtin_exceptions.end_of_file;
-      }
-    };
-  };
-  return Caml_string.bytes_to_string(scan(/* [] */0, 0));
-}
-
-function close_in_noerr() {
-  try {
-    return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
-  }
-  catch (exn){
-    return /* () */0;
-  }
-}
-
-function print_char(c) {
-  return Caml_io.caml_ml_output_char(stdout, c);
-}
-
-function print_string(s) {
-  return output_string(stdout, s);
-}
-
-function print_bytes(s) {
-  return output_bytes(stdout, s);
-}
-
-function print_int(i) {
-  return output_string(stdout, "" + i);
-}
-
-function print_float(f) {
-  return output_string(stdout, valid_float_lexem(Caml_format.caml_format_float("%.12g", f)));
-}
-
-function print_endline(param) {
-  console.log(param);
-  return 0;
-}
-
-function print_newline() {
-  Caml_io.caml_ml_output_char(stdout, /* "\n" */10);
-  return Caml_io.caml_ml_flush(stdout);
-}
-
-function prerr_char(c) {
-  return Caml_io.caml_ml_output_char(stderr, c);
-}
-
-function prerr_string(s) {
-  return output_string(stderr, s);
-}
-
-function prerr_bytes(s) {
-  return output_bytes(stderr, s);
-}
-
-function prerr_int(i) {
-  return output_string(stderr, "" + i);
-}
-
-function prerr_float(f) {
-  return output_string(stderr, valid_float_lexem(Caml_format.caml_format_float("%.12g", f)));
-}
-
-function prerr_endline(param) {
-  console.error(param);
-  return 0;
-}
-
-function prerr_newline() {
-  Caml_io.caml_ml_output_char(stderr, /* "\n" */10);
-  return Caml_io.caml_ml_flush(stderr);
-}
-
-function read_line() {
-  Caml_io.caml_ml_flush(stdout);
-  return input_line(stdin);
-}
-
-function read_int() {
-  return Caml_format.caml_int_of_string((Caml_io.caml_ml_flush(stdout), input_line(stdin)));
-}
-
-function read_float() {
-  return Caml_format.caml_float_of_string((Caml_io.caml_ml_flush(stdout), input_line(stdin)));
-}
-
-function string_of_format(param) {
-  return param[1];
-}
-
-function $caret$caret(param, param$1) {
-  return /* Format */[
-          CamlinternalFormatBasics.concat_fmt(param[0], param$1[0]),
-          $caret(param[1], $caret("%,", param$1[1]))
-        ];
-}
-
-var exit_function = [flush_all];
-
-function at_exit(f) {
-  var g = exit_function[0];
-  exit_function[0] = (function () {
-      Curry._1(f, /* () */0);
-      return Curry._1(g, /* () */0);
-    });
   return /* () */0;
 }
 
-function do_at_exit() {
-  return Curry._1(exit_function[0], /* () */0);
+function map(f, a) {
+  var l = a.length;
+  if (l) {
+    var r = Caml_array.caml_make_vect(l, Curry._1(f, a[0]));
+    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
+      r[i] = Curry._1(f, a[i]);
+    }
+    return r;
+  } else {
+    return /* array */[];
+  }
 }
 
-function exit(retcode) {
-  do_at_exit(/* () */0);
-  return Caml_sys.caml_sys_exit(retcode);
+function iteri(f, a) {
+  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
+    Curry._2(f, i, a[i]);
+  }
+  return /* () */0;
 }
 
-var max_int = 2147483647;
-
-var infinity = Infinity;
-
-var neg_infinity = -Infinity;
-
-var nan = NaN;
-
-var max_float = Number.MAX_VALUE;
-
-var min_float = Number.MIN_VALUE;
-
-var epsilon_float = 2.220446049250313e-16;
-
-var flush = Caml_io.caml_ml_flush;
-
-var output_char = Caml_io.caml_ml_output_char;
-
-var output_byte = Caml_io.caml_ml_output_char;
-
-function output_binary_int(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_ml_output_int not implemented by bucklescript yet\n");
+function mapi(f, a) {
+  var l = a.length;
+  if (l) {
+    var r = Caml_array.caml_make_vect(l, Curry._2(f, 0, a[0]));
+    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
+      r[i] = Curry._2(f, i, a[i]);
+    }
+    return r;
+  } else {
+    return /* array */[];
+  }
 }
 
-function seek_out(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_ml_seek_out not implemented by bucklescript yet\n");
+function to_list(a) {
+  var _i = a.length - 1 | 0;
+  var _res = /* [] */0;
+  while(true) {
+    var res = _res;
+    var i = _i;
+    if (i < 0) {
+      return res;
+    } else {
+      _res = /* :: */[
+        a[i],
+        res
+      ];
+      _i = i - 1 | 0;
+      continue ;
+      
+    }
+  };
 }
 
-function pos_out() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_pos_out not implemented by bucklescript yet\n");
+function list_length(_accu, _param) {
+  while(true) {
+    var param = _param;
+    var accu = _accu;
+    if (param) {
+      _param = param[1];
+      _accu = accu + 1 | 0;
+      continue ;
+      
+    } else {
+      return accu;
+    }
+  };
 }
 
-function out_channel_length() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size not implemented by bucklescript yet\n");
+function of_list(l) {
+  if (l) {
+    var a = Caml_array.caml_make_vect(list_length(0, l), l[0]);
+    var _i = 1;
+    var _param = l[1];
+    while(true) {
+      var param = _param;
+      var i = _i;
+      if (param) {
+        a[i] = param[0];
+        _param = param[1];
+        _i = i + 1 | 0;
+        continue ;
+        
+      } else {
+        return a;
+      }
+    };
+  } else {
+    return /* array */[];
+  }
 }
 
-function set_binary_mode_out(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_ml_set_binary_mode not implemented by bucklescript yet\n");
+function fold_left(f, x, a) {
+  var r = x;
+  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
+    r = Curry._2(f, r, a[i]);
+  }
+  return r;
 }
 
-var input_char = Caml_io.caml_ml_input_char;
-
-var input_byte = Caml_io.caml_ml_input_char;
-
-function input_binary_int() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_input_int not implemented by bucklescript yet\n");
+function fold_right(f, a, x) {
+  var r = x;
+  for(var i = a.length - 1 | 0; i >= 0; --i){
+    r = Curry._2(f, a[i], r);
+  }
+  return r;
 }
 
-function input_value() {
-  return Caml_missing_polyfill.not_implemented("caml_input_value not implemented by bucklescript yet\n");
+var Bottom = Caml_exceptions.create("Array.Bottom");
+
+function sort(cmp, a) {
+  var maxson = function (l, i) {
+    var i31 = ((i + i | 0) + i | 0) + 1 | 0;
+    var x = i31;
+    if ((i31 + 2 | 0) < l) {
+      if (Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
+        x = i31 + 1 | 0;
+      }
+      if (Curry._2(cmp, Caml_array.caml_array_get(a, x), Caml_array.caml_array_get(a, i31 + 2 | 0)) < 0) {
+        x = i31 + 2 | 0;
+      }
+      return x;
+    } else if ((i31 + 1 | 0) < l && Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
+      return i31 + 1 | 0;
+    } else if (i31 < l) {
+      return i31;
+    } else {
+      throw [
+            Bottom,
+            i
+          ];
+    }
+  };
+  var trickle = function (l, i, e) {
+    try {
+      var l$1 = l;
+      var _i = i;
+      var e$1 = e;
+      while(true) {
+        var i$1 = _i;
+        var j = maxson(l$1, i$1);
+        if (Curry._2(cmp, Caml_array.caml_array_get(a, j), e$1) > 0) {
+          Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
+          _i = j;
+          continue ;
+          
+        } else {
+          return Caml_array.caml_array_set(a, i$1, e$1);
+        }
+      };
+    }
+    catch (raw_exn){
+      var exn = Js_exn.internalToOCamlException(raw_exn);
+      if (exn[0] === Bottom) {
+        return Caml_array.caml_array_set(a, exn[1], e);
+      } else {
+        throw exn;
+      }
+    }
+  };
+  var bubble = function (l, i) {
+    try {
+      var l$1 = l;
+      var _i = i;
+      while(true) {
+        var i$1 = _i;
+        var j = maxson(l$1, i$1);
+        Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
+        _i = j;
+        continue ;
+        
+      };
+    }
+    catch (raw_exn){
+      var exn = Js_exn.internalToOCamlException(raw_exn);
+      if (exn[0] === Bottom) {
+        return exn[1];
+      } else {
+        throw exn;
+      }
+    }
+  };
+  var trickleup = function (_i, e) {
+    while(true) {
+      var i = _i;
+      var father = (i - 1 | 0) / 3 | 0;
+      if (i === father) {
+        throw [
+              Caml_builtin_exceptions.assert_failure,
+              [
+                "array.ml",
+                168,
+                4
+              ]
+            ];
+      }
+      if (Curry._2(cmp, Caml_array.caml_array_get(a, father), e) < 0) {
+        Caml_array.caml_array_set(a, i, Caml_array.caml_array_get(a, father));
+        if (father > 0) {
+          _i = father;
+          continue ;
+          
+        } else {
+          return Caml_array.caml_array_set(a, 0, e);
+        }
+      } else {
+        return Caml_array.caml_array_set(a, i, e);
+      }
+    };
+  };
+  var l = a.length;
+  for(var i = ((l + 1 | 0) / 3 | 0) - 1 | 0; i >= 0; --i){
+    trickle(l, i, Caml_array.caml_array_get(a, i));
+  }
+  for(var i$1 = l - 1 | 0; i$1 >= 2; --i$1){
+    var e = Caml_array.caml_array_get(a, i$1);
+    Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, 0));
+    trickleup(bubble(i$1, 0), e);
+  }
+  if (l > 1) {
+    var e$1 = Caml_array.caml_array_get(a, 1);
+    Caml_array.caml_array_set(a, 1, Caml_array.caml_array_get(a, 0));
+    return Caml_array.caml_array_set(a, 0, e$1);
+  } else {
+    return 0;
+  }
 }
 
-function seek_in(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_ml_seek_in not implemented by bucklescript yet\n");
+function stable_sort(cmp, a) {
+  var merge = function (src1ofs, src1len, src2, src2ofs, src2len, dst, dstofs) {
+    var src1r = src1ofs + src1len | 0;
+    var src2r = src2ofs + src2len | 0;
+    var _i1 = src1ofs;
+    var _s1 = Caml_array.caml_array_get(a, src1ofs);
+    var _i2 = src2ofs;
+    var _s2 = Caml_array.caml_array_get(src2, src2ofs);
+    var _d = dstofs;
+    while(true) {
+      var d = _d;
+      var s2 = _s2;
+      var i2 = _i2;
+      var s1 = _s1;
+      var i1 = _i1;
+      if (Curry._2(cmp, s1, s2) <= 0) {
+        Caml_array.caml_array_set(dst, d, s1);
+        var i1$1 = i1 + 1 | 0;
+        if (i1$1 < src1r) {
+          _d = d + 1 | 0;
+          _s1 = Caml_array.caml_array_get(a, i1$1);
+          _i1 = i1$1;
+          continue ;
+          
+        } else {
+          return blit(src2, i2, dst, d + 1 | 0, src2r - i2 | 0);
+        }
+      } else {
+        Caml_array.caml_array_set(dst, d, s2);
+        var i2$1 = i2 + 1 | 0;
+        if (i2$1 < src2r) {
+          _d = d + 1 | 0;
+          _s2 = Caml_array.caml_array_get(src2, i2$1);
+          _i2 = i2$1;
+          continue ;
+          
+        } else {
+          return blit(a, i1, dst, d + 1 | 0, src1r - i1 | 0);
+        }
+      }
+    };
+  };
+  var isortto = function (srcofs, dst, dstofs, len) {
+    for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
+      var e = Caml_array.caml_array_get(a, srcofs + i | 0);
+      var j = (dstofs + i | 0) - 1 | 0;
+      while(j >= dstofs && Curry._2(cmp, Caml_array.caml_array_get(dst, j), e) > 0) {
+        Caml_array.caml_array_set(dst, j + 1 | 0, Caml_array.caml_array_get(dst, j));
+        j = j - 1 | 0;
+      };
+      Caml_array.caml_array_set(dst, j + 1 | 0, e);
+    }
+    return /* () */0;
+  };
+  var sortto = function (srcofs, dst, dstofs, len) {
+    if (len <= 5) {
+      return isortto(srcofs, dst, dstofs, len);
+    } else {
+      var l1 = len / 2 | 0;
+      var l2 = len - l1 | 0;
+      sortto(srcofs + l1 | 0, dst, dstofs + l1 | 0, l2);
+      sortto(srcofs, a, srcofs + l2 | 0, l1);
+      return merge(srcofs + l2 | 0, l1, dst, dstofs + l1 | 0, l2, dst, dstofs);
+    }
+  };
+  var l = a.length;
+  if (l <= 5) {
+    return isortto(0, a, 0, l);
+  } else {
+    var l1 = l / 2 | 0;
+    var l2 = l - l1 | 0;
+    var t = Caml_array.caml_make_vect(l2, Caml_array.caml_array_get(a, 0));
+    sortto(l1, t, 0, l2);
+    sortto(0, a, l2, l1);
+    return merge(l2, l1, t, 0, l2, a, 0);
+  }
 }
 
-function pos_in() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_pos_in not implemented by bucklescript yet\n");
-}
+var create_matrix = make_matrix;
 
-function in_channel_length() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size not implemented by bucklescript yet\n");
-}
+var concat = Caml_array.caml_array_concat;
 
-function close_in() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
-}
+var fast_sort = stable_sort;
 
-function set_binary_mode_in(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_ml_set_binary_mode not implemented by bucklescript yet\n");
-}
-
-function LargeFile_000(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_ml_seek_out_64 not implemented by bucklescript yet\n");
-}
-
-function LargeFile_001() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_pos_out_64 not implemented by bucklescript yet\n");
-}
-
-function LargeFile_002() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size_64 not implemented by bucklescript yet\n");
-}
-
-function LargeFile_003(_, _$1) {
-  return Caml_missing_polyfill.not_implemented("caml_ml_seek_in_64 not implemented by bucklescript yet\n");
-}
-
-function LargeFile_004() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_pos_in_64 not implemented by bucklescript yet\n");
-}
-
-function LargeFile_005() {
-  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size_64 not implemented by bucklescript yet\n");
-}
-
-var LargeFile = [
-  LargeFile_000,
-  LargeFile_001,
-  LargeFile_002,
-  LargeFile_003,
-  LargeFile_004,
-  LargeFile_005
-];
-
-exports.invalid_arg         = invalid_arg;
-exports.failwith            = failwith;
-exports.Exit                = Exit;
-exports.min                 = min;
-exports.max                 = max;
-exports.abs                 = abs;
-exports.max_int             = max_int;
-exports.min_int             = min_int;
-exports.lnot                = lnot;
-exports.infinity            = infinity;
-exports.neg_infinity        = neg_infinity;
-exports.nan                 = nan;
-exports.max_float           = max_float;
-exports.min_float           = min_float;
-exports.epsilon_float       = epsilon_float;
-exports.$caret              = $caret;
-exports.char_of_int         = char_of_int;
-exports.string_of_bool      = string_of_bool;
-exports.bool_of_string      = bool_of_string;
-exports.string_of_int       = string_of_int;
-exports.string_of_float     = string_of_float;
-exports.$at                 = $at;
-exports.stdin               = stdin;
-exports.stdout              = stdout;
-exports.stderr              = stderr;
-exports.print_char          = print_char;
-exports.print_string        = print_string;
-exports.print_bytes         = print_bytes;
-exports.print_int           = print_int;
-exports.print_float         = print_float;
-exports.print_endline       = print_endline;
-exports.print_newline       = print_newline;
-exports.prerr_char          = prerr_char;
-exports.prerr_string        = prerr_string;
-exports.prerr_bytes         = prerr_bytes;
-exports.prerr_int           = prerr_int;
-exports.prerr_float         = prerr_float;
-exports.prerr_endline       = prerr_endline;
-exports.prerr_newline       = prerr_newline;
-exports.read_line           = read_line;
-exports.read_int            = read_int;
-exports.read_float          = read_float;
-exports.open_out            = open_out;
-exports.open_out_bin        = open_out_bin;
-exports.open_out_gen        = open_out_gen;
-exports.flush               = flush;
-exports.flush_all           = flush_all;
-exports.output_char         = output_char;
-exports.output_string       = output_string;
-exports.output_bytes        = output_bytes;
-exports.output              = output;
-exports.output_substring    = output_substring;
-exports.output_byte         = output_byte;
-exports.output_binary_int   = output_binary_int;
-exports.output_value        = output_value;
-exports.seek_out            = seek_out;
-exports.pos_out             = pos_out;
-exports.out_channel_length  = out_channel_length;
-exports.close_out           = close_out;
-exports.close_out_noerr     = close_out_noerr;
-exports.set_binary_mode_out = set_binary_mode_out;
-exports.open_in             = open_in;
-exports.open_in_bin         = open_in_bin;
-exports.open_in_gen         = open_in_gen;
-exports.input_char          = input_char;
-exports.input_line          = input_line;
-exports.input               = input;
-exports.really_input        = really_input;
-exports.really_input_string = really_input_string;
-exports.input_byte          = input_byte;
-exports.input_binary_int    = input_binary_int;
-exports.input_value         = input_value;
-exports.seek_in             = seek_in;
-exports.pos_in              = pos_in;
-exports.in_channel_length   = in_channel_length;
-exports.close_in            = close_in;
-exports.close_in_noerr      = close_in_noerr;
-exports.set_binary_mode_in  = set_binary_mode_in;
-exports.LargeFile           = LargeFile;
-exports.string_of_format    = string_of_format;
-exports.$caret$caret        = $caret$caret;
-exports.exit                = exit;
-exports.at_exit             = at_exit;
-exports.valid_float_lexem   = valid_float_lexem;
-exports.unsafe_really_input = unsafe_really_input;
-exports.do_at_exit          = do_at_exit;
+exports.init          = init;
+exports.make_matrix   = make_matrix;
+exports.create_matrix = create_matrix;
+exports.append        = append;
+exports.concat        = concat;
+exports.sub           = sub;
+exports.copy          = copy;
+exports.fill          = fill;
+exports.blit          = blit;
+exports.to_list       = to_list;
+exports.of_list       = of_list;
+exports.iter          = iter;
+exports.map           = map;
+exports.iteri         = iteri;
+exports.mapi          = mapi;
+exports.fold_left     = fold_left;
+exports.fold_right    = fold_right;
+exports.sort          = sort;
+exports.stable_sort   = stable_sort;
+exports.fast_sort     = fast_sort;
 /* No side effect */
 
 
@@ -2301,45 +2039,212 @@ exports.repeat = repeat;
 // Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
 
 
-var List         = __webpack_require__(11);
-var $$Array      = __webpack_require__(19);
-var Block        = __webpack_require__(5);
-var Caml_array   = __webpack_require__(3);
-var Pervasives   = __webpack_require__(6);
-var ConstantConv = __webpack_require__(21);
-var Supplement   = __webpack_require__(22);
+var $$Array         = __webpack_require__(6);
+var Block           = __webpack_require__(4);
+var Caml_array      = __webpack_require__(2);
+var ConstantConv    = __webpack_require__(12);
+var Supplement      = __webpack_require__(13);
+var HelperFunctions = __webpack_require__(15);
 
 var creeps = (Object.keys(Game.creeps));
 
-var creepsObject = (Game.creeps);
-
 var spawns = (Object.keys(Game.spawns));
 
-var spawnsObject = (Game.spawns);
-
-function arrayFilter(filter, array) {
-  var list = $$Array.to_list(array);
-  return $$Array.of_list(List.filter(filter)(list));
+function roleToString() {
+  return "harvester";
 }
 
-function arraySumRecursive(numArray, _currentSum, _currentIndex) {
-  while(true) {
-    var currentIndex = _currentIndex;
-    var currentSum = _currentSum;
-    if (numArray.length === currentIndex) {
-      return currentSum;
-    } else {
-      _currentIndex = currentIndex + 1 | 0;
-      _currentSum = currentSum + Caml_array.caml_array_get(numArray, currentIndex) | 0;
-      continue ;
-      
+function setMemoryField(creepName, memory) {
+  if (typeof memory === "number") {
+    return /* () */0;
+  } else if (memory.tag) {
+    Supplement.defineMemoryHelper(creepName, "role", "harvester");
+    return /* () */0;
+  } else {
+    Supplement.defineMemoryHelper(creepName, "working", memory[0] !== 0 ? "true" : "false");
+    return /* () */0;
+  }
+}
+
+function spawnCreepWithMemory(spawn, body, mfa) {
+  var $js;
+  $js = typeof mfa === "number" ? /* array */[] : (
+      mfa.tag ? /* array */[
+          "role",
+          "harvester"
+        ] : /* array */[
+          "working",
+          mfa[0] ? "true" : "false"
+        ]
+    );
+  return Supplement.spawnCreepWithMemoryHelper(spawn, $$Array.map(ConstantConv.bodyPartToString, body), $js);
+}
+
+function get_struct_type(r) {
+  return ConstantConv.fromStringStructure(r.structureType);
+}
+
+function find(r, f) {
+  return r.find(ConstantConv.toNumFilter(f));
+}
+
+function iterateCreeps() {
+  var x = creeps.length;
+  if (x !== 0) {
+    for(var i = 0 ,i_finish = x - 1 | 0; i <= i_finish; ++i){
+      var creepName = Caml_array.caml_array_get(creeps, i);
+      var creep = Supplement.getCreep(creepName);
+      var carryCap = creep.carryCapacity;
+      var load = creep.carry.energy;
+      var currentRoom = creep.room;
+      var energySources = currentRoom.find(ConstantConv.toNumFilter(/* FIND_SOURCES */9));
+      var chosenSource = Caml_array.caml_array_get(energySources, 0);
+      if (load < carryCap) {
+        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
+          creep.moveTo(chosenSource);
+        }
+        
+      } else {
+        var structureArray = currentRoom.find(ConstantConv.toNumFilter(/* FIND_STRUCTURES */12));
+        var isSpawnOrExtension = function (ro) {
+          var match = ConstantConv.fromStringStructure(ro.structureType);
+          if (match >= 2) {
+            return /* false */0;
+          } else {
+            return /* true */1;
+          }
+        };
+        var spawnsAndExtensions = HelperFunctions.arrayFilter(isSpawnOrExtension, structureArray);
+        var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
+        creep.transfer(chosenStructure, "energy");
+        creep.moveTo(chosenStructure);
+      }
     }
-  };
+    return /* () */0;
+  } else {
+    console.log("There are no creeps to iterate over");
+    return /* () */0;
+  }
 }
 
-function arraySum(numArray) {
-  return arraySumRecursive(numArray, 0, 0);
+function iterateSpawns() {
+  for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
+    var body = /* int array */[
+      /* WORK */1,
+      /* CARRY */2,
+      /* MOVE */0,
+      /* MOVE */0
+    ];
+    var spawn = Supplement.getSpawn(Caml_array.caml_array_get(spawns, i));
+    var room = spawn.room;
+    var energyAvailable = room.energyAvailable;
+    var bodyCost = HelperFunctions.arraySum($$Array.map(ConstantConv.bodyPartToCost, body));
+    if (bodyCost <= energyAvailable) {
+      spawnCreepWithMemory(Caml_array.caml_array_get(spawns, i), body, /* Memory_Role */Block.__(1, [/* Harvester */0]));
+      console.log("Spawning new creep");
+    }
+    
+  }
+  return /* () */0;
 }
+
+function run() {
+  iterateSpawns(/* () */0);
+  Supplement.doWatcher("");
+  return iterateCreeps(/* () */0);
+}
+
+var runEachTick = run(/* () */0);
+
+exports.creeps               = creeps;
+exports.spawns               = spawns;
+exports.roleToString         = roleToString;
+exports.setMemoryField       = setMemoryField;
+exports.spawnCreepWithMemory = spawnCreepWithMemory;
+exports.get_struct_type      = get_struct_type;
+exports.find                 = find;
+exports.iterateCreeps        = iterateCreeps;
+exports.iterateSpawns        = iterateSpawns;
+exports.run                  = run;
+exports.runEachTick          = runEachTick;
+/* creeps Not a pure module */
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Caml_exceptions = __webpack_require__(3);
+
+var $$Error = Caml_exceptions.create("Js_exn.Error");
+
+function internalToOCamlException(e) {
+  if (Caml_exceptions.isCamlExceptionOrOpenVariant(e)) {
+    return e;
+  } else {
+    return [
+            $$Error,
+            e
+          ];
+  }
+}
+
+function raiseError(str) {
+  throw new Error(str);
+}
+
+function raiseEvalError(str) {
+  throw new EvalError(str);
+}
+
+function raiseRangeError(str) {
+  throw new RangeError(str);
+}
+
+function raiseReferenceError(str) {
+  throw new ReferenceError(str);
+}
+
+function raiseSyntaxError(str) {
+  throw new SyntaxError(str);
+}
+
+function raiseTypeError(str) {
+  throw new TypeError(str);
+}
+
+function raiseUriError(str) {
+  throw new URIError(str);
+}
+
+exports.$$Error                  = $$Error;
+exports.internalToOCamlException = internalToOCamlException;
+exports.raiseError               = raiseError;
+exports.raiseEvalError           = raiseEvalError;
+exports.raiseRangeError          = raiseRangeError;
+exports.raiseReferenceError      = raiseReferenceError;
+exports.raiseSyntaxError         = raiseSyntaxError;
+exports.raiseTypeError           = raiseTypeError;
+exports.raiseUriError            = raiseUriError;
+/* No side effect */
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+var Caml_exceptions = __webpack_require__(3);
+
+var NumNotOfType = Caml_exceptions.create("ConstantConv.NumNotOfType");
+
+var StringNotOfType = Caml_exceptions.create("ConstantConv.StringNotOfType");
 
 function bodyPartToCost(part) {
   switch (part) {
@@ -2384,143 +2289,472 @@ function bodyPartToString(part) {
   }
 }
 
-function roleToString() {
-  return "harvester";
-}
-
-function setMemoryField(creepName, memory) {
-  if (typeof memory === "number") {
-    return /* () */0;
-  } else if (memory.tag) {
-    Supplement.defineMemoryHelper(creepName, "role", "harvester");
-    return /* () */0;
-  } else {
-    Supplement.defineMemoryHelper(creepName, "working", memory[0] !== 0 ? "true" : "false");
-    return /* () */0;
+function toNumResult(sc) {
+  switch (sc) {
+    case 0 : 
+        return 0;
+    case 1 : 
+        return -1;
+    case 2 : 
+        return -2;
+    case 3 : 
+        return -3;
+    case 4 : 
+        return -4;
+    case 5 : 
+        return -5;
+    case 7 : 
+        return -7;
+    case 8 : 
+        return -8;
+    case 9 : 
+        return -9;
+    case 10 : 
+        return -10;
+    case 11 : 
+        return -11;
+    case 12 : 
+        return -12;
+    case 6 : 
+    case 13 : 
+        return -6;
+    case 14 : 
+        return -14;
+    case 15 : 
+        return -15;
+    
   }
 }
 
-function spawnCreepWithMemory(spawn, body, mfa) {
-  var $js;
-  $js = typeof mfa === "number" ? /* array */[] : (
-      mfa.tag ? /* array */[
-          "role",
-          "harvester"
-        ] : /* array */[
-          "working",
-          mfa[0] ? "true" : "false"
-        ]
-    );
-  return Supplement.spawnCreepWithMemoryHelper(spawn, $$Array.map(bodyPartToString, body), $js);
+function fromNumResult(i) {
+  var switcher = i + 15 | 0;
+  if (switcher > 15 || switcher < 0) {
+    throw [
+          NumNotOfType,
+          i
+        ];
+  } else {
+    switch (switcher) {
+      case 0 : 
+          return /* ERR_GCL_NOT_ENOUGH */15;
+      case 1 : 
+          return /* ERR_RCL_NOT_ENOUGH */14;
+      case 2 : 
+          throw [
+                NumNotOfType,
+                i
+              ];
+      case 3 : 
+          return /* ERR_NO_BODYPART */12;
+      case 4 : 
+          return /* ERR_TIRED */11;
+      case 5 : 
+          return /* ERR_INVALID_ARGS */10;
+      case 6 : 
+          return /* ERR_NOT_IN_RANGE */9;
+      case 7 : 
+          return /* ERR_FULL */8;
+      case 8 : 
+          return /* ERR_INVALID_TARGET */7;
+      case 9 : 
+          return /* ERR_NOT_ENOUGH_ENERGY */6;
+      case 10 : 
+          return /* ERR_NOT_FOUND */5;
+      case 11 : 
+          return /* ERR_BUSY */4;
+      case 12 : 
+          return /* ERR_NAME_EXISTS */3;
+      case 13 : 
+          return /* ERR_NO_PATH */2;
+      case 14 : 
+          return /* ERR_NOT_OWNER */1;
+      case 15 : 
+          return /* OK */0;
+      
+    }
+  }
 }
 
-function get_struct_type(r) {
-  return ConstantConv.fromStringStructure(r.structureType);
+function toNumFilter(sc) {
+  switch (sc) {
+    case 0 : 
+        return 1;
+    case 1 : 
+        return 3;
+    case 2 : 
+        return 5;
+    case 3 : 
+        return 7;
+    case 4 : 
+        return 10;
+    case 5 : 
+        return 101;
+    case 6 : 
+        return 102;
+    case 7 : 
+        return 103;
+    case 8 : 
+        return 104;
+    case 9 : 
+        return 105;
+    case 10 : 
+    case 11 : 
+        return 106;
+    case 12 : 
+        return 107;
+    case 13 : 
+        return 108;
+    case 14 : 
+        return 109;
+    case 15 : 
+        return 110;
+    case 16 : 
+        return 111;
+    case 17 : 
+        return 112;
+    case 18 : 
+        return 113;
+    case 19 : 
+        return 114;
+    case 20 : 
+        return 115;
+    case 21 : 
+        return 116;
+    
+  }
 }
 
-function find(r, f) {
-  return r.find(ConstantConv.toNumFilter(f));
-}
-
-function iterateCreeps() {
-  var x = creeps.length;
-  if (x !== 0) {
-    console.log("There are " + (Pervasives.string_of_int(x) + " creeps currently"));
-    for(var i = 0 ,i_finish = creeps.length - 1 | 0; i <= i_finish; ++i){
-      var creepName = Caml_array.caml_array_get(creeps, i);
-      var creep = Supplement.getCreep(creepName);
-      var carryCap = creep.carryCapacity;
-      var load = creep.carry.energy;
-      var currentRoom = creep.room;
-      var energySources = currentRoom.find(ConstantConv.toNumFilter(/* FIND_SOURCES */9));
-      var chosenSource = Caml_array.caml_array_get(energySources, 0);
-      if (load < carryCap) {
-        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
-          creep.moveTo(chosenSource);
-        }
+function fromNumFilter(i) {
+  if (i >= 11) {
+    var switcher = i - 101 | 0;
+    if (switcher > 15 || switcher < 0) {
+      throw [
+            NumNotOfType,
+            i
+          ];
+    } else {
+      switch (switcher) {
+        case 0 : 
+            return /* FIND_CREEPS */5;
+        case 1 : 
+            return /* FIND_MY_CREEPS */6;
+        case 2 : 
+            return /* FIND_HOSTILE_CREEPS */7;
+        case 3 : 
+            return /* FIND_SOURCES_ACTIVE */8;
+        case 4 : 
+            return /* FIND_SOURCES */9;
+        case 5 : 
+            return /* FIND_DROPPED_ENERGY */10;
+        case 6 : 
+            return /* FIND_STRUCTURES */12;
+        case 7 : 
+            return /* FIND_MY_STRUCTURES */13;
+        case 8 : 
+            return /* FIND_HOSTILE_STRUCTURES */14;
+        case 9 : 
+            return /* FIND_FLAGS */15;
+        case 10 : 
+            return /* FIND_CONSTRUCTION_SITES */16;
+        case 11 : 
+            return /* FIND_MY_SPAWNS */17;
+        case 12 : 
+            return /* FIND_HOSTILE_SPAWNS */18;
+        case 13 : 
+            return /* FIND_MY_CONSTRUCTION_SITES */19;
+        case 14 : 
+            return /* FIND_HOSTILE_CONSTRUCTION_SITES */20;
+        case 15 : 
+            return /* FIND_MINERALS */21;
         
-      } else {
-        var structureArray = currentRoom.find(ConstantConv.toNumFilter(/* FIND_STRUCTURES */12));
-        var isSpawnOrExtension = function (ro) {
-          var match = ConstantConv.fromStringStructure(ro.structureType);
-          if (match >= 2) {
-            return /* false */0;
-          } else {
-            return /* true */1;
-          }
-        };
-        var spawnsAndExtensions = arrayFilter(isSpawnOrExtension, structureArray);
-        var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
-        console.log(chosenStructure);
-        creep.transfer(chosenStructure, "energy");
-        creep.moveTo(chosenStructure);
       }
     }
-    return /* () */0;
+  } else if (i > 0) {
+    switch (i - 1 | 0) {
+      case 0 : 
+          return /* FIND_EXIT_TOP */0;
+      case 2 : 
+          return /* FIND_EXIT_RIGHT */1;
+      case 4 : 
+          return /* FIND_EXIT_BOTTOM */2;
+      case 6 : 
+          return /* FIND_EXIT_LEFT */3;
+      case 1 : 
+      case 3 : 
+      case 5 : 
+      case 7 : 
+      case 8 : 
+          throw [
+                NumNotOfType,
+                i
+              ];
+      case 9 : 
+          return /* FIND_EXIT */4;
+      
+    }
   } else {
-    console.log("There are no creeps to iterate over");
-    return /* () */0;
+    throw [
+          NumNotOfType,
+          i
+        ];
   }
 }
 
-function iterateSpawns() {
-  for(var i = 0 ,i_finish = spawns.length - 1 | 0; i <= i_finish; ++i){
-    var body = /* int array */[
-      /* WORK */1,
-      /* CARRY */2,
-      /* MOVE */0,
-      /* MOVE */0
-    ];
-    spawnCreepWithMemory(Caml_array.caml_array_get(spawns, i), body, /* Memory_Role */Block.__(1, [/* Harvester */0]));
+function toStringStructure(sc) {
+  switch (sc) {
+    case 0 : 
+        return "spawn";
+    case 1 : 
+        return "extension";
+    case 2 : 
+        return "road";
+    case 3 : 
+        return "constructedWall";
+    case 4 : 
+        return "rampart";
+    case 5 : 
+        return "keeperLair";
+    case 6 : 
+        return "portal";
+    case 7 : 
+        return "controller";
+    case 8 : 
+        return "link";
+    case 9 : 
+        return "storage";
+    case 10 : 
+        return "tower";
+    case 11 : 
+        return "observer";
+    case 12 : 
+        return "powerBank";
+    case 13 : 
+        return "powerSpawn";
+    case 14 : 
+        return "extractor";
+    case 15 : 
+        return "lab";
+    case 16 : 
+        return "terminal";
+    case 17 : 
+        return "container";
+    
   }
-  return /* () */0;
 }
 
-function run() {
-  iterateSpawns(/* () */0);
-  Supplement.doWatcher("");
-  return iterateCreeps(/* () */0);
+function fromStringStructure(sc) {
+  switch (sc) {
+    case "constructedWall" : 
+        return /* STRUCTURE_WALL */3;
+    case "container" : 
+        return /* STRUCTURE_CONTAINER */17;
+    case "controller" : 
+        return /* STRUCTURE_CONTROLLER */7;
+    case "extension" : 
+        return /* STRUCTURE_EXTENSION */1;
+    case "extractor" : 
+        return /* STRUCTURE_EXTRACTOR */14;
+    case "keeperLair" : 
+        return /* STRUCTURE_KEEPER_LAIR */5;
+    case "lab" : 
+        return /* STRUCTURE_LAB */15;
+    case "link" : 
+        return /* STRUCTURE_LINK */8;
+    case "observer" : 
+        return /* STRUCTURE_OBSERVER */11;
+    case "portal" : 
+        return /* STRUCTURE_PORTAL */6;
+    case "powerBank" : 
+        return /* STRUCTURE_POWER_BANK */12;
+    case "powerSpawn" : 
+        return /* STRUCTURE_POWER_SPAWN */13;
+    case "rampart" : 
+        return /* STRUCTURE_RAMPART */4;
+    case "road" : 
+        return /* STRUCTURE_ROAD */2;
+    case "spawn" : 
+        return /* STRUCTURE_SPAWN */0;
+    case "storage" : 
+        return /* STRUCTURE_STORAGE */9;
+    case "terminal" : 
+        return /* STRUCTURE_TERMINAL */16;
+    case "tower" : 
+        return /* STRUCTURE_TOWER */10;
+    default:
+      throw [
+            StringNotOfType,
+            sc
+          ];
+  }
 }
 
-var runEachTick = run(/* () */0);
-
-var creepsArray = creeps;
-
-var spawnsArray = spawns;
-
-exports.creeps               = creeps;
-exports.creepsArray          = creepsArray;
-exports.creepsObject         = creepsObject;
-exports.spawns               = spawns;
-exports.spawnsArray          = spawnsArray;
-exports.spawnsObject         = spawnsObject;
-exports.arrayFilter          = arrayFilter;
-exports.arraySumRecursive    = arraySumRecursive;
-exports.arraySum             = arraySum;
-exports.bodyPartToCost       = bodyPartToCost;
-exports.bodyPartToString     = bodyPartToString;
-exports.roleToString         = roleToString;
-exports.setMemoryField       = setMemoryField;
-exports.spawnCreepWithMemory = spawnCreepWithMemory;
-exports.get_struct_type      = get_struct_type;
-exports.find                 = find;
-exports.iterateCreeps        = iterateCreeps;
-exports.iterateSpawns        = iterateSpawns;
-exports.run                  = run;
-exports.runEachTick          = runEachTick;
-/* creeps Not a pure module */
+exports.NumNotOfType        = NumNotOfType;
+exports.StringNotOfType     = StringNotOfType;
+exports.bodyPartToCost      = bodyPartToCost;
+exports.bodyPartToString    = bodyPartToString;
+exports.toNumResult         = toNumResult;
+exports.fromNumResult       = fromNumResult;
+exports.toNumFilter         = toNumFilter;
+exports.fromNumFilter       = fromNumFilter;
+exports.toStringStructure   = toStringStructure;
+exports.fromStringStructure = fromStringStructure;
+/* No side effect */
 
 
 /***/ }),
-/* 11 */
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* NOTE: This is the only file in this folder not transpiled by BUCKLESCRIPT.
+  Still though, you should handle with care, although this will be more readable
+  -@lacoperon */
+
+function spawnCreepHelper(spawnName, body) {
+  Game.spawns[spawnName].createCreep(body);
+}
+
+function defineMemoryHelper(creepName, fieldName, value) {
+  Game.creeps[creepName].memory[fieldName] = value;
+}
+
+function doWatcher(empty) {
+  var watcher = __webpack_require__(14);
+  watcher();
+}
+
+function getCreepEnergy(creepName) {
+  return Game.creeps[creepName].carry.energy;
+}
+
+function getCreepCarryCapacity(creepName) {
+  return Game.creeps[creepName].carryCapacity;
+}
+
+function getCreep(creepName) {
+  return Game.creeps[creepName];
+}
+
+function getRoom(creep) {
+  return creep.room;
+}
+
+function getRoomFromCreep(creep) {
+  return creep.room;
+}
+
+function findInRoom(room, thing) {
+  return room.find(thing);
+}
+
+function getRoomfromSpawn(spawn) {
+  return spawn.room;
+}
+
+function getSpawn(spawnString) {
+  return Game.spawns[spawnString];
+}
+
+function spawnCreepWithMemoryHelper(spawnstring, body, memoryArray) {
+  memoryObject = {
+    role : memoryArray[1]
+  };
+  Game.spawns[spawnstring].createCreep(body, null, memoryObject);
+}
+
+exports.spawnCreepHelper = spawnCreepHelper;
+exports.defineMemoryHelper = defineMemoryHelper;
+exports.doWatcher = doWatcher;
+exports.getCreep = getCreep;
+exports.getCreepEnergy = getCreepEnergy;
+exports.getRoom = getRoom;
+exports.spawnCreepWithMemoryHelper = spawnCreepWithMemoryHelper;
+exports.getRoomfromSpawn = getRoomfromSpawn;
+exports.getSpawn = getSpawn;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+  if (typeof Memory.watch !== 'object') {
+    Memory.watch = {};
+  }
+  if (typeof Memory.watch.expressions !== 'object') {
+    Memory.watch.expressions = {};
+  }
+  if (typeof Memory.watch.values !== 'object') {
+    Memory.watch.values = {};
+  }
+  _.each(Memory.watch.expressions, (expr, name) => {
+    if (typeof expr !== 'string') return;
+    let result;
+    try {
+      result = eval(expr);
+    } catch (ex) {
+      result = "Error: " + ex.message;
+    }
+    if (name == 'console') {
+      if (typeof result !== 'undefined') console.log(result);
+    } else {
+      Memory.watch.values[name] = typeof result !== 'undefined' ? result.toString() : result;
+    }
+  });
+};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+var List       = __webpack_require__(16);
+var $$Array    = __webpack_require__(6);
+var Caml_array = __webpack_require__(2);
+
+function arrayFilter(filter, array) {
+  var list = $$Array.to_list(array);
+  return $$Array.of_list(List.filter(filter)(list));
+}
+
+function arraySumRecursive(numArray, _currentSum, _currentIndex) {
+  while(true) {
+    var currentIndex = _currentIndex;
+    var currentSum = _currentSum;
+    if (numArray.length === currentIndex) {
+      return currentSum;
+    } else {
+      _currentIndex = currentIndex + 1 | 0;
+      _currentSum = currentSum + Caml_array.caml_array_get(numArray, currentIndex) | 0;
+      continue ;
+      
+    }
+  };
+}
+
+function arraySum(numArray) {
+  return arraySumRecursive(numArray, 0, 0);
+}
+
+exports.arrayFilter       = arrayFilter;
+exports.arraySumRecursive = arraySumRecursive;
+exports.arraySum          = arraySum;
+/* No side effect */
+
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Curry                   = __webpack_require__(1);
-var Caml_obj                = __webpack_require__(4);
-var Pervasives              = __webpack_require__(6);
+var Caml_obj                = __webpack_require__(5);
+var Pervasives              = __webpack_require__(17);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function length(l) {
@@ -4210,7 +4444,708 @@ exports.merge        = merge;
 
 
 /***/ }),
-/* 12 */
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Curry                    = __webpack_require__(1);
+var Caml_io                  = __webpack_require__(18);
+var Caml_obj                 = __webpack_require__(5);
+var Caml_sys                 = __webpack_require__(19);
+var Caml_format              = __webpack_require__(20);
+var Caml_string              = __webpack_require__(22);
+var Caml_exceptions          = __webpack_require__(3);
+var Caml_missing_polyfill    = __webpack_require__(23);
+var Caml_builtin_exceptions  = __webpack_require__(0);
+var CamlinternalFormatBasics = __webpack_require__(24);
+
+function failwith(s) {
+  throw [
+        Caml_builtin_exceptions.failure,
+        s
+      ];
+}
+
+function invalid_arg(s) {
+  throw [
+        Caml_builtin_exceptions.invalid_argument,
+        s
+      ];
+}
+
+var Exit = Caml_exceptions.create("Pervasives.Exit");
+
+function min(x, y) {
+  if (Caml_obj.caml_lessequal(x, y)) {
+    return x;
+  } else {
+    return y;
+  }
+}
+
+function max(x, y) {
+  if (Caml_obj.caml_greaterequal(x, y)) {
+    return x;
+  } else {
+    return y;
+  }
+}
+
+function abs(x) {
+  if (x >= 0) {
+    return x;
+  } else {
+    return -x | 0;
+  }
+}
+
+function lnot(x) {
+  return x ^ -1;
+}
+
+var min_int = -2147483648;
+
+function $caret(a, b) {
+  return a + b;
+}
+
+function char_of_int(n) {
+  if (n < 0 || n > 255) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "char_of_int"
+        ];
+  } else {
+    return n;
+  }
+}
+
+function string_of_bool(b) {
+  if (b) {
+    return "true";
+  } else {
+    return "false";
+  }
+}
+
+function bool_of_string(param) {
+  switch (param) {
+    case "false" : 
+        return /* false */0;
+    case "true" : 
+        return /* true */1;
+    default:
+      throw [
+            Caml_builtin_exceptions.invalid_argument,
+            "bool_of_string"
+          ];
+  }
+}
+
+function string_of_int(param) {
+  return "" + param;
+}
+
+function valid_float_lexem(s) {
+  var l = s.length;
+  var _i = 0;
+  while(true) {
+    var i = _i;
+    if (i >= l) {
+      return $caret(s, ".");
+    } else {
+      var match = Caml_string.get(s, i);
+      if (match >= 48) {
+        if (match >= 58) {
+          return s;
+        } else {
+          _i = i + 1 | 0;
+          continue ;
+          
+        }
+      } else if (match !== 45) {
+        return s;
+      } else {
+        _i = i + 1 | 0;
+        continue ;
+        
+      }
+    }
+  };
+}
+
+function string_of_float(f) {
+  return valid_float_lexem(Caml_format.caml_format_float("%.12g", f));
+}
+
+function $at(l1, l2) {
+  if (l1) {
+    return /* :: */[
+            l1[0],
+            $at(l1[1], l2)
+          ];
+  } else {
+    return l2;
+  }
+}
+
+var stdin = Caml_io.stdin;
+
+var stdout = Caml_io.stdout;
+
+var stderr = Caml_io.stderr;
+
+function open_out_gen(_, _$1, _$2) {
+  return Caml_io.caml_ml_open_descriptor_out(Caml_missing_polyfill.not_implemented("caml_sys_open not implemented by bucklescript yet\n"));
+}
+
+function open_out(name) {
+  return open_out_gen(/* :: */[
+              /* Open_wronly */1,
+              /* :: */[
+                /* Open_creat */3,
+                /* :: */[
+                  /* Open_trunc */4,
+                  /* :: */[
+                    /* Open_text */7,
+                    /* [] */0
+                  ]
+                ]
+              ]
+            ], 438, name);
+}
+
+function open_out_bin(name) {
+  return open_out_gen(/* :: */[
+              /* Open_wronly */1,
+              /* :: */[
+                /* Open_creat */3,
+                /* :: */[
+                  /* Open_trunc */4,
+                  /* :: */[
+                    /* Open_binary */6,
+                    /* [] */0
+                  ]
+                ]
+              ]
+            ], 438, name);
+}
+
+function flush_all() {
+  var _param = Caml_io.caml_ml_out_channels_list(/* () */0);
+  while(true) {
+    var param = _param;
+    if (param) {
+      try {
+        Caml_io.caml_ml_flush(param[0]);
+      }
+      catch (exn){
+        
+      }
+      _param = param[1];
+      continue ;
+      
+    } else {
+      return /* () */0;
+    }
+  };
+}
+
+function output_bytes(oc, s) {
+  return Caml_io.caml_ml_output(oc, s, 0, s.length);
+}
+
+function output_string(oc, s) {
+  return Caml_io.caml_ml_output(oc, s, 0, s.length);
+}
+
+function output(oc, s, ofs, len) {
+  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "output"
+        ];
+  } else {
+    return Caml_io.caml_ml_output(oc, s, ofs, len);
+  }
+}
+
+function output_substring(oc, s, ofs, len) {
+  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "output_substring"
+        ];
+  } else {
+    return Caml_io.caml_ml_output(oc, s, ofs, len);
+  }
+}
+
+function output_value(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_output_value not implemented by bucklescript yet\n");
+}
+
+function close_out(oc) {
+  Caml_io.caml_ml_flush(oc);
+  return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
+}
+
+function close_out_noerr(oc) {
+  try {
+    Caml_io.caml_ml_flush(oc);
+  }
+  catch (exn){
+    
+  }
+  try {
+    return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
+  }
+  catch (exn$1){
+    return /* () */0;
+  }
+}
+
+function open_in_gen(_, _$1, _$2) {
+  return Caml_io.caml_ml_open_descriptor_in(Caml_missing_polyfill.not_implemented("caml_sys_open not implemented by bucklescript yet\n"));
+}
+
+function open_in(name) {
+  return open_in_gen(/* :: */[
+              /* Open_rdonly */0,
+              /* :: */[
+                /* Open_text */7,
+                /* [] */0
+              ]
+            ], 0, name);
+}
+
+function open_in_bin(name) {
+  return open_in_gen(/* :: */[
+              /* Open_rdonly */0,
+              /* :: */[
+                /* Open_binary */6,
+                /* [] */0
+              ]
+            ], 0, name);
+}
+
+function input(_, s, ofs, len) {
+  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "input"
+        ];
+  } else {
+    return Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
+  }
+}
+
+function unsafe_really_input(_, _$1, _ofs, _len) {
+  while(true) {
+    var len = _len;
+    var ofs = _ofs;
+    if (len <= 0) {
+      return /* () */0;
+    } else {
+      var r = Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
+      if (r) {
+        _len = len - r | 0;
+        _ofs = ofs + r | 0;
+        continue ;
+        
+      } else {
+        throw Caml_builtin_exceptions.end_of_file;
+      }
+    }
+  };
+}
+
+function really_input(ic, s, ofs, len) {
+  if (ofs < 0 || len < 0 || ofs > (s.length - len | 0)) {
+    throw [
+          Caml_builtin_exceptions.invalid_argument,
+          "really_input"
+        ];
+  } else {
+    return unsafe_really_input(ic, s, ofs, len);
+  }
+}
+
+function really_input_string(ic, len) {
+  var s = Caml_string.caml_create_string(len);
+  really_input(ic, s, 0, len);
+  return Caml_string.bytes_to_string(s);
+}
+
+function input_line(chan) {
+  var build_result = function (buf, _pos, _param) {
+    while(true) {
+      var param = _param;
+      var pos = _pos;
+      if (param) {
+        var hd = param[0];
+        var len = hd.length;
+        Caml_string.caml_blit_bytes(hd, 0, buf, pos - len | 0, len);
+        _param = param[1];
+        _pos = pos - len | 0;
+        continue ;
+        
+      } else {
+        return buf;
+      }
+    };
+  };
+  var scan = function (_accu, _len) {
+    while(true) {
+      var len = _len;
+      var accu = _accu;
+      var n = Caml_missing_polyfill.not_implemented("caml_ml_input_scan_line not implemented by bucklescript yet\n");
+      if (n) {
+        if (n > 0) {
+          var res = Caml_string.caml_create_string(n - 1 | 0);
+          Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
+          Caml_io.caml_ml_input_char(chan);
+          if (accu) {
+            var len$1 = (len + n | 0) - 1 | 0;
+            return build_result(Caml_string.caml_create_string(len$1), len$1, /* :: */[
+                        res,
+                        accu
+                      ]);
+          } else {
+            return res;
+          }
+        } else {
+          var beg = Caml_string.caml_create_string(-n | 0);
+          Caml_missing_polyfill.not_implemented("caml_ml_input not implemented by bucklescript yet\n");
+          _len = len - n | 0;
+          _accu = /* :: */[
+            beg,
+            accu
+          ];
+          continue ;
+          
+        }
+      } else if (accu) {
+        return build_result(Caml_string.caml_create_string(len), len, accu);
+      } else {
+        throw Caml_builtin_exceptions.end_of_file;
+      }
+    };
+  };
+  return Caml_string.bytes_to_string(scan(/* [] */0, 0));
+}
+
+function close_in_noerr() {
+  try {
+    return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
+  }
+  catch (exn){
+    return /* () */0;
+  }
+}
+
+function print_char(c) {
+  return Caml_io.caml_ml_output_char(stdout, c);
+}
+
+function print_string(s) {
+  return output_string(stdout, s);
+}
+
+function print_bytes(s) {
+  return output_bytes(stdout, s);
+}
+
+function print_int(i) {
+  return output_string(stdout, "" + i);
+}
+
+function print_float(f) {
+  return output_string(stdout, valid_float_lexem(Caml_format.caml_format_float("%.12g", f)));
+}
+
+function print_endline(param) {
+  console.log(param);
+  return 0;
+}
+
+function print_newline() {
+  Caml_io.caml_ml_output_char(stdout, /* "\n" */10);
+  return Caml_io.caml_ml_flush(stdout);
+}
+
+function prerr_char(c) {
+  return Caml_io.caml_ml_output_char(stderr, c);
+}
+
+function prerr_string(s) {
+  return output_string(stderr, s);
+}
+
+function prerr_bytes(s) {
+  return output_bytes(stderr, s);
+}
+
+function prerr_int(i) {
+  return output_string(stderr, "" + i);
+}
+
+function prerr_float(f) {
+  return output_string(stderr, valid_float_lexem(Caml_format.caml_format_float("%.12g", f)));
+}
+
+function prerr_endline(param) {
+  console.error(param);
+  return 0;
+}
+
+function prerr_newline() {
+  Caml_io.caml_ml_output_char(stderr, /* "\n" */10);
+  return Caml_io.caml_ml_flush(stderr);
+}
+
+function read_line() {
+  Caml_io.caml_ml_flush(stdout);
+  return input_line(stdin);
+}
+
+function read_int() {
+  return Caml_format.caml_int_of_string((Caml_io.caml_ml_flush(stdout), input_line(stdin)));
+}
+
+function read_float() {
+  return Caml_format.caml_float_of_string((Caml_io.caml_ml_flush(stdout), input_line(stdin)));
+}
+
+function string_of_format(param) {
+  return param[1];
+}
+
+function $caret$caret(param, param$1) {
+  return /* Format */[
+          CamlinternalFormatBasics.concat_fmt(param[0], param$1[0]),
+          $caret(param[1], $caret("%,", param$1[1]))
+        ];
+}
+
+var exit_function = [flush_all];
+
+function at_exit(f) {
+  var g = exit_function[0];
+  exit_function[0] = (function () {
+      Curry._1(f, /* () */0);
+      return Curry._1(g, /* () */0);
+    });
+  return /* () */0;
+}
+
+function do_at_exit() {
+  return Curry._1(exit_function[0], /* () */0);
+}
+
+function exit(retcode) {
+  do_at_exit(/* () */0);
+  return Caml_sys.caml_sys_exit(retcode);
+}
+
+var max_int = 2147483647;
+
+var infinity = Infinity;
+
+var neg_infinity = -Infinity;
+
+var nan = NaN;
+
+var max_float = Number.MAX_VALUE;
+
+var min_float = Number.MIN_VALUE;
+
+var epsilon_float = 2.220446049250313e-16;
+
+var flush = Caml_io.caml_ml_flush;
+
+var output_char = Caml_io.caml_ml_output_char;
+
+var output_byte = Caml_io.caml_ml_output_char;
+
+function output_binary_int(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_ml_output_int not implemented by bucklescript yet\n");
+}
+
+function seek_out(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_ml_seek_out not implemented by bucklescript yet\n");
+}
+
+function pos_out() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_pos_out not implemented by bucklescript yet\n");
+}
+
+function out_channel_length() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size not implemented by bucklescript yet\n");
+}
+
+function set_binary_mode_out(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_ml_set_binary_mode not implemented by bucklescript yet\n");
+}
+
+var input_char = Caml_io.caml_ml_input_char;
+
+var input_byte = Caml_io.caml_ml_input_char;
+
+function input_binary_int() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_input_int not implemented by bucklescript yet\n");
+}
+
+function input_value() {
+  return Caml_missing_polyfill.not_implemented("caml_input_value not implemented by bucklescript yet\n");
+}
+
+function seek_in(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_ml_seek_in not implemented by bucklescript yet\n");
+}
+
+function pos_in() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_pos_in not implemented by bucklescript yet\n");
+}
+
+function in_channel_length() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size not implemented by bucklescript yet\n");
+}
+
+function close_in() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_close_channel not implemented by bucklescript yet\n");
+}
+
+function set_binary_mode_in(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_ml_set_binary_mode not implemented by bucklescript yet\n");
+}
+
+function LargeFile_000(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_ml_seek_out_64 not implemented by bucklescript yet\n");
+}
+
+function LargeFile_001() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_pos_out_64 not implemented by bucklescript yet\n");
+}
+
+function LargeFile_002() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size_64 not implemented by bucklescript yet\n");
+}
+
+function LargeFile_003(_, _$1) {
+  return Caml_missing_polyfill.not_implemented("caml_ml_seek_in_64 not implemented by bucklescript yet\n");
+}
+
+function LargeFile_004() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_pos_in_64 not implemented by bucklescript yet\n");
+}
+
+function LargeFile_005() {
+  return Caml_missing_polyfill.not_implemented("caml_ml_channel_size_64 not implemented by bucklescript yet\n");
+}
+
+var LargeFile = [
+  LargeFile_000,
+  LargeFile_001,
+  LargeFile_002,
+  LargeFile_003,
+  LargeFile_004,
+  LargeFile_005
+];
+
+exports.invalid_arg         = invalid_arg;
+exports.failwith            = failwith;
+exports.Exit                = Exit;
+exports.min                 = min;
+exports.max                 = max;
+exports.abs                 = abs;
+exports.max_int             = max_int;
+exports.min_int             = min_int;
+exports.lnot                = lnot;
+exports.infinity            = infinity;
+exports.neg_infinity        = neg_infinity;
+exports.nan                 = nan;
+exports.max_float           = max_float;
+exports.min_float           = min_float;
+exports.epsilon_float       = epsilon_float;
+exports.$caret              = $caret;
+exports.char_of_int         = char_of_int;
+exports.string_of_bool      = string_of_bool;
+exports.bool_of_string      = bool_of_string;
+exports.string_of_int       = string_of_int;
+exports.string_of_float     = string_of_float;
+exports.$at                 = $at;
+exports.stdin               = stdin;
+exports.stdout              = stdout;
+exports.stderr              = stderr;
+exports.print_char          = print_char;
+exports.print_string        = print_string;
+exports.print_bytes         = print_bytes;
+exports.print_int           = print_int;
+exports.print_float         = print_float;
+exports.print_endline       = print_endline;
+exports.print_newline       = print_newline;
+exports.prerr_char          = prerr_char;
+exports.prerr_string        = prerr_string;
+exports.prerr_bytes         = prerr_bytes;
+exports.prerr_int           = prerr_int;
+exports.prerr_float         = prerr_float;
+exports.prerr_endline       = prerr_endline;
+exports.prerr_newline       = prerr_newline;
+exports.read_line           = read_line;
+exports.read_int            = read_int;
+exports.read_float          = read_float;
+exports.open_out            = open_out;
+exports.open_out_bin        = open_out_bin;
+exports.open_out_gen        = open_out_gen;
+exports.flush               = flush;
+exports.flush_all           = flush_all;
+exports.output_char         = output_char;
+exports.output_string       = output_string;
+exports.output_bytes        = output_bytes;
+exports.output              = output;
+exports.output_substring    = output_substring;
+exports.output_byte         = output_byte;
+exports.output_binary_int   = output_binary_int;
+exports.output_value        = output_value;
+exports.seek_out            = seek_out;
+exports.pos_out             = pos_out;
+exports.out_channel_length  = out_channel_length;
+exports.close_out           = close_out;
+exports.close_out_noerr     = close_out_noerr;
+exports.set_binary_mode_out = set_binary_mode_out;
+exports.open_in             = open_in;
+exports.open_in_bin         = open_in_bin;
+exports.open_in_gen         = open_in_gen;
+exports.input_char          = input_char;
+exports.input_line          = input_line;
+exports.input               = input;
+exports.really_input        = really_input;
+exports.really_input_string = really_input_string;
+exports.input_byte          = input_byte;
+exports.input_binary_int    = input_binary_int;
+exports.input_value         = input_value;
+exports.seek_in             = seek_in;
+exports.pos_in              = pos_in;
+exports.in_channel_length   = in_channel_length;
+exports.close_in            = close_in;
+exports.close_in_noerr      = close_in_noerr;
+exports.set_binary_mode_in  = set_binary_mode_in;
+exports.LargeFile           = LargeFile;
+exports.string_of_format    = string_of_format;
+exports.$caret$caret        = $caret$caret;
+exports.exit                = exit;
+exports.at_exit             = at_exit;
+exports.valid_float_lexem   = valid_float_lexem;
+exports.unsafe_really_input = unsafe_really_input;
+exports.do_at_exit          = do_at_exit;
+/* No side effect */
+
+
+/***/ }),
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4348,7 +5283,7 @@ exports.caml_ml_out_channels_list   = caml_ml_out_channels_list;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 13 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4448,7 +5383,7 @@ exports.caml_sys_file_exists    = caml_sys_file_exists;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 14 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4456,7 +5391,7 @@ exports.caml_sys_file_exists    = caml_sys_file_exists;
 
 var Curry                   = __webpack_require__(1);
 var Caml_int32              = __webpack_require__(8);
-var Caml_int64              = __webpack_require__(15);
+var Caml_int64              = __webpack_require__(21);
 var Caml_utils              = __webpack_require__(9);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
@@ -5256,13 +6191,13 @@ exports.caml_nativeint_of_string = caml_nativeint_of_string;
 
 
 /***/ }),
-/* 15 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Caml_obj                = __webpack_require__(4);
+var Caml_obj                = __webpack_require__(5);
 var Caml_int32              = __webpack_require__(8);
 var Caml_utils              = __webpack_require__(9);
 var Caml_builtin_exceptions = __webpack_require__(0);
@@ -5863,7 +6798,7 @@ exports.get64         = get64;
 
 
 /***/ }),
-/* 16 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6073,7 +7008,7 @@ exports.get                       = get;
 
 
 /***/ }),
-/* 17 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6087,13 +7022,13 @@ exports.not_implemented = not_implemented;
 
 
 /***/ }),
-/* 18 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Block = __webpack_require__(5);
+var Block = __webpack_require__(4);
 
 function erase_rel(param) {
   if (typeof param === "number") {
@@ -6319,924 +7254,6 @@ exports.concat_fmtty = concat_fmtty;
 exports.erase_rel    = erase_rel;
 exports.concat_fmt   = concat_fmt;
 /* No side effect */
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Curry                   = __webpack_require__(1);
-var Js_exn                  = __webpack_require__(20);
-var Caml_array              = __webpack_require__(3);
-var Caml_exceptions         = __webpack_require__(2);
-var Caml_builtin_exceptions = __webpack_require__(0);
-
-function init(l, f) {
-  if (l) {
-    if (l < 0) {
-      throw [
-            Caml_builtin_exceptions.invalid_argument,
-            "Array.init"
-          ];
-    } else {
-      var res = Caml_array.caml_make_vect(l, Curry._1(f, 0));
-      for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
-        res[i] = Curry._1(f, i);
-      }
-      return res;
-    }
-  } else {
-    return /* array */[];
-  }
-}
-
-function make_matrix(sx, sy, init) {
-  var res = Caml_array.caml_make_vect(sx, /* array */[]);
-  for(var x = 0 ,x_finish = sx - 1 | 0; x <= x_finish; ++x){
-    res[x] = Caml_array.caml_make_vect(sy, init);
-  }
-  return res;
-}
-
-function copy(a) {
-  var l = a.length;
-  if (l) {
-    return Caml_array.caml_array_sub(a, 0, l);
-  } else {
-    return /* array */[];
-  }
-}
-
-function append(a1, a2) {
-  var l1 = a1.length;
-  if (l1) {
-    if (a2.length) {
-      return a1.concat(a2);
-    } else {
-      return Caml_array.caml_array_sub(a1, 0, l1);
-    }
-  } else {
-    return copy(a2);
-  }
-}
-
-function sub(a, ofs, len) {
-  if (len < 0 || ofs > (a.length - len | 0)) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "Array.sub"
-        ];
-  } else {
-    return Caml_array.caml_array_sub(a, ofs, len);
-  }
-}
-
-function fill(a, ofs, len, v) {
-  if (ofs < 0 || len < 0 || ofs > (a.length - len | 0)) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "Array.fill"
-        ];
-  } else {
-    for(var i = ofs ,i_finish = (ofs + len | 0) - 1 | 0; i <= i_finish; ++i){
-      a[i] = v;
-    }
-    return /* () */0;
-  }
-}
-
-function blit(a1, ofs1, a2, ofs2, len) {
-  if (len < 0 || ofs1 < 0 || ofs1 > (a1.length - len | 0) || ofs2 < 0 || ofs2 > (a2.length - len | 0)) {
-    throw [
-          Caml_builtin_exceptions.invalid_argument,
-          "Array.blit"
-        ];
-  } else {
-    return Caml_array.caml_array_blit(a1, ofs1, a2, ofs2, len);
-  }
-}
-
-function iter(f, a) {
-  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
-    Curry._1(f, a[i]);
-  }
-  return /* () */0;
-}
-
-function map(f, a) {
-  var l = a.length;
-  if (l) {
-    var r = Caml_array.caml_make_vect(l, Curry._1(f, a[0]));
-    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
-      r[i] = Curry._1(f, a[i]);
-    }
-    return r;
-  } else {
-    return /* array */[];
-  }
-}
-
-function iteri(f, a) {
-  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
-    Curry._2(f, i, a[i]);
-  }
-  return /* () */0;
-}
-
-function mapi(f, a) {
-  var l = a.length;
-  if (l) {
-    var r = Caml_array.caml_make_vect(l, Curry._2(f, 0, a[0]));
-    for(var i = 1 ,i_finish = l - 1 | 0; i <= i_finish; ++i){
-      r[i] = Curry._2(f, i, a[i]);
-    }
-    return r;
-  } else {
-    return /* array */[];
-  }
-}
-
-function to_list(a) {
-  var _i = a.length - 1 | 0;
-  var _res = /* [] */0;
-  while(true) {
-    var res = _res;
-    var i = _i;
-    if (i < 0) {
-      return res;
-    } else {
-      _res = /* :: */[
-        a[i],
-        res
-      ];
-      _i = i - 1 | 0;
-      continue ;
-      
-    }
-  };
-}
-
-function list_length(_accu, _param) {
-  while(true) {
-    var param = _param;
-    var accu = _accu;
-    if (param) {
-      _param = param[1];
-      _accu = accu + 1 | 0;
-      continue ;
-      
-    } else {
-      return accu;
-    }
-  };
-}
-
-function of_list(l) {
-  if (l) {
-    var a = Caml_array.caml_make_vect(list_length(0, l), l[0]);
-    var _i = 1;
-    var _param = l[1];
-    while(true) {
-      var param = _param;
-      var i = _i;
-      if (param) {
-        a[i] = param[0];
-        _param = param[1];
-        _i = i + 1 | 0;
-        continue ;
-        
-      } else {
-        return a;
-      }
-    };
-  } else {
-    return /* array */[];
-  }
-}
-
-function fold_left(f, x, a) {
-  var r = x;
-  for(var i = 0 ,i_finish = a.length - 1 | 0; i <= i_finish; ++i){
-    r = Curry._2(f, r, a[i]);
-  }
-  return r;
-}
-
-function fold_right(f, a, x) {
-  var r = x;
-  for(var i = a.length - 1 | 0; i >= 0; --i){
-    r = Curry._2(f, a[i], r);
-  }
-  return r;
-}
-
-var Bottom = Caml_exceptions.create("Array.Bottom");
-
-function sort(cmp, a) {
-  var maxson = function (l, i) {
-    var i31 = ((i + i | 0) + i | 0) + 1 | 0;
-    var x = i31;
-    if ((i31 + 2 | 0) < l) {
-      if (Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
-        x = i31 + 1 | 0;
-      }
-      if (Curry._2(cmp, Caml_array.caml_array_get(a, x), Caml_array.caml_array_get(a, i31 + 2 | 0)) < 0) {
-        x = i31 + 2 | 0;
-      }
-      return x;
-    } else if ((i31 + 1 | 0) < l && Curry._2(cmp, Caml_array.caml_array_get(a, i31), Caml_array.caml_array_get(a, i31 + 1 | 0)) < 0) {
-      return i31 + 1 | 0;
-    } else if (i31 < l) {
-      return i31;
-    } else {
-      throw [
-            Bottom,
-            i
-          ];
-    }
-  };
-  var trickle = function (l, i, e) {
-    try {
-      var l$1 = l;
-      var _i = i;
-      var e$1 = e;
-      while(true) {
-        var i$1 = _i;
-        var j = maxson(l$1, i$1);
-        if (Curry._2(cmp, Caml_array.caml_array_get(a, j), e$1) > 0) {
-          Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
-          _i = j;
-          continue ;
-          
-        } else {
-          return Caml_array.caml_array_set(a, i$1, e$1);
-        }
-      };
-    }
-    catch (raw_exn){
-      var exn = Js_exn.internalToOCamlException(raw_exn);
-      if (exn[0] === Bottom) {
-        return Caml_array.caml_array_set(a, exn[1], e);
-      } else {
-        throw exn;
-      }
-    }
-  };
-  var bubble = function (l, i) {
-    try {
-      var l$1 = l;
-      var _i = i;
-      while(true) {
-        var i$1 = _i;
-        var j = maxson(l$1, i$1);
-        Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, j));
-        _i = j;
-        continue ;
-        
-      };
-    }
-    catch (raw_exn){
-      var exn = Js_exn.internalToOCamlException(raw_exn);
-      if (exn[0] === Bottom) {
-        return exn[1];
-      } else {
-        throw exn;
-      }
-    }
-  };
-  var trickleup = function (_i, e) {
-    while(true) {
-      var i = _i;
-      var father = (i - 1 | 0) / 3 | 0;
-      if (i === father) {
-        throw [
-              Caml_builtin_exceptions.assert_failure,
-              [
-                "array.ml",
-                168,
-                4
-              ]
-            ];
-      }
-      if (Curry._2(cmp, Caml_array.caml_array_get(a, father), e) < 0) {
-        Caml_array.caml_array_set(a, i, Caml_array.caml_array_get(a, father));
-        if (father > 0) {
-          _i = father;
-          continue ;
-          
-        } else {
-          return Caml_array.caml_array_set(a, 0, e);
-        }
-      } else {
-        return Caml_array.caml_array_set(a, i, e);
-      }
-    };
-  };
-  var l = a.length;
-  for(var i = ((l + 1 | 0) / 3 | 0) - 1 | 0; i >= 0; --i){
-    trickle(l, i, Caml_array.caml_array_get(a, i));
-  }
-  for(var i$1 = l - 1 | 0; i$1 >= 2; --i$1){
-    var e = Caml_array.caml_array_get(a, i$1);
-    Caml_array.caml_array_set(a, i$1, Caml_array.caml_array_get(a, 0));
-    trickleup(bubble(i$1, 0), e);
-  }
-  if (l > 1) {
-    var e$1 = Caml_array.caml_array_get(a, 1);
-    Caml_array.caml_array_set(a, 1, Caml_array.caml_array_get(a, 0));
-    return Caml_array.caml_array_set(a, 0, e$1);
-  } else {
-    return 0;
-  }
-}
-
-function stable_sort(cmp, a) {
-  var merge = function (src1ofs, src1len, src2, src2ofs, src2len, dst, dstofs) {
-    var src1r = src1ofs + src1len | 0;
-    var src2r = src2ofs + src2len | 0;
-    var _i1 = src1ofs;
-    var _s1 = Caml_array.caml_array_get(a, src1ofs);
-    var _i2 = src2ofs;
-    var _s2 = Caml_array.caml_array_get(src2, src2ofs);
-    var _d = dstofs;
-    while(true) {
-      var d = _d;
-      var s2 = _s2;
-      var i2 = _i2;
-      var s1 = _s1;
-      var i1 = _i1;
-      if (Curry._2(cmp, s1, s2) <= 0) {
-        Caml_array.caml_array_set(dst, d, s1);
-        var i1$1 = i1 + 1 | 0;
-        if (i1$1 < src1r) {
-          _d = d + 1 | 0;
-          _s1 = Caml_array.caml_array_get(a, i1$1);
-          _i1 = i1$1;
-          continue ;
-          
-        } else {
-          return blit(src2, i2, dst, d + 1 | 0, src2r - i2 | 0);
-        }
-      } else {
-        Caml_array.caml_array_set(dst, d, s2);
-        var i2$1 = i2 + 1 | 0;
-        if (i2$1 < src2r) {
-          _d = d + 1 | 0;
-          _s2 = Caml_array.caml_array_get(src2, i2$1);
-          _i2 = i2$1;
-          continue ;
-          
-        } else {
-          return blit(a, i1, dst, d + 1 | 0, src1r - i1 | 0);
-        }
-      }
-    };
-  };
-  var isortto = function (srcofs, dst, dstofs, len) {
-    for(var i = 0 ,i_finish = len - 1 | 0; i <= i_finish; ++i){
-      var e = Caml_array.caml_array_get(a, srcofs + i | 0);
-      var j = (dstofs + i | 0) - 1 | 0;
-      while(j >= dstofs && Curry._2(cmp, Caml_array.caml_array_get(dst, j), e) > 0) {
-        Caml_array.caml_array_set(dst, j + 1 | 0, Caml_array.caml_array_get(dst, j));
-        j = j - 1 | 0;
-      };
-      Caml_array.caml_array_set(dst, j + 1 | 0, e);
-    }
-    return /* () */0;
-  };
-  var sortto = function (srcofs, dst, dstofs, len) {
-    if (len <= 5) {
-      return isortto(srcofs, dst, dstofs, len);
-    } else {
-      var l1 = len / 2 | 0;
-      var l2 = len - l1 | 0;
-      sortto(srcofs + l1 | 0, dst, dstofs + l1 | 0, l2);
-      sortto(srcofs, a, srcofs + l2 | 0, l1);
-      return merge(srcofs + l2 | 0, l1, dst, dstofs + l1 | 0, l2, dst, dstofs);
-    }
-  };
-  var l = a.length;
-  if (l <= 5) {
-    return isortto(0, a, 0, l);
-  } else {
-    var l1 = l / 2 | 0;
-    var l2 = l - l1 | 0;
-    var t = Caml_array.caml_make_vect(l2, Caml_array.caml_array_get(a, 0));
-    sortto(l1, t, 0, l2);
-    sortto(0, a, l2, l1);
-    return merge(l2, l1, t, 0, l2, a, 0);
-  }
-}
-
-var create_matrix = make_matrix;
-
-var concat = Caml_array.caml_array_concat;
-
-var fast_sort = stable_sort;
-
-exports.init          = init;
-exports.make_matrix   = make_matrix;
-exports.create_matrix = create_matrix;
-exports.append        = append;
-exports.concat        = concat;
-exports.sub           = sub;
-exports.copy          = copy;
-exports.fill          = fill;
-exports.blit          = blit;
-exports.to_list       = to_list;
-exports.of_list       = of_list;
-exports.iter          = iter;
-exports.map           = map;
-exports.iteri         = iteri;
-exports.mapi          = mapi;
-exports.fold_left     = fold_left;
-exports.fold_right    = fold_right;
-exports.sort          = sort;
-exports.stable_sort   = stable_sort;
-exports.fast_sort     = fast_sort;
-/* No side effect */
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Caml_exceptions = __webpack_require__(2);
-
-var $$Error = Caml_exceptions.create("Js_exn.Error");
-
-function internalToOCamlException(e) {
-  if (Caml_exceptions.isCamlExceptionOrOpenVariant(e)) {
-    return e;
-  } else {
-    return [
-            $$Error,
-            e
-          ];
-  }
-}
-
-function raiseError(str) {
-  throw new Error(str);
-}
-
-function raiseEvalError(str) {
-  throw new EvalError(str);
-}
-
-function raiseRangeError(str) {
-  throw new RangeError(str);
-}
-
-function raiseReferenceError(str) {
-  throw new ReferenceError(str);
-}
-
-function raiseSyntaxError(str) {
-  throw new SyntaxError(str);
-}
-
-function raiseTypeError(str) {
-  throw new TypeError(str);
-}
-
-function raiseUriError(str) {
-  throw new URIError(str);
-}
-
-exports.$$Error                  = $$Error;
-exports.internalToOCamlException = internalToOCamlException;
-exports.raiseError               = raiseError;
-exports.raiseEvalError           = raiseEvalError;
-exports.raiseRangeError          = raiseRangeError;
-exports.raiseReferenceError      = raiseReferenceError;
-exports.raiseSyntaxError         = raiseSyntaxError;
-exports.raiseTypeError           = raiseTypeError;
-exports.raiseUriError            = raiseUriError;
-/* No side effect */
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
-
-
-var Caml_exceptions = __webpack_require__(2);
-
-var NumNotOfType = Caml_exceptions.create("ConstantConv.NumNotOfType");
-
-var StringNotOfType = Caml_exceptions.create("ConstantConv.StringNotOfType");
-
-function toNumResult(sc) {
-  switch (sc) {
-    case 0 : 
-        return 0;
-    case 1 : 
-        return -1;
-    case 2 : 
-        return -2;
-    case 3 : 
-        return -3;
-    case 4 : 
-        return -4;
-    case 5 : 
-        return -5;
-    case 7 : 
-        return -7;
-    case 8 : 
-        return -8;
-    case 9 : 
-        return -9;
-    case 10 : 
-        return -10;
-    case 11 : 
-        return -11;
-    case 12 : 
-        return -12;
-    case 6 : 
-    case 13 : 
-        return -6;
-    case 14 : 
-        return -14;
-    case 15 : 
-        return -15;
-    
-  }
-}
-
-function fromNumResult(i) {
-  var switcher = i + 15 | 0;
-  if (switcher > 15 || switcher < 0) {
-    throw [
-          NumNotOfType,
-          i
-        ];
-  } else {
-    switch (switcher) {
-      case 0 : 
-          return /* ERR_GCL_NOT_ENOUGH */15;
-      case 1 : 
-          return /* ERR_RCL_NOT_ENOUGH */14;
-      case 2 : 
-          throw [
-                NumNotOfType,
-                i
-              ];
-      case 3 : 
-          return /* ERR_NO_BODYPART */12;
-      case 4 : 
-          return /* ERR_TIRED */11;
-      case 5 : 
-          return /* ERR_INVALID_ARGS */10;
-      case 6 : 
-          return /* ERR_NOT_IN_RANGE */9;
-      case 7 : 
-          return /* ERR_FULL */8;
-      case 8 : 
-          return /* ERR_INVALID_TARGET */7;
-      case 9 : 
-          return /* ERR_NOT_ENOUGH_ENERGY */6;
-      case 10 : 
-          return /* ERR_NOT_FOUND */5;
-      case 11 : 
-          return /* ERR_BUSY */4;
-      case 12 : 
-          return /* ERR_NAME_EXISTS */3;
-      case 13 : 
-          return /* ERR_NO_PATH */2;
-      case 14 : 
-          return /* ERR_NOT_OWNER */1;
-      case 15 : 
-          return /* OK */0;
-      
-    }
-  }
-}
-
-function toNumFilter(sc) {
-  switch (sc) {
-    case 0 : 
-        return 1;
-    case 1 : 
-        return 3;
-    case 2 : 
-        return 5;
-    case 3 : 
-        return 7;
-    case 4 : 
-        return 10;
-    case 5 : 
-        return 101;
-    case 6 : 
-        return 102;
-    case 7 : 
-        return 103;
-    case 8 : 
-        return 104;
-    case 9 : 
-        return 105;
-    case 10 : 
-    case 11 : 
-        return 106;
-    case 12 : 
-        return 107;
-    case 13 : 
-        return 108;
-    case 14 : 
-        return 109;
-    case 15 : 
-        return 110;
-    case 16 : 
-        return 111;
-    case 17 : 
-        return 112;
-    case 18 : 
-        return 113;
-    case 19 : 
-        return 114;
-    case 20 : 
-        return 115;
-    case 21 : 
-        return 116;
-    
-  }
-}
-
-function fromNumFilter(i) {
-  if (i >= 11) {
-    var switcher = i - 101 | 0;
-    if (switcher > 15 || switcher < 0) {
-      throw [
-            NumNotOfType,
-            i
-          ];
-    } else {
-      switch (switcher) {
-        case 0 : 
-            return /* FIND_CREEPS */5;
-        case 1 : 
-            return /* FIND_MY_CREEPS */6;
-        case 2 : 
-            return /* FIND_HOSTILE_CREEPS */7;
-        case 3 : 
-            return /* FIND_SOURCES_ACTIVE */8;
-        case 4 : 
-            return /* FIND_SOURCES */9;
-        case 5 : 
-            return /* FIND_DROPPED_ENERGY */10;
-        case 6 : 
-            return /* FIND_STRUCTURES */12;
-        case 7 : 
-            return /* FIND_MY_STRUCTURES */13;
-        case 8 : 
-            return /* FIND_HOSTILE_STRUCTURES */14;
-        case 9 : 
-            return /* FIND_FLAGS */15;
-        case 10 : 
-            return /* FIND_CONSTRUCTION_SITES */16;
-        case 11 : 
-            return /* FIND_MY_SPAWNS */17;
-        case 12 : 
-            return /* FIND_HOSTILE_SPAWNS */18;
-        case 13 : 
-            return /* FIND_MY_CONSTRUCTION_SITES */19;
-        case 14 : 
-            return /* FIND_HOSTILE_CONSTRUCTION_SITES */20;
-        case 15 : 
-            return /* FIND_MINERALS */21;
-        
-      }
-    }
-  } else if (i > 0) {
-    switch (i - 1 | 0) {
-      case 0 : 
-          return /* FIND_EXIT_TOP */0;
-      case 2 : 
-          return /* FIND_EXIT_RIGHT */1;
-      case 4 : 
-          return /* FIND_EXIT_BOTTOM */2;
-      case 6 : 
-          return /* FIND_EXIT_LEFT */3;
-      case 1 : 
-      case 3 : 
-      case 5 : 
-      case 7 : 
-      case 8 : 
-          throw [
-                NumNotOfType,
-                i
-              ];
-      case 9 : 
-          return /* FIND_EXIT */4;
-      
-    }
-  } else {
-    throw [
-          NumNotOfType,
-          i
-        ];
-  }
-}
-
-function toStringStructure(sc) {
-  switch (sc) {
-    case 0 : 
-        return "spawn";
-    case 1 : 
-        return "extension";
-    case 2 : 
-        return "road";
-    case 3 : 
-        return "constructedWall";
-    case 4 : 
-        return "rampart";
-    case 5 : 
-        return "keeperLair";
-    case 6 : 
-        return "portal";
-    case 7 : 
-        return "controller";
-    case 8 : 
-        return "link";
-    case 9 : 
-        return "storage";
-    case 10 : 
-        return "tower";
-    case 11 : 
-        return "observer";
-    case 12 : 
-        return "powerBank";
-    case 13 : 
-        return "powerSpawn";
-    case 14 : 
-        return "extractor";
-    case 15 : 
-        return "lab";
-    case 16 : 
-        return "terminal";
-    case 17 : 
-        return "container";
-    
-  }
-}
-
-function fromStringStructure(sc) {
-  switch (sc) {
-    case "constructedWall" : 
-        return /* STRUCTURE_WALL */3;
-    case "container" : 
-        return /* STRUCTURE_CONTAINER */17;
-    case "controller" : 
-        return /* STRUCTURE_CONTROLLER */7;
-    case "extension" : 
-        return /* STRUCTURE_EXTENSION */1;
-    case "extractor" : 
-        return /* STRUCTURE_EXTRACTOR */14;
-    case "keeperLair" : 
-        return /* STRUCTURE_KEEPER_LAIR */5;
-    case "lab" : 
-        return /* STRUCTURE_LAB */15;
-    case "link" : 
-        return /* STRUCTURE_LINK */8;
-    case "observer" : 
-        return /* STRUCTURE_OBSERVER */11;
-    case "portal" : 
-        return /* STRUCTURE_PORTAL */6;
-    case "powerBank" : 
-        return /* STRUCTURE_POWER_BANK */12;
-    case "powerSpawn" : 
-        return /* STRUCTURE_POWER_SPAWN */13;
-    case "rampart" : 
-        return /* STRUCTURE_RAMPART */4;
-    case "road" : 
-        return /* STRUCTURE_ROAD */2;
-    case "spawn" : 
-        return /* STRUCTURE_SPAWN */0;
-    case "storage" : 
-        return /* STRUCTURE_STORAGE */9;
-    case "terminal" : 
-        return /* STRUCTURE_TERMINAL */16;
-    case "tower" : 
-        return /* STRUCTURE_TOWER */10;
-    default:
-      throw [
-            StringNotOfType,
-            sc
-          ];
-  }
-}
-
-exports.NumNotOfType        = NumNotOfType;
-exports.StringNotOfType     = StringNotOfType;
-exports.toNumResult         = toNumResult;
-exports.fromNumResult       = fromNumResult;
-exports.toNumFilter         = toNumFilter;
-exports.fromNumFilter       = fromNumFilter;
-exports.toStringStructure   = toStringStructure;
-exports.fromStringStructure = fromStringStructure;
-/* No side effect */
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* NOTE: This is the only file in this folder not transpiled by BUCKLESCRIPT.
-  Still though, you should handle with care, although this will be more readable
-  -@lacoperon */
-
-function spawnCreepHelper(spawnName, body) {
-  Game.spawns[spawnName].createCreep(body);
-}
-
-function defineMemoryHelper(creepName, fieldName, value) {
-  Game.creeps[creepName].memory[fieldName] = value;
-}
-
-function doWatcher(empty) {
-  var watcher = __webpack_require__(23);
-  watcher();
-}
-
-function getCreepEnergy(creepName) {
-  return Game.creeps[creepName].carry.energy;
-}
-
-function getCreepCarryCapacity(creepName) {
-  return Game.creeps[creepName].carryCapacity;
-}
-
-function getCreep(creepName) {
-  return Game.creeps[creepName];
-}
-
-function getRoom(creep) {
-  return creep.room;
-}
-
-function getRoomFromCreep(creep) {
-  return creep.room;
-}
-
-function findInRoom(room, thing) {
-  return room.find(thing);
-}
-
-function spawnCreepWithMemoryHelper(spawnstring, body, memoryArray) {
-  memoryObject = {};
-  for(i=0; i < memoryArray.length; i = i + 2) {
-    memoryObject[memoryArray[i]] = memoryObject[i+1]
-  }
-  Game.spawns[spawnstring].createCreep(body, null, memoryObject);
-}
-
-exports.spawnCreepHelper = spawnCreepHelper;
-exports.defineMemoryHelper = defineMemoryHelper;
-exports.doWatcher = doWatcher;
-exports.getCreep = getCreep;
-exports.getCreepEnergy = getCreepEnergy;
-exports.getRoom = getRoom;
-exports.spawnCreepWithMemoryHelper = spawnCreepWithMemoryHelper;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-module.exports = function() {
-  if (typeof Memory.watch !== 'object') {
-    Memory.watch = {};
-  }
-  if (typeof Memory.watch.expressions !== 'object') {
-    Memory.watch.expressions = {};
-  }
-  if (typeof Memory.watch.values !== 'object') {
-    Memory.watch.values = {};
-  }
-  _.each(Memory.watch.expressions, (expr, name) => {
-    if (typeof expr !== 'string') return;
-    let result;
-    try {
-      result = eval(expr);
-    } catch (ex) {
-      result = "Error: " + ex.message;
-    }
-    if (name == 'console') {
-      if (typeof result !== 'undefined') console.log(result);
-    } else {
-      Memory.watch.values[name] = typeof result !== 'undefined' ? result.toString() : result;
-    }
-  });
-};
 
 
 /***/ })
