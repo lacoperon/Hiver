@@ -7,7 +7,7 @@ open RoomObject
 open HelperFunctions
 
 let runCreep(creep : creep) : unit =
-  say creep "Upgrade";
+  (* say creep "Upgrade"; *)
   let carryCap = get_carry creep in
   let load = get_load creep in
   let currentRoom = get_room creep in
