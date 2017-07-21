@@ -7392,7 +7392,6 @@ var ConstantConv    = __webpack_require__(4);
 var HelperFunctions = __webpack_require__(5);
 
 function runCreep(creep) {
-  creep.say("Upgrade");
   var carryCap = creep.carryCapacity;
   var load = creep.carry.energy;
   var currentRoom = creep.room;
@@ -7407,7 +7406,6 @@ function runCreep(creep) {
         return 0;
       }
     } else {
-      console.log("hi");
       Creep.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* false */0]));
       var structureArray = RoomObject.find(currentRoom, /* FIND_STRUCTURES */12);
       var isSpawnOrExtension = function (ro) {
@@ -7426,7 +7424,6 @@ function runCreep(creep) {
     }
   } else {
     Creep.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* true */1]));
-    console.log(load);
     if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
       creep.moveTo(chosenSource);
       return /* () */0;
@@ -7455,7 +7452,6 @@ var ConstantConv    = __webpack_require__(4);
 var HelperFunctions = __webpack_require__(5);
 
 function runCreep(creep) {
-  creep.say("Harvest");
   var carryCap = creep.carryCapacity;
   var load = creep.carry.energy;
   var currentRoom = creep.room;
