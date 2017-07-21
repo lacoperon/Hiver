@@ -2,6 +2,7 @@ open BaseTypes
 open ConstantConv
 open HelperFunctions
 open Room
+open RoomObject
 open Spawn
 open Creep
 
@@ -21,7 +22,8 @@ let iterateCreeps () : unit =
       let creepRole = getRole creep in
       match creepRole with
       | Harvester -> RoleHarvester.runCreep(creep) ;
-      | Upgrader  -> RoleUpgrader.runCreep(creep)
+      | Upgrader  -> RoleUpgrader.runCreep(creep)  ;
+      | Builder   -> RoleBuilder.runCreep(creep)
     done
 
 
@@ -34,6 +36,7 @@ let iterateSpawns () : unit =
     let spawnString = (Array.get spawns i) in
     let spawn = getSpawn (spawnString) in
     let room = getRoomFromSpawn spawn in
+    (* Js.log (find room FIND_MY_CONSTRUCTION_SITES); *)
     let energyAvailable = getEnergyInRoom room in
     let bodyCost = arraySum (Array.map bodyPartToCost body ) in
     let roleToOne (r : role) (creep : creep)  : int =
@@ -44,21 +47,31 @@ let iterateSpawns () : unit =
     in
     if bodyCost <= energyAvailable
     then
-    (*TODO: Add room specificity for creeps (currently not scaleable to more
-      than one spawn  *)
-    let harvesterIntArray = Array.map (roleToOne Harvester) realCreeps in
-    let harvesterNum = arraySum harvesterIntArray in
+      (*TODO: Add room specificity for creeps (currently not scaleable to more
+        than one spawn  *)
+      let harvesterIntArray = Array.map (roleToOne Harvester) realCreeps in
+      let harvesterNum = arraySum harvesterIntArray in
 
-    let upgraderIntArray  = Array.map (roleToOne Upgrader ) realCreeps in
-    let upgraderNum  = arraySum upgraderIntArray in
+      let upgraderIntArray  = Array.map (roleToOne Upgrader ) realCreeps in
+      let upgraderNum  = arraySum upgraderIntArray in
 
-    if harvesterNum > 4 && upgraderNum < 3
-    then
-      (ignore (spawnCreepWithRole spawnString body Upgrader);
-       Js.log "Spawning new upgrader creep")
-    else
-      (ignore (spawnCreepWithRole spawnString body Harvester) ;
-       Js.log("Spawning new harvester creep"))
+      let builderIntArray   = Array.map (roleToOne Builder  ) realCreeps in
+      let builderNum   = arraySum builderIntArray in
+
+      if harvesterNum > 3 && builderNum = 0 then
+        (ignore (spawnCreepWithRole spawnString body Builder);
+         Js.log "Spawning new builder creep")
+      else
+        (
+
+          if harvesterNum > 4 && upgraderNum < 3
+          then
+            (ignore (spawnCreepWithRole spawnString body Upgrader);
+             Js.log "Spawning new upgrader creep")
+          else
+            (ignore (spawnCreepWithRole spawnString body Harvester) ;
+             Js.log("Spawning new harvester creep"))
+        )
   done
 
 (* Baseline loop code. Calls all subfunctions*)
@@ -67,7 +80,7 @@ let run () : unit =
   ignore (iterateSpawns());
   ignore (doWatcher(""));
   clearDeadCreepsFromMemory("")
-  (* Js.log("TICK") *)
+(* Js.log("TICK") *)
 
 
 let runEachTick : unit = run()

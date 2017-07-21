@@ -11,14 +11,16 @@ let runCreep(creep : creep) : unit =
   let carryCap = get_carry creep in
   let load = get_load creep in
   let currentRoom = get_room creep in
-  let energySources = find currentRoom FIND_SOURCES_ACTIVE in
-  let chosenSource  = Array.get energySources 1 in
   if load = 0 then
     (setMemoryField(creep)(Should_Mine true) ;
-     (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
-        moveTo creep chosenSource);)
+     let energySources = find currentRoom FIND_SOURCES_ACTIVE in
+     let chosenSource  = Array.get energySources 1 in
+     if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
+       moveTo creep chosenSource)
   else
-    (if (load < carryCap && ((getIfMining creep) = true) ) then
+    (let energySources = find currentRoom FIND_SOURCES_ACTIVE in
+     let chosenSource  = Array.get energySources 1 in
+     if (load < carryCap && ((getIfMining creep) = true) ) then
        (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
           moveTo creep chosenSource)
      else

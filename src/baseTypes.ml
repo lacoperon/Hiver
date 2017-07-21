@@ -46,14 +46,18 @@ type bodyPart =
 type role =
   | Harvester
   | Upgrader
+  | Builder
 
 let roleToString (role : role) =
   match role with
   | Harvester -> "harvester"
   | Upgrader  -> "upgrader"
+  | Builder   -> "builder"
 
 (* Defines all of the memory fields I allow to be set on creeps programmatically *)
 type memoryField =
   | Working of bool
   | Memory_Role of role
   | Should_Mine of bool
+  | Should_Build of bool
+  | Memory_Source of string (* roomObject ID *)

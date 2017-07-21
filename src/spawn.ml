@@ -11,4 +11,5 @@ let spawnCreepWithRole(spawn : string) (body : bodyPart array) (r : role) : int 
   spawnCreepWithMemoryHelper(spawn)(Array.map bodyPartToString body)([|"role";
                                                                        (match r with
                                                                         | Harvester -> "harvester";
-                                                                        | Upgrader  -> "upgrader")|])
+                                                                        | Upgrader  -> "upgrader";
+                                                                        | Builder   -> "builder")|])
