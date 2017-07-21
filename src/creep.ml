@@ -12,6 +12,7 @@ external moveTo : creep -> roomObject -> unit = "moveTo" [@@bs.send]
 external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Supplement"]
 external getRoomFromCreep: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 external transfer : creep -> roomObject -> string -> int = "transfer" [@@bs.send]
+external say : creep -> string -> unit = "say" [@@bs.send]
 
 
 let setMemoryField(creepName : string) (memory : memoryField) : unit =
@@ -24,7 +25,9 @@ let setMemoryField(creepName : string) (memory : memoryField) : unit =
   | Memory_Role(occupation) ->
     defineMemoryHelper(creepName)("role")(roleToString occupation)
 
+(* THIS IS IMPORTANT -- KEEP IT UPDATED *)
 let getRole(creep : creep) : role =
   match (getRoleHelper creep) with
   | "harvester" -> Harvester ;
+  | "upgrader"  -> Upgrader ;
   | x           -> raise (NotRoleString(x))

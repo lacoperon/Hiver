@@ -7,7 +7,7 @@ open RoomObject
 open HelperFunctions
 
 let runCreep(creep : creep) : unit =
-  (* Js.log("I'm a creep. I'm a weirdo."); *)
+  say creep "Harvest" ;
   let carryCap = get_carry creep in
   let load = get_load creep in
   let currentRoom = get_room creep in

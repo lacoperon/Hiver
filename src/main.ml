@@ -15,19 +15,21 @@ let iterateCreeps () : unit =
   match Array.length creeps  with
   | 0 -> Js.log("There are no creeps to iterate over") ;
   | x -> () ;
-  (* Js.log(creeps); *)
     for i=0 to x - 1 do
       let creepName = Array.get creeps i in
       let creep = getCreep(creepName) in
       let creepRole = getRole creep in
       match creepRole with
       | Harvester -> RoleHarvester.runCreep(creep) ;
-      | Upgrader  -> RoleUpgrader.runCreep(creep) ;
+      | Upgrader  -> RoleUpgrader.runCreep(creep)
     done
+
+
 
 (* This function iterates over all of my spawns, trying to give them units to spawn *)
 let iterateSpawns () : unit =
   for i=0 to Array.length spawns - 1 do
+    (* Js.log "hello"; GETS HERE*)
     let body = [|WORK; CARRY; MOVE; MOVE|] in
     let spawnString = (Array.get spawns i) in
     let spawn = getSpawn (spawnString) in
@@ -46,23 +48,26 @@ let iterateSpawns () : unit =
       than one spawn  *)
     let harvesterIntArray = Array.map (roleToOne Harvester) realCreeps in
     let harvesterNum = arraySum harvesterIntArray in
+
     let upgraderIntArray  = Array.map (roleToOne Upgrader ) realCreeps in
     let upgraderNum  = arraySum upgraderIntArray in
+
     if harvesterNum > 4 && upgraderNum < 3
     then
-      (spawnCreepWithRole spawnString body Upgrader;
+      (ignore (spawnCreepWithRole spawnString body Upgrader);
        Js.log "Spawning new upgrader creep")
-    else (ignore (spawnCreepWithRole spawnString body (Harvester) );
-          Js.log("Spawning new harvester creep"))
+    else
+      (ignore (spawnCreepWithRole spawnString body Harvester) ;
+       Js.log("Spawning new harvester creep"))
   done
 
 (* Baseline loop code. Calls all subfunctions*)
 let run () : unit =
-  (* Js.log "Tick" ; *)
-  iterateSpawns();
-  iterateCreeps();
-  doWatcher("") ;
+  ignore (iterateCreeps());
+  ignore (iterateSpawns());
+  ignore (doWatcher(""));
   clearDeadCreepsFromMemory("")
+  (* Js.log("TICK") *)
 
 
 let runEachTick : unit = run()
