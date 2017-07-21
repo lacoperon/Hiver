@@ -56,3 +56,4 @@ let roleToString (role : role) =
 type memoryField =
   | Working of bool
   | Memory_Role of role
+  | Should_Mine of bool

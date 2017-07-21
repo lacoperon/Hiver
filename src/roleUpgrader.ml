@@ -14,19 +14,25 @@ let runCreep(creep : creep) : unit =
   let energySources = find currentRoom FIND_SOURCES_ACTIVE in
   let chosenSource  = Array.get energySources 1 in
   if load = 0 then
-    (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
-       moveTo creep chosenSource)
+    (setMemoryField(creep)(Should_Mine true) ;
+     (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
+        moveTo creep chosenSource);)
   else
-    let structureArray = find currentRoom FIND_STRUCTURES in
-    let isSpawnOrExtension (ro : roomObject) : bool =
-      match get_struct_type ro with
-      | STRUCTURE_CONTROLLER  -> true;
-      | _                     -> false
-    in
-    let spawnsAndExtensions =  Array.filter (isSpawnOrExtension) (structureArray)  in
-    (* TODO: Add code which sets the destination structure randomly, and assigns
-       it permanantly to the harvester creep *)
-    let chosenStructure = Array.get spawnsAndExtensions 0 in
-    ignore (transfer creep chosenStructure "energy") ;
-    ignore(moveTo creep chosenStructure);
-    ()
+    (if (load < carryCap && ((getIfMining creep) = true) ) then
+       (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
+          moveTo creep chosenSource)
+     else
+        (setMemoryField(creep)(Should_Mine false) ;
+         let structureArray = find currentRoom FIND_STRUCTURES in
+         let isSpawnOrExtension (ro : roomObject) : bool =
+           match get_struct_type ro with
+           | STRUCTURE_CONTROLLER  -> true;
+           | _                     -> false
+         in
+         let spawnsAndExtensions =  Array.filter (isSpawnOrExtension) (structureArray)  in
+         (* TODO: Add code which sets the destination structure randomly, and assigns
+            it permanantly to the harvester creep *)
+         let chosenStructure = Array.get spawnsAndExtensions 0 in
+         ignore (transfer creep chosenStructure "energy") ;
+         ignore(moveTo creep chosenStructure);
+         ())))

@@ -22,9 +22,10 @@ external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./
 external spawnCreepWithMemoryHelper : string -> string array -> string array -> int = "" [@@bs.module "./supplemental", "Supplement"]
 external doWatcher : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external clearDeadCreepsFromMemory : string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
-external defineMemoryHelper : string -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
+external defineMemoryHelper : creep -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 
 (* Using the 'Getter' provided by BuckleScript *)
 external getStructureTypeHelper : roomObject -> string = "structureType" [@@bs.get]
 external getRoleHelper : creep -> string = "role" [@@bs.get] [@@bs.scope "memory"]
 external findHelper : room -> int -> roomObject array = "find" [@@bs.send]
+external gameNotify : string -> unit = "notify" [@@bs.val "Game"]

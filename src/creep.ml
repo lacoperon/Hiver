@@ -13,21 +13,27 @@ external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Suppleme
 external getRoomFromCreep: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 external transfer : creep -> roomObject -> string -> int = "transfer" [@@bs.send]
 external say : creep -> string -> unit = "say" [@@bs.send]
+external getIfMining : creep -> bool = "mining" [@@bs.get]
 
-
-let setMemoryField(creepName : string) (memory : memoryField) : unit =
+let setMemoryField(creep : creep) (memory : memoryField) : unit =
   match memory with
   | Working(x) ->
-    defineMemoryHelper(creepName)("working")
+    defineMemoryHelper(creep)("working")
       (match x with
        | true -> "true";
        | false-> "false");
   | Memory_Role(occupation) ->
-    defineMemoryHelper(creepName)("role")(roleToString occupation)
+    defineMemoryHelper(creep)("role")(roleToString occupation)
+  | Should_Mine(x) ->
+    defineMemoryHelper(creep)("mining")
+      (match x with
+       | true -> "true";
+       | false-> "false")
+
 
 (* THIS IS IMPORTANT -- KEEP IT UPDATED *)
 let getRole(creep : creep) : role =
   match (getRoleHelper creep) with
   | "harvester" -> Harvester ;
   | "upgrader"  -> Upgrader ;
-  | x           -> raise (NotRoleString(x))
+  | x           -> (gameNotify "ERROR: NO ROLE"); Harvester
