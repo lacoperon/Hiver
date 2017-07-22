@@ -7015,13 +7015,16 @@ function iterateSpawns() {
             }), realCreeps);
       var builderNum = HelperFunctions.arraySum(builderIntArray);
       if (harvesterNum > 4 && upgraderNum < 3) {
-        Spawn.spawnCreepWithRole(spawnString, body, /* Upgrader */1);
+        var largestBody = Spawn.createLargestTandemBody(spawn, body);
+        Spawn.spawnCreepWithRole(spawnString, largestBody, /* Upgrader */1);
         console.log("Spawning new builder creep");
       } else if (builderNum < 3) {
-        Spawn.spawnCreepWithRole(spawnString, body, /* Builder */2);
+        var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
+        Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Builder */2);
         console.log("Spawning new upgrader creep");
       } else {
-        Spawn.spawnCreepWithRole(spawnString, body, /* Harvester */0);
+        var largestBody$2 = Spawn.createLargestTandemBody(spawn, body);
+        Spawn.spawnCreepWithRole(spawnString, largestBody$2, /* Harvester */0);
         console.log("Spawning new harvester creep");
       }
     }
@@ -7119,21 +7122,26 @@ function spawnCreepWithRole(spawn, body, r) {
 function createLargestTandemBody(spawn, body) {
   var spawnEnergy = spawn.energyCapacityAvailable;
   var bodyCost = HelperFunctions.arraySum(Curry._2(HelperFunctions.$$Array[/* map */12], ConstantConv.bodyPartToCost, body));
-  var _spawnEnergyRemaining = spawnEnergy;
-  var bodyUnit = Curry._1(HelperFunctions.$$Array[/* to_list */9], body);
-  var _currentBody = /* [] */0;
-  while(true) {
-    var currentBody = _currentBody;
-    var spawnEnergyRemaining = _spawnEnergyRemaining;
-    if (spawnEnergyRemaining < bodyCost) {
-      return Curry._1(HelperFunctions.$$Array[/* of_list */10], currentBody);
-    } else {
-      _currentBody = Pervasives.$at(bodyUnit, currentBody);
-      _spawnEnergyRemaining = spawnEnergyRemaining - bodyCost | 0;
-      continue ;
-      
-    }
-  };
+  if (spawnEnergy > bodyCost) {
+    var _spawnEnergyRemaining = spawnEnergy;
+    var bodyUnit = Curry._1(HelperFunctions.$$Array[/* to_list */9], body);
+    var _currentBody = /* [] */0;
+    while(true) {
+      var currentBody = _currentBody;
+      var spawnEnergyRemaining = _spawnEnergyRemaining;
+      if (spawnEnergyRemaining < bodyCost) {
+        return Curry._1(HelperFunctions.$$Array[/* of_list */10], currentBody);
+      } else {
+        _currentBody = Pervasives.$at(bodyUnit, currentBody);
+        _spawnEnergyRemaining = spawnEnergyRemaining - bodyCost | 0;
+        continue ;
+        
+      }
+    };
+  } else {
+    console.log("Base body is too large");
+    return body;
+  }
 }
 
 exports.spawnCreepWithRole      = spawnCreepWithRole;

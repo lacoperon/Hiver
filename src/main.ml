@@ -73,16 +73,19 @@ let iterateSpawns () : unit =
 
 
       if harvesterNum > 4 && upgraderNum < 3 then
-        (ignore (spawnCreepWithRole spawnString body Upgrader);
+        (let largestBody = createLargestTandemBody spawn body in
+          ignore (spawnCreepWithRole spawnString largestBody Upgrader);
          Js.log "Spawning new builder creep")
       else
         (
           if builderNum < 3
           then
-            (ignore (spawnCreepWithRole spawnString body Builder);
+            (let largestBody = createLargestTandemBody spawn body in
+             ignore (spawnCreepWithRole spawnString largestBody Builder);
              Js.log "Spawning new upgrader creep")
           else
-            (ignore (spawnCreepWithRole spawnString body Harvester) ;
+            (let largestBody = createLargestTandemBody spawn body in
+             ignore (spawnCreepWithRole spawnString largestBody Harvester) ;
              Js.log("Spawning new harvester creep"))
         )
   done
