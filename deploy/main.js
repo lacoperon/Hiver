@@ -7030,13 +7030,11 @@ function iterateSpawns() {
         var largestBody = Spawn.createLargestTandemBody(spawn, body);
         Spawn.spawnCreepWithRole(spawnString, largestBody, /* Harvester */0);
         console.log("Spawning new harvester creep");
-      }
-      if (upgraderNum < 10) {
+      } else if (upgraderNum < 5) {
         var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
         Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Upgrader */1);
         console.log("Spawning new upgrader creep");
-      }
-      if (builderNum < 5) {
+      } else if (builderNum < 10) {
         var largestBody$2 = Spawn.createLargestTandemBody(spawn, body);
         Spawn.spawnCreepWithRole(spawnString, largestBody$2, /* Builder */2);
         console.log("Spawning new builder creep");
