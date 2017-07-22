@@ -44,13 +44,13 @@ let iterateSpawns () : unit =
     let towersArray = Array.filter isTower structures in
     let numTowers = Array.length towersArray in
     (if numTowers != 0 then
-      (for i=0 to numTowers -1 do
-        Tower.runTower(Array.get towersArray i)
-       done));
+       (for i=0 to numTowers -1 do
+          Tower.runTower(Array.get towersArray i)
+        done));
     let energyAvailable = getEnergyInRoom room in
     let bodyCost = arraySum (Array.map bodyPartToCost body ) in
     (* roleToOne is a One Hot Converter function which maps an creep within
-    a role array to 1 if it is r : role, or 0 otherwise. *)
+       a role array to 1 if it is r : role, or 0 otherwise. *)
     let roleToOne (r : role) (creep : creep)  : int =
       if (getRole creep) = r then
         1
@@ -70,24 +70,36 @@ let iterateSpawns () : unit =
       let builderIntArray   = Array.map (roleToOne Builder  ) realCreeps in
       let builderNum   = arraySum builderIntArray in
 
-
-
-      if harvesterNum > 4 && upgraderNum < 3 then
+      if harvesterNum < 3 then
         (let largestBody = createLargestTandemBody spawn body in
-          ignore (spawnCreepWithRole spawnString largestBody Upgrader);
-         Js.log "Spawning new builder creep")
-      else
-        (
-          if builderNum < 3
-          then
-            (let largestBody = createLargestTandemBody spawn body in
-             ignore (spawnCreepWithRole spawnString largestBody Builder);
-             Js.log "Spawning new upgrader creep")
-          else
-            (let largestBody = createLargestTandemBody spawn body in
-             ignore (spawnCreepWithRole spawnString largestBody Harvester) ;
-             Js.log("Spawning new harvester creep"))
-        )
+         ignore (spawnCreepWithRole spawnString largestBody Harvester);
+         Js.log "Spawning new harvester creep")
+      else (
+
+        if harvesterNum > 4 && upgraderNum < 3 then
+          (let largestBody = createLargestTandemBody spawn body in
+           ignore (spawnCreepWithRole spawnString largestBody Upgrader);
+           Js.log "Spawning new builder creep")
+        else
+          (
+            if builderNum < 3
+            then
+              (let largestBody = createLargestTandemBody spawn body in
+               ignore (spawnCreepWithRole spawnString largestBody Builder);
+               Js.log "Spawning new upgrader creep")
+            else
+              (
+                if upgraderNum < (harvesterNum * 2 / 3) then
+                  (let largestBody = createLargestTandemBody spawn body in
+                   ignore (spawnCreepWithRole spawnString largestBody Upgrader);
+                   Js.log "Spawning new upgrader creep")
+                else
+                  (let largestBody = createLargestTandemBody spawn body in
+                   ignore (spawnCreepWithRole spawnString largestBody Harvester);
+                   Js.log "Spawning new harvester creep")
+              )
+          )
+      )
   done
 
 (* Baseline loop code. Calls all subfunctions*)

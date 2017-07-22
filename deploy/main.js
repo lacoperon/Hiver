@@ -7014,17 +7014,25 @@ function iterateSpawns() {
               return roleToOne(/* Builder */2, param);
             }), realCreeps);
       var builderNum = HelperFunctions.arraySum(builderIntArray);
-      if (harvesterNum > 4 && upgraderNum < 3) {
+      if (harvesterNum < 3) {
         var largestBody = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody, /* Upgrader */1);
+        Spawn.spawnCreepWithRole(spawnString, largestBody, /* Harvester */0);
+        console.log("Spawning new harvester creep");
+      } else if (harvesterNum > 4 && upgraderNum < 3) {
+        var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
+        Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Upgrader */1);
         console.log("Spawning new builder creep");
       } else if (builderNum < 3) {
-        var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Builder */2);
+        var largestBody$2 = Spawn.createLargestTandemBody(spawn, body);
+        Spawn.spawnCreepWithRole(spawnString, largestBody$2, /* Builder */2);
+        console.log("Spawning new upgrader creep");
+      } else if (upgraderNum < ((harvesterNum << 1) / 3 | 0)) {
+        var largestBody$3 = Spawn.createLargestTandemBody(spawn, body);
+        Spawn.spawnCreepWithRole(spawnString, largestBody$3, /* Upgrader */1);
         console.log("Spawning new upgrader creep");
       } else {
-        var largestBody$2 = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody$2, /* Harvester */0);
+        var largestBody$4 = Spawn.createLargestTandemBody(spawn, body);
+        Spawn.spawnCreepWithRole(spawnString, largestBody$4, /* Harvester */0);
         console.log("Spawning new harvester creep");
       }
     }
@@ -7120,7 +7128,7 @@ function spawnCreepWithRole(spawn, body, r) {
 }
 
 function createLargestTandemBody(spawn, body) {
-  var spawnEnergy = spawn.energyCapacityAvailable;
+  var spawnEnergy = spawn.energyCapacity;
   var bodyCost = HelperFunctions.arraySum(Curry._2(HelperFunctions.$$Array[/* map */12], ConstantConv.bodyPartToCost, body));
   if (spawnEnergy > bodyCost) {
     var _spawnEnergyRemaining = spawnEnergy;
@@ -9406,7 +9414,7 @@ function runCreep(creep) {
   var currentRoom = creep.room;
   if (load) {
     var energySources = RoomObject.find(currentRoom, /* FIND_SOURCES_ACTIVE */8);
-    var chosenSource = Caml_array.caml_array_get(energySources, 1);
+    var chosenSource = Caml_array.caml_array_get(energySources, 0);
     if (load < carryCap && +creep.mining === /* true */1) {
       if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
         creep.moveTo(chosenSource);

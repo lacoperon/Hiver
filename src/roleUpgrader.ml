@@ -19,7 +19,7 @@ let runCreep(creep : creep) : unit =
        moveTo creep chosenSource)
   else
     (let energySources = find currentRoom FIND_SOURCES_ACTIVE in
-     let chosenSource  = Array.get energySources 1 in
+     let chosenSource  = Array.get energySources 0 in
      if (load < carryCap && ((getIfMining creep) = true) ) then
        (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
           moveTo creep chosenSource)
