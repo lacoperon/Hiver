@@ -7026,18 +7026,23 @@ function iterateSpawns() {
               return roleToOne(/* Builder */2, param);
             }), realCreeps);
       var builderNum = HelperFunctions.arraySum(builderIntArray);
-      if (harvesterNum < 10) {
-        var largestBody = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody, /* Harvester */0);
-        console.log("Spawning new harvester creep");
-      } else if (upgraderNum < 5) {
-        var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Upgrader */1);
-        console.log("Spawning new upgrader creep");
-      } else if (builderNum < 10) {
-        var largestBody$2 = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody$2, /* Builder */2);
-        console.log("Spawning new builder creep");
+      var actualBody = Spawn.createLargestTandemBody(spawn, body);
+      var actualBodyCost = HelperFunctions.arraySum(Curry._2(HelperFunctions.$$Array[/* map */12], ConstantConv.bodyPartToCost, actualBody));
+      if (actualBodyCost <= energyAvailable) {
+        if (harvesterNum < 10) {
+          var largestBody = Spawn.createLargestTandemBody(spawn, body);
+          Spawn.spawnCreepWithRole(spawnString, largestBody, /* Harvester */0);
+          console.log("Spawning new harvester creep");
+        } else if (upgraderNum < 5) {
+          var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
+          Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Upgrader */1);
+          console.log("Spawning new upgrader creep");
+        } else if (builderNum < 10) {
+          var largestBody$2 = Spawn.createLargestTandemBody(spawn, body);
+          Spawn.spawnCreepWithRole(spawnString, largestBody$2, /* Builder */2);
+          console.log("Spawning new builder creep");
+        }
+        
       }
       
     }
@@ -7680,6 +7685,7 @@ exports.runTower = runTower;
 
 
 var Block           = __webpack_require__(9);
+var Curry           = __webpack_require__(1);
 var RoomObject      = __webpack_require__(13);
 var ConstantConv    = __webpack_require__(6);
 var RoleHarvester   = __webpack_require__(21);
@@ -7709,8 +7715,17 @@ function runCreep(creep) {
     }
   } else {
     var constructSites = RoomObject.find(currentRoom, /* FIND_MY_CONSTRUCTION_SITES */19);
-    if (constructSites.length !== 0) {
-      var chosenSite = creep.pos.findClosestByPath(constructSites);
+    var isNotWall = function (ro) {
+      var match = RoomObject.get_struct_type(ro);
+      if (match !== 3) {
+        return /* true */1;
+      } else {
+        return /* false */0;
+      }
+    };
+    var constructSitesNotWall = Curry._2(HelperFunctions.$$Array[/* filter */20], isNotWall, constructSites);
+    if (constructSitesNotWall.length !== 0) {
+      var chosenSite = creep.pos.findClosestByPath(constructSitesNotWall);
       creep.say("B_BUIL");
       if (creep.build(chosenSite) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
         creep.moveTo(chosenSite);

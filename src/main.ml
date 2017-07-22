@@ -75,22 +75,26 @@ let iterateSpawns () : unit =
       let builderIntArray   = Array.map (roleToOne Builder  ) realCreeps in
       let builderNum   = arraySum builderIntArray in
 
-      if harvesterNum < harvesterLim then
-        ((let largestBody = createLargestTandemBody spawn body in
-          ignore (spawnCreepWithRole spawnString largestBody Harvester);
-          Js.log "Spawning new harvester creep");)
-      else
-        (if upgraderNum < upgraderLim then
-           (let largestBody = createLargestTandemBody spawn body in
-            ignore (spawnCreepWithRole spawnString largestBody Upgrader);
-            Js.log "Spawning new upgrader creep")
-         else
-         if builderNum < builderLim then
-           (let largestBody = createLargestTandemBody spawn body in
-            ignore (spawnCreepWithRole spawnString largestBody Builder);
-            Js.log "Spawning new builder creep")  )
+      let actualBody = createLargestTandemBody spawn body in
+      let actualBodyCost = arraySum(Array.map bodyPartToCost actualBody) in
 
-
+      if actualBodyCost <= energyAvailable then
+        (
+          (* TODO: Refactor into methods to be called *)
+          if harvesterNum < harvesterLim then
+            ((let largestBody = createLargestTandemBody spawn body in
+              ignore (spawnCreepWithRole spawnString largestBody Harvester);
+              Js.log "Spawning new harvester creep");)
+          else
+            (if upgraderNum < upgraderLim then
+               (let largestBody = createLargestTandemBody spawn body in
+                ignore (spawnCreepWithRole spawnString largestBody Upgrader);
+                Js.log "Spawning new upgrader creep")
+             else
+             if builderNum < builderLim then
+               (let largestBody = createLargestTandemBody spawn body in
+                ignore (spawnCreepWithRole spawnString largestBody Builder);
+                Js.log "Spawning new builder creep")  ))
   done
 
 (* Baseline loop code. Calls all subfunctions*)

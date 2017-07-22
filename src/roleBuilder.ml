@@ -25,9 +25,15 @@ let runCreep(creep : creep) : unit =
           moveTo creep chosenSource))
   else
     (let constructSites = find currentRoom FIND_MY_CONSTRUCTION_SITES in
-     if (Array.length constructSites)  != 0
+     let isNotWall(ro : roomObject) : bool =
+       match (get_struct_type ro) with
+       | STRUCTURE_WALL -> false
+       | _              -> true
+     in
+     let constructSitesNotWall = Array.filter isNotWall constructSites in
+     if (Array.length constructSitesNotWall)  != 0
      then
-       (let chosenSite  = get_closest creep constructSites in
+       (let chosenSite  = get_closest creep constructSitesNotWall in
         (say creep "B_BUIL";
          if (build creep chosenSite = toNumResult ERR_NOT_IN_RANGE)
          then
