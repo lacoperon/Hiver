@@ -1881,6 +1881,103 @@ exports.fromStringStructure = fromStringStructure;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* NOTE: This is the only file in this folder not transpiled by BUCKLESCRIPT.
+  Still though, you should handle with care, although this will be more readable
+  -@lacoperon */
+
+function spawnCreepHelper(spawnName, body) {
+  Game.spawns[spawnName].createCreep(body);
+}
+
+function defineMemoryHelper(creep, fieldName, value) {
+  creep.memory[fieldName] = value;
+}
+
+function doWatcher(empty) {
+  var watcher = __webpack_require__(28);
+  watcher();
+}
+
+function getCreepEnergy(creepName) {
+  return Game.creeps[creepName].carry.energy;
+}
+
+function getCreepCarryCapacity(creepName) {
+  return Game.creeps[creepName].carryCapacity;
+}
+
+function getCreep(creepName) {
+  return Game.creeps[creepName];
+}
+
+function getRoom(creep) {
+  return creep.room;
+}
+
+function getRoomFromCreep(creep) {
+  return creep.room;
+}
+
+function findInRoom(room, thing) {
+  return room.find(thing);
+}
+
+function getRoomfromSpawn(spawn) {
+  return spawn.room;
+}
+
+function getSpawn(spawnString) {
+  return Game.spawns[spawnString];
+}
+
+function spawnCreepWithMemoryHelper(spawnstring, body, memoryArray) {
+  memoryObject = {
+    role : memoryArray[1]
+  };
+  Game.spawns[spawnstring].createCreep(body, null, memoryObject);
+}
+
+function clearDeadCreepsFromMemory(emptyString) {
+  for(var i in Memory.creeps) {
+      if(!Game.creeps[i]) {
+          delete Memory.creeps[i];
+      }
+  }
+}
+
+function isAssignedSource(creep) {
+  if(creep.memory.source) {
+    return true;
+  }
+  return false;
+}
+
+function getObjectFromID(id) {
+  return Game.getObjectById(id);
+}
+
+function getIfShouldMine(creep) {
+  return (creep.memory.mining == "true");
+}
+exports.spawnCreepHelper = spawnCreepHelper;
+exports.defineMemoryHelper = defineMemoryHelper;
+exports.doWatcher = doWatcher;
+exports.getCreep = getCreep;
+exports.getCreepEnergy = getCreepEnergy;
+exports.getRoom = getRoom;
+exports.spawnCreepWithMemoryHelper = spawnCreepWithMemoryHelper;
+exports.getRoomfromSpawn = getRoomfromSpawn;
+exports.getSpawn = getSpawn;
+exports.clearDeadCreepsFromMemory = clearDeadCreepsFromMemory;
+exports.isAssignedSource = isAssignedSource;
+exports.getObjectFromID = getObjectFromID;
+exports.getIfShouldMine = getIfShouldMine;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -1888,7 +1985,7 @@ var Curry                    = __webpack_require__(1);
 var Caml_io                  = __webpack_require__(26);
 var Caml_obj                 = __webpack_require__(3);
 var Caml_sys                 = __webpack_require__(14);
-var Caml_format              = __webpack_require__(10);
+var Caml_format              = __webpack_require__(11);
 var Caml_string              = __webpack_require__(5);
 var Caml_exceptions          = __webpack_require__(4);
 var Caml_missing_polyfill    = __webpack_require__(19);
@@ -2579,103 +2676,6 @@ exports.do_at_exit          = do_at_exit;
 
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* NOTE: This is the only file in this folder not transpiled by BUCKLESCRIPT.
-  Still though, you should handle with care, although this will be more readable
-  -@lacoperon */
-
-function spawnCreepHelper(spawnName, body) {
-  Game.spawns[spawnName].createCreep(body);
-}
-
-function defineMemoryHelper(creep, fieldName, value) {
-  creep.memory[fieldName] = value;
-}
-
-function doWatcher(empty) {
-  var watcher = __webpack_require__(28);
-  watcher();
-}
-
-function getCreepEnergy(creepName) {
-  return Game.creeps[creepName].carry.energy;
-}
-
-function getCreepCarryCapacity(creepName) {
-  return Game.creeps[creepName].carryCapacity;
-}
-
-function getCreep(creepName) {
-  return Game.creeps[creepName];
-}
-
-function getRoom(creep) {
-  return creep.room;
-}
-
-function getRoomFromCreep(creep) {
-  return creep.room;
-}
-
-function findInRoom(room, thing) {
-  return room.find(thing);
-}
-
-function getRoomfromSpawn(spawn) {
-  return spawn.room;
-}
-
-function getSpawn(spawnString) {
-  return Game.spawns[spawnString];
-}
-
-function spawnCreepWithMemoryHelper(spawnstring, body, memoryArray) {
-  memoryObject = {
-    role : memoryArray[1]
-  };
-  Game.spawns[spawnstring].createCreep(body, null, memoryObject);
-}
-
-function clearDeadCreepsFromMemory(emptyString) {
-  for(var i in Memory.creeps) {
-      if(!Game.creeps[i]) {
-          delete Memory.creeps[i];
-      }
-  }
-}
-
-function isAssignedSource(creep) {
-  if(creep.memory.source) {
-    return true;
-  }
-  return false;
-}
-
-function getObjectFromID(id) {
-  return Game.getObjectById(id);
-}
-
-function getIfShouldMine(creep) {
-  return (creep.memory.mining == "true");
-}
-exports.spawnCreepHelper = spawnCreepHelper;
-exports.defineMemoryHelper = defineMemoryHelper;
-exports.doWatcher = doWatcher;
-exports.getCreep = getCreep;
-exports.getCreepEnergy = getCreepEnergy;
-exports.getRoom = getRoom;
-exports.spawnCreepWithMemoryHelper = spawnCreepWithMemoryHelper;
-exports.getRoomfromSpawn = getRoomfromSpawn;
-exports.getSpawn = getSpawn;
-exports.clearDeadCreepsFromMemory = clearDeadCreepsFromMemory;
-exports.isAssignedSource = isAssignedSource;
-exports.getObjectFromID = getObjectFromID;
-exports.getIfShouldMine = getIfShouldMine;
-
-
-/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2697,10 +2697,100 @@ exports.__ = __;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
+
+
+var List       = __webpack_require__(16);
+var $$Array    = __webpack_require__(20);
+var BaseTypes  = __webpack_require__(30);
+var Caml_array = __webpack_require__(2);
+var Supplement = __webpack_require__(7);
+
+function filter(cond, array) {
+  var list = $$Array.to_list(array);
+  return $$Array.of_list(List.filter(cond)(list));
+}
+
+var $$Array$1 = /* module */[
+  /* init */$$Array.init,
+  /* make_matrix */$$Array.make_matrix,
+  /* create_matrix */$$Array.create_matrix,
+  /* append */$$Array.append,
+  /* concat */$$Array.concat,
+  /* sub */$$Array.sub,
+  /* copy */$$Array.copy,
+  /* fill */$$Array.fill,
+  /* blit */$$Array.blit,
+  /* to_list */$$Array.to_list,
+  /* of_list */$$Array.of_list,
+  /* iter */$$Array.iter,
+  /* map */$$Array.map,
+  /* iteri */$$Array.iteri,
+  /* mapi */$$Array.mapi,
+  /* fold_left */$$Array.fold_left,
+  /* fold_right */$$Array.fold_right,
+  /* sort */$$Array.sort,
+  /* stable_sort */$$Array.stable_sort,
+  /* fast_sort */$$Array.fast_sort,
+  /* filter */filter
+];
+
+function arraySumRecursive(numArray, _currentSum, _currentIndex) {
+  while(true) {
+    var currentIndex = _currentIndex;
+    var currentSum = _currentSum;
+    if (numArray.length === currentIndex) {
+      return currentSum;
+    } else {
+      _currentIndex = currentIndex + 1 | 0;
+      _currentSum = currentSum + Caml_array.caml_array_get(numArray, currentIndex) | 0;
+      continue ;
+      
+    }
+  };
+}
+
+function arraySum(numArray) {
+  return arraySumRecursive(numArray, 0, 0);
+}
+
+function setMemoryField(creep, memory) {
+  switch (memory.tag | 0) {
+    case 0 : 
+        Supplement.defineMemoryHelper(creep, "working", memory[0] !== 0 ? "true" : "false");
+        return /* () */0;
+    case 1 : 
+        Supplement.defineMemoryHelper(creep, "role", BaseTypes.roleToString(memory[0]));
+        return /* () */0;
+    case 2 : 
+        Supplement.defineMemoryHelper(creep, "mining", memory[0] !== 0 ? "true" : "false");
+        return /* () */0;
+    case 3 : 
+        Supplement.defineMemoryHelper(creep, "building", memory[0] !== 0 ? "true" : "false");
+        return /* () */0;
+    case 4 : 
+        Supplement.defineMemoryHelper(creep, "source", memory[0]);
+        return /* () */0;
+    
+  }
+}
+
+exports.$$Array           = $$Array$1;
+exports.arraySumRecursive = arraySumRecursive;
+exports.arraySum          = arraySum;
+exports.setMemoryField    = setMemoryField;
+/* ./supplemental Not a pure module */
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 var Curry                   = __webpack_require__(1);
-var Caml_int32              = __webpack_require__(11);
+var Caml_int32              = __webpack_require__(12);
 var Caml_int64              = __webpack_require__(15);
 var Caml_utils              = __webpack_require__(18);
 var Caml_builtin_exceptions = __webpack_require__(0);
@@ -3501,7 +3591,7 @@ exports.caml_nativeint_of_string = caml_nativeint_of_string;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3547,96 +3637,6 @@ exports.caml_int32_bswap     = caml_int32_bswap;
 exports.caml_nativeint_bswap = caml_nativeint_bswap;
 exports.imul                 = imul;
 /* imul Not a pure module */
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
-
-
-var List       = __webpack_require__(16);
-var $$Array    = __webpack_require__(20);
-var BaseTypes  = __webpack_require__(30);
-var Caml_array = __webpack_require__(2);
-var Supplement = __webpack_require__(8);
-
-function filter(cond, array) {
-  var list = $$Array.to_list(array);
-  return $$Array.of_list(List.filter(cond)(list));
-}
-
-var $$Array$1 = /* module */[
-  /* init */$$Array.init,
-  /* make_matrix */$$Array.make_matrix,
-  /* create_matrix */$$Array.create_matrix,
-  /* append */$$Array.append,
-  /* concat */$$Array.concat,
-  /* sub */$$Array.sub,
-  /* copy */$$Array.copy,
-  /* fill */$$Array.fill,
-  /* blit */$$Array.blit,
-  /* to_list */$$Array.to_list,
-  /* of_list */$$Array.of_list,
-  /* iter */$$Array.iter,
-  /* map */$$Array.map,
-  /* iteri */$$Array.iteri,
-  /* mapi */$$Array.mapi,
-  /* fold_left */$$Array.fold_left,
-  /* fold_right */$$Array.fold_right,
-  /* sort */$$Array.sort,
-  /* stable_sort */$$Array.stable_sort,
-  /* fast_sort */$$Array.fast_sort,
-  /* filter */filter
-];
-
-function arraySumRecursive(numArray, _currentSum, _currentIndex) {
-  while(true) {
-    var currentIndex = _currentIndex;
-    var currentSum = _currentSum;
-    if (numArray.length === currentIndex) {
-      return currentSum;
-    } else {
-      _currentIndex = currentIndex + 1 | 0;
-      _currentSum = currentSum + Caml_array.caml_array_get(numArray, currentIndex) | 0;
-      continue ;
-      
-    }
-  };
-}
-
-function arraySum(numArray) {
-  return arraySumRecursive(numArray, 0, 0);
-}
-
-function setMemoryField(creep, memory) {
-  switch (memory.tag | 0) {
-    case 0 : 
-        Supplement.defineMemoryHelper(creep, "working", memory[0] !== 0 ? "true" : "false");
-        return /* () */0;
-    case 1 : 
-        Supplement.defineMemoryHelper(creep, "role", BaseTypes.roleToString(memory[0]));
-        return /* () */0;
-    case 2 : 
-        Supplement.defineMemoryHelper(creep, "mining", memory[0] !== 0 ? "true" : "false");
-        return /* () */0;
-    case 3 : 
-        Supplement.defineMemoryHelper(creep, "building", memory[0] !== 0 ? "true" : "false");
-        return /* () */0;
-    case 4 : 
-        Supplement.defineMemoryHelper(creep, "source", memory[0]);
-        return /* () */0;
-    
-  }
-}
-
-exports.$$Array           = $$Array$1;
-exports.arraySumRecursive = arraySumRecursive;
-exports.arraySum          = arraySum;
-exports.setMemoryField    = setMemoryField;
-/* ./supplemental Not a pure module */
 
 
 /***/ }),
@@ -3770,7 +3770,7 @@ exports.caml_sys_file_exists    = caml_sys_file_exists;
 
 
 var Caml_obj                = __webpack_require__(3);
-var Caml_int32              = __webpack_require__(11);
+var Caml_int32              = __webpack_require__(12);
 var Caml_utils              = __webpack_require__(18);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
@@ -4378,7 +4378,7 @@ exports.get64         = get64;
 
 var Curry                   = __webpack_require__(1);
 var Caml_obj                = __webpack_require__(3);
-var Pervasives              = __webpack_require__(7);
+var Pervasives              = __webpack_require__(8);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
 function length(l) {
@@ -6762,8 +6762,8 @@ var Random          = __webpack_require__(33);
 var Caml_array      = __webpack_require__(2);
 var RoomObject      = __webpack_require__(13);
 var ConstantConv    = __webpack_require__(6);
-var Supplemental    = __webpack_require__(8);
-var HelperFunctions = __webpack_require__(12);
+var Supplemental    = __webpack_require__(7);
+var HelperFunctions = __webpack_require__(10);
 
 function runCreep(creep) {
   var carryCap = creep.carryCapacity;
@@ -6794,10 +6794,18 @@ function runCreep(creep) {
         return /* true */1;
       }
     };
+    var isNotFull = function (ro) {
+      var energy = ro.energy;
+      var cap = ro.energyCapacity;
+      return +(energy !== cap);
+    };
     var spawnsAndExtensions = Curry._2(HelperFunctions.$$Array[/* filter */20], isSpawnOrExtension, structureArray);
-    var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
-    creep.transfer(chosenStructure, "energy");
-    creep.moveTo(chosenStructure);
+    var notFullSpawnsAndExtensions = Curry._2(HelperFunctions.$$Array[/* filter */20], isNotFull, spawnsAndExtensions);
+    if (notFullSpawnsAndExtensions.length !== 0) {
+      var chosenStructure = Caml_array.caml_array_get(notFullSpawnsAndExtensions, 0);
+      creep.transfer(chosenStructure, "energy");
+      creep.moveTo(chosenStructure);
+    }
     return /* () */0;
   }
 }
@@ -6931,8 +6939,8 @@ var RoleBuilder     = __webpack_require__(32);
 var ConstantConv    = __webpack_require__(6);
 var RoleUpgrader    = __webpack_require__(42);
 var RoleHarvester   = __webpack_require__(21);
-var Supplement      = __webpack_require__(8);
-var HelperFunctions = __webpack_require__(12);
+var Supplement      = __webpack_require__(7);
+var HelperFunctions = __webpack_require__(10);
 
 var creeps = (Object.keys(Game.creeps));
 
@@ -7018,27 +7026,22 @@ function iterateSpawns() {
               return roleToOne(/* Builder */2, param);
             }), realCreeps);
       var builderNum = HelperFunctions.arraySum(builderIntArray);
-      if (harvesterNum < 3) {
+      if (harvesterNum < 10) {
         var largestBody = Spawn.createLargestTandemBody(spawn, body);
         Spawn.spawnCreepWithRole(spawnString, largestBody, /* Harvester */0);
         console.log("Spawning new harvester creep");
-      } else if (harvesterNum > 4 && upgraderNum < 3) {
+      }
+      if (upgraderNum < 10) {
         var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
         Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Upgrader */1);
-        console.log("Spawning new builder creep");
-      } else if (builderNum < 3) {
+        console.log("Spawning new upgrader creep");
+      }
+      if (builderNum < 5) {
         var largestBody$2 = Spawn.createLargestTandemBody(spawn, body);
         Spawn.spawnCreepWithRole(spawnString, largestBody$2, /* Builder */2);
-        console.log("Spawning new upgrader creep");
-      } else if (upgraderNum < ((harvesterNum << 1) / 3 | 0)) {
-        var largestBody$3 = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody$3, /* Upgrader */1);
-        console.log("Spawning new upgrader creep");
-      } else {
-        var largestBody$4 = Spawn.createLargestTandemBody(spawn, body);
-        Spawn.spawnCreepWithRole(spawnString, largestBody$4, /* Harvester */0);
-        console.log("Spawning new harvester creep");
+        console.log("Spawning new builder creep");
       }
+      
     }
     
   }
@@ -7106,10 +7109,10 @@ exports.getRole       = getRole;
 
 
 var Curry           = __webpack_require__(1);
-var Pervasives      = __webpack_require__(7);
+var Pervasives      = __webpack_require__(8);
 var ConstantConv    = __webpack_require__(6);
-var Supplement      = __webpack_require__(8);
-var HelperFunctions = __webpack_require__(12);
+var Supplement      = __webpack_require__(7);
+var HelperFunctions = __webpack_require__(10);
 
 function spawnCreepWithRole(spawn, body, r) {
   var $js;
@@ -7678,19 +7681,29 @@ exports.runTower = runTower;
 // Generated by BUCKLESCRIPT VERSION 1.8.1, PLEASE EDIT WITH CARE
 
 
-var Caml_array    = __webpack_require__(2);
-var RoomObject    = __webpack_require__(13);
-var ConstantConv  = __webpack_require__(6);
-var RoleHarvester = __webpack_require__(21);
+var Block           = __webpack_require__(9);
+var RoomObject      = __webpack_require__(13);
+var ConstantConv    = __webpack_require__(6);
+var RoleHarvester   = __webpack_require__(21);
+var Supplemental    = __webpack_require__(7);
+var HelperFunctions = __webpack_require__(10);
 
 function runCreep(creep) {
   var carryCap = creep.carryCapacity;
   var load = creep.carry.energy;
   var currentRoom = creep.room;
-  if (load < carryCap) {
+  var shouldMine = +Supplemental.getIfShouldMine(creep);
+  if (!load) {
+    HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* true */1]));
+  }
+  if (load === carryCap) {
+    HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* false */0]));
+  }
+  if (shouldMine && load !== carryCap) {
     var energySources = RoomObject.find(currentRoom, /* FIND_SOURCES_ACTIVE */8);
     var chosenSource = creep.pos.findClosestByPath(energySources);
-    if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
+    if (shouldMine && creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
+      creep.say("B_HARV");
       creep.moveTo(chosenSource);
       return /* () */0;
     } else {
@@ -7699,7 +7712,8 @@ function runCreep(creep) {
   } else {
     var constructSites = RoomObject.find(currentRoom, /* FIND_MY_CONSTRUCTION_SITES */19);
     if (constructSites.length !== 0) {
-      var chosenSite = Caml_array.caml_array_get(constructSites, 0);
+      var chosenSite = creep.pos.findClosestByPath(constructSites);
+      creep.say("B_BUIL");
       if (creep.build(chosenSite) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
         creep.moveTo(chosenSite);
         return /* () */0;
@@ -7707,6 +7721,7 @@ function runCreep(creep) {
         return 0;
       }
     } else {
+      creep.say("B_NOPE");
       return RoleHarvester.runCreep(creep);
     }
   }
@@ -7732,7 +7747,7 @@ var Caml_sys                = __webpack_require__(14);
 var Nativeint               = __webpack_require__(40);
 var Caml_array              = __webpack_require__(2);
 var Caml_int64              = __webpack_require__(15);
-var Pervasives              = __webpack_require__(7);
+var Pervasives              = __webpack_require__(8);
 var Caml_string             = __webpack_require__(5);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
@@ -8040,7 +8055,7 @@ exports.set_state = set_state;
 
 
 var Caml_obj    = __webpack_require__(3);
-var Caml_format = __webpack_require__(10);
+var Caml_format = __webpack_require__(11);
 
 function succ(n) {
   return n + 1 | 0;
@@ -8100,7 +8115,7 @@ exports.compare   = compare;
 
 
 var Caml_int64  = __webpack_require__(15);
-var Caml_format = __webpack_require__(10);
+var Caml_format = __webpack_require__(11);
 
 function succ(n) {
   return Caml_int64.add(n, /* int64 */[
@@ -8189,7 +8204,7 @@ exports.compare   = compare;
 var Char                    = __webpack_require__(22);
 var $$String                = __webpack_require__(37);
 var Caml_md5                = __webpack_require__(39);
-var Pervasives              = __webpack_require__(7);
+var Pervasives              = __webpack_require__(8);
 var Caml_string             = __webpack_require__(5);
 var Caml_missing_polyfill   = __webpack_require__(19);
 var Caml_builtin_exceptions = __webpack_require__(0);
@@ -8327,7 +8342,7 @@ exports.from_hex  = from_hex;
 
 var List        = __webpack_require__(16);
 var Bytes       = __webpack_require__(38);
-var Caml_int32  = __webpack_require__(11);
+var Caml_int32  = __webpack_require__(12);
 var Caml_string = __webpack_require__(5);
 
 function make(n, c) {
@@ -8538,8 +8553,8 @@ var Char                    = __webpack_require__(22);
 var List                    = __webpack_require__(16);
 var Curry                   = __webpack_require__(1);
 var Caml_obj                = __webpack_require__(3);
-var Caml_int32              = __webpack_require__(11);
-var Pervasives              = __webpack_require__(7);
+var Caml_int32              = __webpack_require__(12);
+var Pervasives              = __webpack_require__(8);
 var Caml_string             = __webpack_require__(5);
 var Caml_builtin_exceptions = __webpack_require__(0);
 
@@ -9212,7 +9227,7 @@ exports.caml_md5_string = caml_md5_string;
 
 var Sys         = __webpack_require__(41);
 var Caml_obj    = __webpack_require__(3);
-var Caml_format = __webpack_require__(10);
+var Caml_format = __webpack_require__(11);
 
 function succ(n) {
   return n + 1;
@@ -9410,8 +9425,8 @@ var Curry           = __webpack_require__(1);
 var Caml_array      = __webpack_require__(2);
 var RoomObject      = __webpack_require__(13);
 var ConstantConv    = __webpack_require__(6);
-var Supplemental    = __webpack_require__(8);
-var HelperFunctions = __webpack_require__(12);
+var Supplemental    = __webpack_require__(7);
+var HelperFunctions = __webpack_require__(10);
 
 function runCreep(creep) {
   var carryCap = creep.carryCapacity;

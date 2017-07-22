@@ -59,6 +59,11 @@ let iterateSpawns () : unit =
     in
     if bodyCost <= energyAvailable
     then
+
+      let harvesterLim = 10 in
+      let upgraderLim = 10 in
+      let builderLim = 5 in
+
       (*TODO: Add room specificity for creeps (currently not scaleable to more
         than one spawn  *)
       let harvesterIntArray = Array.map (roleToOne Harvester) realCreeps in
@@ -70,37 +75,22 @@ let iterateSpawns () : unit =
       let builderIntArray   = Array.map (roleToOne Builder  ) realCreeps in
       let builderNum   = arraySum builderIntArray in
 
-      if harvesterNum < 3 then
+      if harvesterNum < harvesterLim then
         (let largestBody = createLargestTandemBody spawn body in
          ignore (spawnCreepWithRole spawnString largestBody Harvester);
-         Js.log "Spawning new harvester creep")
-      else (
+         Js.log "Spawning new harvester creep");
 
-        if harvesterNum > 4 && upgraderNum < 3 then
-          (let largestBody = createLargestTandemBody spawn body in
-           ignore (spawnCreepWithRole spawnString largestBody Upgrader);
-           Js.log "Spawning new builder creep")
-        else
-          (
-            if builderNum < 3
-            then
-              (let largestBody = createLargestTandemBody spawn body in
-               ignore (spawnCreepWithRole spawnString largestBody Builder);
-               Js.log "Spawning new upgrader creep")
-            else
-              (
-                if upgraderNum < (harvesterNum * 2 / 3) then
-                  (let largestBody = createLargestTandemBody spawn body in
-                   ignore (spawnCreepWithRole spawnString largestBody Upgrader);
-                   Js.log "Spawning new upgrader creep")
-                else
-                  (let largestBody = createLargestTandemBody spawn body in
-                   ignore (spawnCreepWithRole spawnString largestBody Harvester);
-                   Js.log "Spawning new harvester creep")
-              )
-          )
-      )
-  done
+
+      if upgraderNum < upgraderLim then
+        (let largestBody = createLargestTandemBody spawn body in
+         ignore (spawnCreepWithRole spawnString largestBody Upgrader);
+         Js.log "Spawning new upgrader creep");
+
+      if builderNum < builderLim then
+        (let largestBody = createLargestTandemBody spawn body in
+         ignore (spawnCreepWithRole spawnString largestBody Builder);
+         Js.log "Spawning new builder creep")
+done
 
 (* Baseline loop code. Calls all subfunctions*)
 let run () : unit =

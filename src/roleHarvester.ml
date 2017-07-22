@@ -6,6 +6,10 @@ open ConstantConv
 open RoomObject
 open HelperFunctions
 
+(*TODO: Add check that all spawns / extensions aren't full, else upgrader.
+
+  Also maybe something about creep recycling after they're obsolete*)
+
 let runCreep(creep : creep) : unit =
   (* say creep "Harvest" ; *)
   let carryCap = get_carry creep in
@@ -23,17 +27,25 @@ let runCreep(creep : creep) : unit =
     (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
        moveTo creep chosenSource)
   else
-    let structureArray = find currentRoom FIND_MY_STRUCTURES in
-    let isSpawnOrExtension (ro : roomObject) : bool =
-      match get_struct_type ro with
-      | STRUCTURE_SPAWN     -> true;
-      | STRUCTURE_EXTENSION -> true;
-      | _                   -> false
-    in
-    let spawnsAndExtensions =  Array.filter (isSpawnOrExtension) (structureArray)  in
-    (* TODO: Add code which sets the destination structure randomly, and assigns
-       it permanantly to the harvester creep *)
-    let chosenStructure = Array.get spawnsAndExtensions 0 in
-    ignore (transfer creep chosenStructure "energy") ;
-    ignore(moveTo creep chosenStructure);
-    ()
+    (let structureArray = find currentRoom FIND_MY_STRUCTURES in
+     let isSpawnOrExtension (ro : roomObject) : bool =
+       match get_struct_type ro with
+       | STRUCTURE_SPAWN     -> true;
+       | STRUCTURE_EXTENSION -> true;
+       | _                   -> false
+     in
+     let isNotFull (ro : roomObject) : bool =
+       (let energy = getExtensionOrSpawnEnergy ro in
+        let cap    = getExtensionOrSpawnCapacity ro in
+        energy != cap )
+     in
+     let spawnsAndExtensions =  Array.filter (isSpawnOrExtension) (structureArray)  in
+     let notFullSpawnsAndExtensions = Array.filter (isNotFull) (spawnsAndExtensions) in
+     (* TODO: Add code which sets the destination structure randomly, and assigns
+        it permanantly to the harvester creep *)
+     if (Array.length notFullSpawnsAndExtensions != 0) then
+       (
+         let chosenStructure = Array.get notFullSpawnsAndExtensions 0 in
+         ignore (transfer creep chosenStructure "energy") ;
+         ignore(moveTo creep chosenStructure) );
+     ())

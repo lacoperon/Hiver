@@ -27,6 +27,7 @@ external isAssignedSource : creep -> bool = "" [@@bs.module "./supplemental", "S
 external getObjectFromID : string -> roomObject = "" [@@bs.module "./supplemental", "Supplemental"]
 external getIfShouldMine : creep  -> bool = "" [@@bs.module "./supplemental", "Supplemental"]
 
+
 (* Using the 'Getter' provided by BuckleScript *)
 external getStructureTypeHelper : roomObject -> string = "structureType" [@@bs.get]
 external getRoleHelper : creep -> string = "role" [@@bs.get] [@@bs.scope "memory"]
@@ -34,6 +35,8 @@ external findHelper : room -> int -> roomObject array = "find" [@@bs.send]
 external gameNotify : string -> unit = "notify" [@@bs.val "Game"]
 external getIDFromStructure : roomObject -> string = "id" [@@bs.get]
 external getSourceFromMemory : creep -> string = "source" [@@bs.get] [@@bs.scope "memory"]
+external getExtensionOrSpawnEnergy : roomObject -> int = "energy" [@@bs.get]
+external getExtensionOrSpawnCapacity : roomObject -> int = "energyCapacity" [@@bs.get]
 
 let setMemoryField(creep : creep) (memory : memoryField) : unit =
   match memory with
