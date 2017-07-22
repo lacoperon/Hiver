@@ -25,6 +25,7 @@ external clearDeadCreepsFromMemory : string -> unit = "" [@@bs.module "./supplem
 external defineMemoryHelper : creep -> string -> string -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external isAssignedSource : creep -> bool = "" [@@bs.module "./supplemental", "Supplemental"]
 external getObjectFromID : string -> roomObject = "" [@@bs.module "./supplemental", "Supplemental"]
+external getIfShouldMine : creep  -> bool = "" [@@bs.module "./supplemental", "Supplemental"]
 
 (* Using the 'Getter' provided by BuckleScript *)
 external getStructureTypeHelper : roomObject -> string = "structureType" [@@bs.get]
