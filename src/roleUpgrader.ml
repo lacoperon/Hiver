@@ -25,7 +25,7 @@ let runCreep(creep : creep) : unit =
           moveTo creep chosenSource)
      else
        (setMemoryField(creep)(Should_Mine false) ;
-        let structureArray = find currentRoom FIND_STRUCTURES in
+        let structureArray = find currentRoom FIND_MY_STRUCTURES in
         let isSpawnOrExtension (ro : roomObject) : bool =
           match get_struct_type ro with
           | STRUCTURE_CONTROLLER  -> true;

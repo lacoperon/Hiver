@@ -39,6 +39,10 @@ build src/spawn.mlast : build_ast_and_deps $src_root_dir/src/spawn.ml
 build src/spawn.mlast.d : build_deps src/spawn.mlast
 build src/spawn.cmj $src_root_dir/lib/js/src/spawn.js src/spawn.cmi : build_cmj_cmi src/spawn.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/tower.mlast : build_ast_and_deps $src_root_dir/src/tower.ml
+build src/tower.mlast.d : build_deps src/tower.mlast
+build src/tower.cmj $src_root_dir/lib/js/src/tower.js src/tower.cmi : build_cmj_cmi src/tower.mlast
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
 build src/baseTypes.mlast : build_ast_and_deps $src_root_dir/src/baseTypes.ml
 build src/baseTypes.mlast.d : build_deps src/baseTypes.mlast
 build src/baseTypes.cmj $src_root_dir/lib/js/src/baseTypes.js src/baseTypes.cmi : build_cmj_cmi src/baseTypes.mlast
@@ -67,4 +71,4 @@ build src/helperFunctions.mlast : build_ast_and_deps $src_root_dir/src/helperFun
 build src/helperFunctions.mlast.d : build_deps src/helperFunctions.mlast
 build src/helperFunctions.cmj $src_root_dir/lib/js/src/helperFunctions.js src/helperFunctions.cmi : build_cmj_cmi src/helperFunctions.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
-build build.ninja : phony  ||  src/helperFunctions.mlast.d src/roleHarvester.mlast.d src/roleUpgrader.mlast.d src/constantConv.mlast.d src/roleBuilder.mlast.d src/roomObject.mlast.d src/baseTypes.mlast.d src/spawn.mlast.d src/creep.mlast.d src/room.mlast.d src/main.mlast.d
+build build.ninja : phony  ||  src/helperFunctions.mlast.d src/roleHarvester.mlast.d src/roleUpgrader.mlast.d src/constantConv.mlast.d src/roleBuilder.mlast.d src/roomObject.mlast.d src/baseTypes.mlast.d src/tower.mlast.d src/spawn.mlast.d src/creep.mlast.d src/room.mlast.d src/main.mlast.d

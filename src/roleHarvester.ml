@@ -23,7 +23,7 @@ let runCreep(creep : creep) : unit =
     (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
        moveTo creep chosenSource)
   else
-    let structureArray = find currentRoom FIND_STRUCTURES in
+    let structureArray = find currentRoom FIND_MY_STRUCTURES in
     let isSpawnOrExtension (ro : roomObject) : bool =
       match get_struct_type ro with
       | STRUCTURE_SPAWN     -> true;
