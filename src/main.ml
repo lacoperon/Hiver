@@ -31,7 +31,10 @@ let iterateCreeps () : unit =
 (* This function iterates over all of my spawns, trying to give them units to spawn *)
 let iterateSpawns () : unit =
   for i=0 to Array.length spawns - 1 do
-    let body = [|WORK; CARRY; MOVE; MOVE|] in
+    let roadsConnected = false in
+    let body =
+      if roadsConnected then [|WORK; CARRY; MOVE|] else [|WORK; CARRY; MOVE; MOVE|]
+    in
     let spawnString = (Array.get spawns i) in
     let spawn = getSpawn (spawnString) in
     let room = getRoomFromSpawn spawn in
@@ -60,9 +63,9 @@ let iterateSpawns () : unit =
     if bodyCost <= energyAvailable
     then
 
-      let harvesterLim = 10 in
-      let upgraderLim = 10 in
-      let builderLim = 10 in
+      let harvesterLim = 5 in
+      let upgraderLim = 5 in
+      let builderLim = 7 in
 
       (*TODO: Add room specificity for creeps (currently not scaleable to more
         than one spawn  *)
