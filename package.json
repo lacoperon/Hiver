@@ -5,7 +5,7 @@
   "main": "lib/js/src/main.js",
   "scripts": {
     "test": "exit",
-    "build": "bsb && webpack",
+    "build": "bsb && webpack && grunt screeps",
     "watch": "bsb -w"
   },
   "repository": {
