@@ -14,15 +14,14 @@ let runCreep(creep : creep) : unit =
   if not (isAssignedSource creep)
   then
     (let energySources = find currentRoom FIND_SOURCES_ACTIVE in
+     Js.log("Before error");
      let chosenSource  = get_closest creep energySources in
      let chosenSourceID = getIDFromStructure chosenSource in
      setMemoryField(creep)(Memory_Source(chosenSourceID)))
   else
   if load = 0 then
     (setMemoryField(creep)(Should_Mine true) ;
-     Js.log("Before error");
      let chosenSource  = getObjectFromID (getSourceFromMemory creep) in
-     Js.log("After Error");
      if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
        moveTo creep chosenSource)
   else

@@ -7708,7 +7708,6 @@ function runCreep(creep) {
     var energySources = RoomObject.find(currentRoom, /* FIND_SOURCES_ACTIVE */8);
     var chosenSource = creep.pos.findClosestByPath(energySources);
     if (shouldMine && creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
-      creep.say("B_HARV");
       creep.moveTo(chosenSource);
       return /* () */0;
     } else {
@@ -7727,7 +7726,6 @@ function runCreep(creep) {
     var constructSitesNotWall = Curry._2(HelperFunctions.$$Array[/* filter */20], isNotWall, constructSites);
     if (constructSitesNotWall.length !== 0) {
       var chosenSite = creep.pos.findClosestByPath(constructSitesNotWall);
-      creep.say("B_BUIL");
       if (creep.build(chosenSite) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
         creep.moveTo(chosenSite);
         return /* () */0;
@@ -7735,7 +7733,6 @@ function runCreep(creep) {
         return 0;
       }
     } else {
-      creep.say("B_NOPE");
       return RoleHarvester.runCreep(creep);
     }
   }
@@ -9476,9 +9473,7 @@ function runCreep(creep) {
       }
     } else {
       HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* true */1]));
-      console.log("Before error");
       var chosenSource$1 = Supplemental.getObjectFromID(creep.memory.source);
-      console.log("After Error");
       if (creep.harvest(chosenSource$1) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
         creep.moveTo(chosenSource$1);
         return /* () */0;
@@ -9488,6 +9483,7 @@ function runCreep(creep) {
     }
   } else {
     var energySources = RoomObject.find(currentRoom, /* FIND_SOURCES_ACTIVE */8);
+    console.log("Before error");
     var chosenSource$2 = creep.pos.findClosestByPath(energySources);
     var chosenSourceID = chosenSource$2.id;
     return HelperFunctions.setMemoryField(creep, /* Memory_Source */Block.__(4, [chosenSourceID]));

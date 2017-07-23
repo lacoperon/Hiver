@@ -21,8 +21,7 @@ let runCreep(creep : creep) : unit =
     let chosenSource  = get_closest creep energySources in
     (if shouldMine then
        if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
-         (say creep "B_HARV";
-          moveTo creep chosenSource))
+         moveTo creep chosenSource)
   else
     (let constructSites = find currentRoom FIND_MY_CONSTRUCTION_SITES in
      let isNotWall(ro : roomObject) : bool =
@@ -34,10 +33,8 @@ let runCreep(creep : creep) : unit =
      if (Array.length constructSitesNotWall)  != 0
      then
        (let chosenSite  = get_closest creep constructSitesNotWall in
-        (say creep "B_BUIL";
-         if (build creep chosenSite = toNumResult ERR_NOT_IN_RANGE)
-         then
-           moveTo creep chosenSite))
+        if (build creep chosenSite = toNumResult ERR_NOT_IN_RANGE)
+        then
+          moveTo creep chosenSite)
      else
-       (say creep "B_NOPE";
-        RoleHarvester.runCreep(creep)))
+       RoleHarvester.runCreep(creep))
