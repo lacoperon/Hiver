@@ -1,34 +1,24 @@
 # Hiver
 
-Hiver is [lacoperon](https://www.github.com/lacoperon "GitHub Profile")'s implementation of an AI for the programming game [Screeps](https://www.screeps.com "Screeps")
-in **OCaml**, transpiled to **Javascript** through [**Bucklescript**](http://bucklescript.github.io/bucklescript/Manual.html "Bucklescript") (which, by the way, is brilliant. You should check it out!).
+Hiver is [lacoperon](https://www.github.com/lacoperon "GitHub Profile")'s implementation of an AI for the programming game [Screeps](https://www.screeps.com "Screeps")in **OCaml**, transpiled to **Javascript** through [**Bucklescript**](http://bucklescript.github.io/bucklescript/Manual.html "Bucklescript") (which, by the way, is brilliant. You should check it out!).
 
-**NOTE**: Implementing my AI in OCaml (when Screeps is a JS-based game) is impractical.
-And using things like `bs.raw` removes the type-safety that would make OCaml practical and nice.
-People before me have made the (sensible) choice of settling on TypeScript. I wanted to do something
-more ambitious / weird. So, with that disclaimer out of the way, here's what I did (slash am doing).
+My rationale behind doing this is that OCaml-transpiled Javascript is (depending on the measure) around 3x faster than regular Javascript. The Screeps game imposes CPU limits on players in the game, so execution time is at a premium. So, faster scripts --> faster execution --> profit (hopefully).
 
-To install dependencies, simply run `npm install`, and make sure you've also
-installed OCaml   (IE `sudo apt-get install ocaml`) beforehand.
+### Configuration
 
-To build from `./src/*.ml` to `./deploy/main.js` (They're bundled together
-via `webpack`), run `npm run build`. To deploy to the screeps server, setup
-your own Gruntfile.js (based off of my `Gruntfile.example.js`), and then run
-`grunt screeps`.
+Replace `Gruntfile.example.js` with `Gruntfile.js`, in which your Screeps
+username and password (and branch, if applicable) are filled out correctly.
 
-All `ml` files within `./src` are transpiled by Bucklescript into the `./lib/js/src` directory, and then all of those files are packed (with their
-dependencies) into a `main.js` file within `./deploy` via `webpack`.
+Then, you should be good to go.
 
-In the future, I'll be adding more functional accessibility between OCaml,
-via the Bucklescript bindings, and the Screeps API.
+### Installation (for anyone who wants to try this out)
+To install dependencies, simply run `npm install`, and to transpile + package
+your ml code, run `npm run build`.
 
-The way I have settled on doing the access thus far (IE using `bs.raw`) is
-potentially not the most type-safe way to do it (I could use a different method,
-but that would require documenting every single type within the Screeps API down
-from global objects like `Game`, and I don't have time for that alone. It would
-also be a massive waste of time if nobody else wants to write their AI in OCaml).
+All `ml` files within `./src` are transpiled by Bucklescript into the `./lib/js/src` directory,
+and then all of those files are packed (with their dependencies) into `./deploy/main.js` by webpack.
 
-
+**Also note**: Functions that don't easily translate into OCaml (or that I wrote in the beginning of my time writing this project) are found in `lib/js/src/supplemental.js`, and these functions are referred to elsewhere (IE in my `ml` files) using the appropriate `[@@bs.send]` syntax described within the Bucklescript manual.
 
 Quick List of Modules/Tools Used:
   * `grunt`
@@ -37,11 +27,21 @@ Quick List of Modules/Tools Used:
   * `Bucklescript`
   * `screeps-multimeter`(which saved me from having to launch the game GUI to see if my code has runtime JS errors.)
 
-I currently use a whole bunch of supplemental Screeps interface functions I defined
-within `./lib/js/src/supplemental.js`, to make working with the OCaml functions easier.
-(IE Object-Oriented OCaml seems like something of a clusterfuck, and I don't want to deal with that
-every time I need to call a function which is four properties down of the global Game Object if I don't have to).
 
-T
+### Description of my AI Implementation
 
-//TODO: Add dependencies / other peoples' work to thank / more detailed deploy instructions
+Each tick, the `run` function (within `main.ml`) is called, which in turn calls functions which iterates through my units (`iterateCreeps`, which has each creep do their respective role in the colony), my spawns (`iterateSpawns`, which sees if a given spawn can make a new unit), as well as garbage collects my memory `clearDeadCreepsFromMemory`, and provides me data I can see outside of the game window (`doWatcher`).
+
+#### Creep Roles
+
+My units ('creeps', in Screeps parlance) each have various roles:
+
+* **Harvester** : harvests energy, and brings it to the spawn to make more units
+* **Upgrader** : harvests/transports energy, and brings it to the Room Controller to 'level up' my room
+* **Builder** : harvests/transports energy, and builds/repairs my structures with it
+
+(*There are more to come, but this is it for now*.)
+
+#### Spawn Logic
+
+*To come later. Stay tuned, folks.*
