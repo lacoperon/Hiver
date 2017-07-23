@@ -37,6 +37,7 @@ external getIDFromStructure : roomObject -> string = "id" [@@bs.get]
 external getSourceFromMemory : creep -> string = "source" [@@bs.get] [@@bs.scope "memory"]
 external getExtensionOrSpawnEnergy : roomObject -> int = "energy" [@@bs.get]
 external getExtensionOrSpawnCapacity : roomObject -> int = "energyCapacity" [@@bs.get]
+external getRoomEnergyCapacity : room -> int = "energyCapacityAvailable" [@@bs.get]
 
 let setMemoryField(creep : creep) (memory : memoryField) : unit =
   match memory with

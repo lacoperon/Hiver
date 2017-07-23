@@ -1,1 +1,1 @@
-src/spawn.cmj : src/helperFunctions.cmj src/constantConv.cmj src/baseTypes.cmj
+src/spawn.cmj : src/room.cmj src/helperFunctions.cmj src/constantConv.cmj src/baseTypes.cmj

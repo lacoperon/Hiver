@@ -7138,20 +7138,21 @@ function spawnCreepWithRole(spawn, body, r) {
 }
 
 function createLargestTandemBody(spawn, body) {
-  var spawnEnergy = spawn.energyCapacity;
+  var room = spawn.room;
+  var roomEnergy = room.energyCapacityAvailable;
   var bodyCost = HelperFunctions.arraySum(Curry._2(HelperFunctions.$$Array[/* map */12], ConstantConv.bodyPartToCost, body));
-  if (spawnEnergy > bodyCost) {
-    var _spawnEnergyRemaining = spawnEnergy;
+  if (roomEnergy > bodyCost) {
+    var _roomEnergyRemaining = roomEnergy;
     var bodyUnit = Curry._1(HelperFunctions.$$Array[/* to_list */9], body);
     var _currentBody = /* [] */0;
     while(true) {
       var currentBody = _currentBody;
-      var spawnEnergyRemaining = _spawnEnergyRemaining;
-      if (spawnEnergyRemaining < bodyCost) {
+      var roomEnergyRemaining = _roomEnergyRemaining;
+      if (roomEnergyRemaining < bodyCost) {
         return Curry._1(HelperFunctions.$$Array[/* of_list */10], currentBody);
       } else {
         _currentBody = Pervasives.$at(bodyUnit, currentBody);
-        _spawnEnergyRemaining = spawnEnergyRemaining - bodyCost | 0;
+        _roomEnergyRemaining = roomEnergyRemaining - bodyCost | 0;
         continue ;
         
       }
@@ -9445,48 +9446,51 @@ function runCreep(creep) {
   var carryCap = creep.carryCapacity;
   var load = creep.carry.energy;
   var currentRoom = creep.room;
-  if (!Supplemental.isAssignedSource(creep)) {
-    var energySources = RoomObject.find(currentRoom, /* FIND_SOURCES_ACTIVE */8);
-    var chosenSource = creep.pos.findClosestByPath(energySources);
-    var chosenSourceID = chosenSource.id;
-    HelperFunctions.setMemoryField(creep, /* Memory_Source */Block.__(4, [chosenSourceID]));
-  }
-  if (load) {
-    var chosenSource$1 = Supplemental.getObjectFromID(creep.memory.source);
-    var shouldMine = +Supplemental.getIfShouldMine(creep);
-    if (load < carryCap && shouldMine) {
+  if (Supplemental.isAssignedSource(creep)) {
+    if (load) {
+      var chosenSource = Supplemental.getObjectFromID(creep.memory.source);
+      var shouldMine = +Supplemental.getIfShouldMine(creep);
+      if (load < carryCap && shouldMine) {
+        if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
+          creep.moveTo(chosenSource);
+          return /* () */0;
+        } else {
+          return 0;
+        }
+      } else {
+        HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* false */0]));
+        var structureArray = RoomObject.find(currentRoom, /* FIND_MY_STRUCTURES */13);
+        var isSpawnOrExtension = function (ro) {
+          var match = RoomObject.get_struct_type(ro);
+          if (match !== 7) {
+            return /* false */0;
+          } else {
+            return /* true */1;
+          }
+        };
+        var spawnsAndExtensions = Curry._2(HelperFunctions.$$Array[/* filter */20], isSpawnOrExtension, structureArray);
+        var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
+        creep.transfer(chosenStructure, "energy");
+        creep.moveTo(chosenStructure);
+        return /* () */0;
+      }
+    } else {
+      HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* true */1]));
+      console.log("Before error");
+      var chosenSource$1 = Supplemental.getObjectFromID(creep.memory.source);
+      console.log("After Error");
       if (creep.harvest(chosenSource$1) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
         creep.moveTo(chosenSource$1);
         return /* () */0;
       } else {
         return 0;
       }
-    } else {
-      HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* false */0]));
-      var structureArray = RoomObject.find(currentRoom, /* FIND_MY_STRUCTURES */13);
-      var isSpawnOrExtension = function (ro) {
-        var match = RoomObject.get_struct_type(ro);
-        if (match !== 7) {
-          return /* false */0;
-        } else {
-          return /* true */1;
-        }
-      };
-      var spawnsAndExtensions = Curry._2(HelperFunctions.$$Array[/* filter */20], isSpawnOrExtension, structureArray);
-      var chosenStructure = Caml_array.caml_array_get(spawnsAndExtensions, 0);
-      creep.transfer(chosenStructure, "energy");
-      creep.moveTo(chosenStructure);
-      return /* () */0;
     }
   } else {
-    HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* true */1]));
-    var chosenSource$2 = Supplemental.getObjectFromID(creep.memory.source);
-    if (creep.harvest(chosenSource$2) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
-      creep.moveTo(chosenSource$2);
-      return /* () */0;
-    } else {
-      return 0;
-    }
+    var energySources = RoomObject.find(currentRoom, /* FIND_SOURCES_ACTIVE */8);
+    var chosenSource$2 = creep.pos.findClosestByPath(energySources);
+    var chosenSourceID = chosenSource$2.id;
+    return HelperFunctions.setMemoryField(creep, /* Memory_Source */Block.__(4, [chosenSourceID]));
   }
 }
 
