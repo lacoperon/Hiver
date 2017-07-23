@@ -15,6 +15,7 @@ let spawnCreepWithRole(spawn : string) (body : bodyPart array) (r : role) : int 
                                                                        (match r with
                                                                         | Harvester -> "harvester";
                                                                         | Upgrader  -> "upgrader";
+                                                                        | LongRangeHarvester -> "lr_harvester";
                                                                         | Builder   -> "builder")|])
 
 (* Creates the largest 'tandem repeat' sequence of the bodyPart Array given,

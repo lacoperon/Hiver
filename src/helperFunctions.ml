@@ -17,6 +17,8 @@ let rec arraySumRecursive (numArray : int array) (currentSum : int) (currentInde
 let arraySum (numArray : int array) : int =
   arraySumRecursive(numArray)(0)(0)
 
+
+(* TODO: Reorganize these into coherent sections corresponding to the various modules *)
 (* Various helper functions used in other modules to embed JS functionality *)
 external spawnCreepHelper : string -> string array -> unit = "" [@@bs.module "./supplemental", "Supplement"]
 external spawnCreepWithMemoryHelper : string -> string array -> string array -> int = "" [@@bs.module "./supplemental", "Supplement"]
@@ -26,7 +28,7 @@ external defineMemoryHelper : creep -> string -> string -> unit = "" [@@bs.modul
 external isAssignedSource : creep -> bool = "" [@@bs.module "./supplemental", "Supplemental"]
 external getObjectFromID : string -> roomObject = "" [@@bs.module "./supplemental", "Supplemental"]
 external getIfShouldMine : creep  -> bool = "" [@@bs.module "./supplemental", "Supplemental"]
-
+external getRoomFromString : string -> room = "" [@@bs.module "./supplemental", "Supplemental"]
 
 (* Using the 'Getter' provided by BuckleScript *)
 external getStructureTypeHelper : roomObject -> string = "structureType" [@@bs.get]
@@ -35,9 +37,11 @@ external findHelper : room -> int -> roomObject array = "find" [@@bs.send]
 external gameNotify : string -> unit = "notify" [@@bs.val "Game"]
 external getIDFromStructure : roomObject -> string = "id" [@@bs.get]
 external getSourceFromMemory : creep -> string = "source" [@@bs.get] [@@bs.scope "memory"]
+external getHomeroomFromMemory : creep -> string = "homeroom" [@@bs.get] [@@bs.scope "memory"]
 external getExtensionOrSpawnEnergy : roomObject -> int = "energy" [@@bs.get]
 external getExtensionOrSpawnCapacity : roomObject -> int = "energyCapacity" [@@bs.get]
 external getRoomEnergyCapacity : room -> int = "energyCapacityAvailable" [@@bs.get]
+external getRoomName : room -> string = "name" [@@bs.get]
 
 let setMemoryField(creep : creep) (memory : memoryField) : unit =
   match memory with
@@ -60,3 +64,5 @@ let setMemoryField(creep : creep) (memory : memoryField) : unit =
        | false-> "false")
   | Memory_Source(roID) ->
     defineMemoryHelper(creep)("source")(roID)
+  | Homeroom(roomString) ->
+    defineMemoryHelper(creep)("homeroom")(roomString)

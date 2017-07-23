@@ -13,6 +13,7 @@ let runCreep(creep : creep) : unit =
   let currentRoom = get_room creep in
   if not (isAssignedSource creep)
   then
+    (* TODO: Memoize energy Sources (for a tick, or several) *)
     (let energySources = find currentRoom FIND_SOURCES_ACTIVE in
      Js.log("Before error");
      let chosenSource  = get_closest creep energySources in
@@ -32,6 +33,7 @@ let runCreep(creep : creep) : unit =
           moveTo creep chosenSource)
      else
        (setMemoryField(creep)(Should_Mine false) ;
+        (* TODO: Memoize structures (for a tick, or several) *)
         let structureArray = find currentRoom FIND_MY_STRUCTURES in
         let isSpawnOrExtension (ro : roomObject) : bool =
           match get_struct_type ro with

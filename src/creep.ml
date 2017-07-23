@@ -22,4 +22,5 @@ let getRole(creep : creep) : role =
   | "harvester" -> Harvester ;
   | "upgrader"  -> Upgrader  ;
   | "builder"   -> Builder   ;
+  | "lr_harvester" -> LongRangeHarvester;
   | x           -> (gameNotify "ERROR: NO ROLE"); Harvester

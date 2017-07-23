@@ -23,7 +23,8 @@ let iterateCreeps () : unit =
       match creepRole with
       | Harvester -> RoleHarvester.runCreep(creep) ;
       | Upgrader  -> RoleUpgrader.runCreep(creep)  ;
-      | Builder   -> RoleBuilder.runCreep(creep)
+      | Builder   -> RoleBuilder.runCreep(creep) ;
+      | LongRangeHarvester -> RoleLongRangeHarvester.runCreep(creep) ;
     done
 
 
@@ -31,10 +32,11 @@ let iterateCreeps () : unit =
 (* This function iterates over all of my spawns, trying to give them units to spawn *)
 let iterateSpawns () : unit =
   for i=0 to Array.length spawns - 1 do
-    let roadsConnected = false in
+    let roadsConnected = true in
     let body =
       if roadsConnected then [|WORK; CARRY; MOVE|] else [|WORK; CARRY; MOVE; MOVE|]
     in
+    let lrharvesterBaseBody = [|WORK;CARRY;MOVE;MOVE|] in
     let spawnString = (Array.get spawns i) in
     let spawn = getSpawn (spawnString) in
     let room = getRoomFromSpawn spawn in
@@ -66,21 +68,26 @@ let iterateSpawns () : unit =
       let harvesterLim = 5 in
       let upgraderLim = 5 in
       let builderLim = 7 in
+      let lrharvesterLim = 4 in
 
       (*TODO: Add room specificity for creeps (currently not scaleable to more
         than one spawn  *)
+      (*TODO: Memoize screep body costs for each role each tick *)
       let harvesterIntArray = Array.map (roleToOne Harvester) realCreeps in
       let harvesterNum = arraySum harvesterIntArray in
       (* Js.log("Harvester Num:");
-      Js.log(harvesterNum); *)
+         Js.log(harvesterNum); *)
       let upgraderIntArray  = Array.map (roleToOne Upgrader ) realCreeps in
       let upgraderNum  = arraySum upgraderIntArray in
       (* Js.log("Upgrader Num:");
-      Js.log(upgraderNum); *)
+         Js.log(upgraderNum); *)
       let builderIntArray   = Array.map (roleToOne Builder  ) realCreeps in
       let builderNum   = arraySum builderIntArray in
+
+      let lrHarvesterIntArray = Array.map (roleToOne LongRangeHarvester) realCreeps in
+      let lrharvesterNum = arraySum lrHarvesterIntArray in
       (* Js.log("Builder Num:");
-      Js.log(builderNum); *)
+         Js.log(builderNum); *)
       let actualBody = createLargestTandemBody spawn body in
       let actualBodyCost = arraySum(Array.map bodyPartToCost actualBody) in
 
@@ -88,19 +95,26 @@ let iterateSpawns () : unit =
         (
           (* TODO: Refactor into methods to be called *)
           if harvesterNum < harvesterLim then
-            ((let largestBody = createLargestTandemBody spawn body in
-              ignore (spawnCreepWithRole spawnString largestBody Harvester);
+            ((ignore (spawnCreepWithRole spawnString actualBody Harvester);
               Js.log "Spawning new harvester creep");)
           else
             (if upgraderNum < upgraderLim then
-               (let largestBody = createLargestTandemBody spawn body in
-                ignore (spawnCreepWithRole spawnString largestBody Upgrader);
+               (ignore (spawnCreepWithRole spawnString actualBody Upgrader);
                 Js.log "Spawning new upgrader creep")
              else
-             if builderNum < builderLim then
-               (let largestBody = createLargestTandemBody spawn body in
-                ignore (spawnCreepWithRole spawnString largestBody Builder);
-                Js.log "Spawning new builder creep")  ))
+               (
+                 let actualLRHarvestBody = createLargestTandemBody spawn lrharvesterBaseBody in
+                 let lrbodycost = arraySum(Array.map bodyPartToCost actualLRHarvestBody) in
+                 if lrbodycost <= energyAvailable then
+                   (if lrharvesterNum < lrharvesterLim then
+                      (ignore (spawnCreepWithRole spawnString actualLRHarvestBody LongRangeHarvester);
+                       Js.log "Spawning new long range harvester creep"))
+                 else (
+                   if builderNum < builderLim then
+                     (ignore (spawnCreepWithRole spawnString actualBody Builder);
+                      Js.log "Spawning new builder creep")  ))
+            ))
+
   done
 
 (* Baseline loop code. Calls all subfunctions*)

@@ -7,23 +7,23 @@ open RoomObject
 open HelperFunctions
 
 (*TODO: Add check that all spawns / extensions aren't full, else upgrader.
-  Or some sort of storage container logic...
+
   Also maybe something about creep recycling after they're obsolete*)
 
 let runCreep(creep : creep) : unit =
   (* say creep "Harvest" ; *)
   let carryCap = get_carry creep in
   let load = get_load creep in
-  let currentRoom = get_room creep in
+  let assignedSourceID = "57ef9e7b86f108ae6e60f5e2" in
   if not (isAssignedSource creep)
   then
-    (* TODO: Memoize energySources for a tick (or several) *)
-    (let energySources = find currentRoom FIND_SOURCES_ACTIVE in
-     let i  = Random.int (Array.length energySources) in
-     let chosenSourceID = getIDFromStructure (Array.get energySources i) in
-     setMemoryField(creep)(Memory_Source(chosenSourceID)));
+    (let room = getRoomFromCreep creep in
+     setMemoryField(creep)(Memory_Source(assignedSourceID));
+     setMemoryField(creep)(Homeroom(getRoomName room)));
+  let roomString = getHomeroomFromMemory creep in
+  let homeroom = getRoomFromString roomString in
   (if load = 0 then
-      setMemoryField(creep)(Should_Mine(true)));
+     setMemoryField(creep)(Should_Mine(true)));
   (if load = carryCap then
      setMemoryField(creep)(Should_Mine(false)));
   let isMining = (getIfMining creep = "true") in
@@ -34,7 +34,7 @@ let runCreep(creep : creep) : unit =
        moveTo creep chosenSource)
   else
     (* TODO: Memoize structures (for a tick, or several) *)
-    (let structureArray = find currentRoom FIND_MY_STRUCTURES in
+    (let structureArray = find homeroom FIND_MY_STRUCTURES in
      let isSpawnOrExtension (ro : roomObject) : bool =
        match get_struct_type ro with
        | STRUCTURE_SPAWN     -> true;

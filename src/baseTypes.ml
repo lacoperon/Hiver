@@ -47,12 +47,14 @@ type role =
   | Harvester
   | Upgrader
   | Builder
+  | LongRangeHarvester
 
 let roleToString (role : role) =
   match role with
   | Harvester -> "harvester"
   | Upgrader  -> "upgrader"
   | Builder   -> "builder"
+  | LongRangeHarvester -> "lr_harvester"
 
 (* Defines all of the memory fields I allow to be set on creeps programmatically *)
 type memoryField =
@@ -61,3 +63,4 @@ type memoryField =
   | Should_Mine of bool
   | Should_Build of bool
   | Memory_Source of string (* roomObject ID *)
+  | Homeroom of string (* room ID *)

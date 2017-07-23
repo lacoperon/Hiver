@@ -17,12 +17,14 @@ let runCreep(creep : creep) : unit =
     setMemoryField creep (Should_Mine(false)) ;
 
   if shouldMine && load != carryCap then
+    (* TODO: Memoize energy sources (for a tick, or several) *)
     let energySources = find currentRoom FIND_SOURCES_ACTIVE in
     let chosenSource  = get_closest creep energySources in
     (if shouldMine then
        if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then
          moveTo creep chosenSource)
   else
+    (* TODO: Memoize sites (for a tick, or several) *)
     (let constructSites = find currentRoom FIND_MY_CONSTRUCTION_SITES in
      let isNotWall(ro : roomObject) : bool =
        match (get_struct_type ro) with

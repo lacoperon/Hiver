@@ -71,4 +71,8 @@ build src/helperFunctions.mlast : build_ast_and_deps $src_root_dir/src/helperFun
 build src/helperFunctions.mlast.d : build_deps src/helperFunctions.mlast
 build src/helperFunctions.cmj $src_root_dir/lib/js/src/helperFunctions.js src/helperFunctions.cmi : build_cmj_cmi src/helperFunctions.mlast
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
-build build.ninja : phony  ||  src/helperFunctions.mlast.d src/roleHarvester.mlast.d src/roleUpgrader.mlast.d src/constantConv.mlast.d src/roleBuilder.mlast.d src/roomObject.mlast.d src/baseTypes.mlast.d src/tower.mlast.d src/spawn.mlast.d src/creep.mlast.d src/room.mlast.d src/main.mlast.d
+build src/roleLongRangeHarvester.mlast : build_ast_and_deps $src_root_dir/src/roleLongRangeHarvester.ml
+build src/roleLongRangeHarvester.mlast.d : build_deps src/roleLongRangeHarvester.mlast
+build src/roleLongRangeHarvester.cmj $src_root_dir/lib/js/src/roleLongRangeHarvester.js src/roleLongRangeHarvester.cmi : build_cmj_cmi src/roleLongRangeHarvester.mlast
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build build.ninja : phony  ||  src/roleLongRangeHarvester.mlast.d src/helperFunctions.mlast.d src/roleHarvester.mlast.d src/roleUpgrader.mlast.d src/constantConv.mlast.d src/roleBuilder.mlast.d src/roomObject.mlast.d src/baseTypes.mlast.d src/tower.mlast.d src/spawn.mlast.d src/creep.mlast.d src/room.mlast.d src/main.mlast.d
