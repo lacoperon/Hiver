@@ -46,8 +46,6 @@ let runCreep(creep : creep) : unit =
      in
      let spawnsAndExtensions =  Array.filter (isSpawnOrExtension) (structureArray)  in
      let notFullSpawnsAndExtensions = Array.filter (isNotFull) (spawnsAndExtensions) in
-     (* TODO: Add code which sets the destination structure randomly, and assigns
-        it permanantly to the harvester creep *)
      if (Array.length notFullSpawnsAndExtensions != 0) then
        (
          let chosenStructure = Array.get notFullSpawnsAndExtensions 0 in

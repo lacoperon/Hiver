@@ -68,13 +68,16 @@ let iterateSpawns () : unit =
         than one spawn  *)
       let harvesterIntArray = Array.map (roleToOne Harvester) realCreeps in
       let harvesterNum = arraySum harvesterIntArray in
-
+      (* Js.log("Harvester Num:");
+      Js.log(harvesterNum); *)
       let upgraderIntArray  = Array.map (roleToOne Upgrader ) realCreeps in
       let upgraderNum  = arraySum upgraderIntArray in
-
+      (* Js.log("Upgrader Num:");
+      Js.log(upgraderNum); *)
       let builderIntArray   = Array.map (roleToOne Builder  ) realCreeps in
       let builderNum   = arraySum builderIntArray in
-
+      (* Js.log("Builder Num:");
+      Js.log(builderNum); *)
       let actualBody = createLargestTandemBody spawn body in
       let actualBodyCost = arraySum(Array.map bodyPartToCost actualBody) in
 
