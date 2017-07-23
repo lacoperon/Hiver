@@ -21,7 +21,12 @@ let runCreep(creep : creep) : unit =
      let i  = Random.int (Array.length energySources) in
      let chosenSourceID = getIDFromStructure (Array.get energySources i) in
      setMemoryField(creep)(Memory_Source(chosenSourceID)));
-  if load < carryCap then
+  (if load = 0 then
+      setMemoryField(creep)(Should_Mine(true)));
+  (if load = carryCap then
+     setMemoryField(creep)(Should_Mine(false)));
+  let isMining = (getIfMining creep = "true") in
+  if load < carryCap && isMining then
     let sourceID      = getSourceFromMemory creep in
     let chosenSource  = getObjectFromID sourceID in
     (if (harvest creep (chosenSource) = (toNumResult ERR_NOT_IN_RANGE)) then

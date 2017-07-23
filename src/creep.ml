@@ -14,7 +14,7 @@ external getCreep: string -> creep = "" [@@bs.module "./supplemental", "Suppleme
 external getRoomFromCreep: creep -> room = "" [@@bs.module "./supplemental", "Supplement"]
 external transfer : creep -> roomObject -> string -> int = "transfer" [@@bs.send]
 external say : creep -> string -> unit = "say" [@@bs.send]
-external getIfMining : creep -> bool = "mining" [@@bs.get]
+external getIfMining : creep -> string = "mining" [@@bs.get] [@@bs.scope "memory"]
 
 (* THIS IS IMPORTANT -- KEEP IT UPDATED *)
 let getRole(creep : creep) : role =

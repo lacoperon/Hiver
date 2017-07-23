@@ -6775,7 +6775,14 @@ function runCreep(creep) {
     var chosenSourceID = Caml_array.caml_array_get(energySources, i).id;
     HelperFunctions.setMemoryField(creep, /* Memory_Source */Block.__(4, [chosenSourceID]));
   }
-  if (load < carryCap) {
+  if (!load) {
+    HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* true */1]));
+  }
+  if (load === carryCap) {
+    HelperFunctions.setMemoryField(creep, /* Should_Mine */Block.__(2, [/* false */0]));
+  }
+  var isMining = +(creep.memory.mining === "true");
+  if (load < carryCap && isMining) {
     var sourceID = creep.memory.source;
     var chosenSource = Supplemental.getObjectFromID(sourceID);
     if (creep.harvest(chosenSource) === ConstantConv.toNumResult(/* ERR_NOT_IN_RANGE */9)) {
@@ -7033,7 +7040,7 @@ function iterateSpawns() {
           var largestBody = Spawn.createLargestTandemBody(spawn, body);
           Spawn.spawnCreepWithRole(spawnString, largestBody, /* Harvester */0);
           console.log("Spawning new harvester creep");
-        } else if (upgraderNum < 5) {
+        } else if (upgraderNum < 10) {
           var largestBody$1 = Spawn.createLargestTandemBody(spawn, body);
           Spawn.spawnCreepWithRole(spawnString, largestBody$1, /* Upgrader */1);
           console.log("Spawning new upgrader creep");
