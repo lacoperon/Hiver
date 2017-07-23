@@ -38,5 +38,6 @@ let runCreep(creep : creep) : unit =
         if (build creep chosenSite = toNumResult ERR_NOT_IN_RANGE)
         then
           moveTo creep chosenSite)
+  (* TODO: Add repair code *)
      else
        RoleHarvester.runCreep(creep))
