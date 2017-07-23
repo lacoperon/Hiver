@@ -1,6 +1,6 @@
 # Hiver
 
-Hiver is [lacoperon](https://www.github.com/lacoperon "GitHub Profile")'s implementation of an AI for the programming game [Screeps](https://www.screeps.com "Screeps")in **OCaml**, transpiled to **Javascript** through [**Bucklescript**](http://bucklescript.github.io/bucklescript/Manual.html "Bucklescript") (which, by the way, is brilliant. You should check it out!).
+Hiver is [lacoperon](https://www.github.com/lacoperon "GitHub Profile")'s implementation of an AI for the programming game [Screeps](https://www.screeps.com "Screeps") in **OCaml**, transpiled to **Javascript** through [**Bucklescript**](http://bucklescript.github.io/bucklescript/Manual.html "Bucklescript") (which, by the way, is brilliant. You should check it out!).
 
 My rationale behind doing this is that OCaml-transpiled Javascript is (depending on the measure) around 3x faster than regular Javascript. The Screeps game imposes CPU limits on players in the game, so execution time is at a premium. So, faster scripts --> faster execution --> profit (hopefully).
 
