@@ -68,7 +68,7 @@ let iterateSpawns () : unit =
       let harvesterLim = 5 in
       let upgraderLim = 5 in
       let builderLim = 7 in
-      let lrharvesterLim = 4 in
+      let lrharvesterLim = 0 in
 
       (*TODO: Add room specificity for creeps (currently not scaleable to more
         than one spawn  *)

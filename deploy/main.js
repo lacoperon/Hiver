@@ -7068,7 +7068,7 @@ function iterateSpawns() {
           var actualLRHarvestBody = Spawn.createLargestTandemBody(spawn, lrharvesterBaseBody);
           var lrbodycost = HelperFunctions.arraySum(Curry._2(HelperFunctions.$$Array[/* map */12], ConstantConv.bodyPartToCost, actualLRHarvestBody));
           if (lrbodycost <= energyAvailable) {
-            if (lrharvesterNum < 4) {
+            if (lrharvesterNum < 0) {
               Spawn.spawnCreepWithRole(spawnString, actualLRHarvestBody, /* LongRangeHarvester */3);
               console.log("Spawning new long range harvester creep");
             }
@@ -7712,7 +7712,6 @@ exports.roleToString = roleToString;
 
 
 function runTower() {
-  console.log("I AM A TOWER");
   return /* () */0;
 }
 
